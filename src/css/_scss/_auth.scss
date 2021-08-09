@@ -1,0 +1,16 @@
+.auth {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    .banner {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        padding: 100px 0px 50px;
+
+        img {
+            width: clamp(300px, 100%, 600px);
+            height: auto;
+        }
+    }
+}

@@ -1,0 +1,51 @@
+@import "./_scss/variables";
+html,
+body {
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+body::-webkit-scrollbar-thumb {
+    width: 10px;
+    background: var(--main);
+    border-radius: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+#root {
+    height: 100%;
+}
+
+.logo {
+    display: grid;
+    place-items: center;
+    gap: 20px;
+    grid-template-columns: 55px auto;
+    width: 200px;
+
+    .logo_main {
+        background: $main_faint;
+        border-radius: 50px 50px 50px 0px;
+        font-family: $Sea;
+        color: $main;
+        width: 55px;
+        height: 55px;
+        display: grid;
+        place-items: center;
+        font-size: 30px;
+    }
+    .logo_text {
+        font-family: $Gisha;
+        font-weight: bold;
+        font-size: 24px;
+        color: black;
+    }
+}
+
+@import "./_scss/auth";

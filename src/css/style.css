@@ -1,0 +1,75 @@
+html,
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  width: 10px;
+  background: var(--main);
+  border-radius: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+#root {
+  height: 100%;
+}
+
+.logo {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  gap: 20px;
+  -ms-grid-columns: 55px auto;
+      grid-template-columns: 55px auto;
+  width: 200px;
+}
+
+.logo .logo_main {
+  background: rgba(220, 20, 60, 0.1);
+  border-radius: 50px 50px 50px 0px;
+  font-family: "Seaside Resort NF";
+  color: #dc143c;
+  width: 55px;
+  height: 55px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+}
+
+.logo .logo_text {
+  font-family: "Gisha";
+  font-weight: bold;
+  font-size: 24px;
+  color: black;
+}
+
+.auth {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  height: 100vh;
+}
+
+.auth .banner {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 100px 0px 50px;
+}
+
+.auth .banner img {
+  width: clamp(300px, 100%, 600px);
+  height: auto;
+}
+/*# sourceMappingURL=style.css.map */

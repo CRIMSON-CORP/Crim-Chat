@@ -1,10 +1,12 @@
 import React from "react";
-import firebase, { auth } from "../../utils/firebase";
+import Banner from "./Banner";
+import SignUp from "./SignUp";
 
 function Auth() {
     return (
-        <div>
-            <SignUp/>
+        <div className="auth">
+            <Banner />
+            <SignUp />
         </div>
     );
 }

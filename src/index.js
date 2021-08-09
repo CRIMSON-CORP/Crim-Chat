@@ -4,6 +4,7 @@ import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
+import "./css/style.css";
 import "./style.css";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
