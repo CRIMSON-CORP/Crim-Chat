@@ -1,5 +1,4 @@
 import { store } from "react-notifications-component";
-import $ from "jquery";
 export function Notification(type, title, message) {
     store.addNotification({
         title,
