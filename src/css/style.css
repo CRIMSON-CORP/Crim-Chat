@@ -52,6 +52,19 @@ a {
   color: black;
 }
 
+.signup {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+.signup h1 {
+  font-family: "Gisha";
+  color: #000;
+  font-size: 28px;
+  font-weight: bold;
+}
+
 .auth {
   display: -ms-grid;
   display: grid;
@@ -65,10 +78,23 @@ a {
   display: grid;
   place-items: center;
   height: 100%;
-  padding: 100px 0px 50px;
+  padding: 30px;
 }
 
-.auth .banner img {
+.auth .banner .banner-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.auth .banner .banner-wrapper img {
   width: clamp(300px, 100%, 600px);
   height: auto;
 }
