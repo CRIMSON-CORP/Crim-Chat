@@ -7,28 +7,29 @@ import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { LoaderContext } from "../../utils/Contexts";
 import { Notification } from "../../utils/utils";
+import { AddUser } from "./SignUp";
 function SignIn({ setActivePage }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { setLoading } = useContext(LoaderContext);
-    async function signInwithGoogle(e) {
+    async function signInwithGoogle() {
         setLoading(true);
-        e.preventDefault();
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider);
+            AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
         } finally {
             setLoading(false);
         }
     }
-    async function signInwithFacebook(e) {
+    async function signInwithFacebook() {
         setLoading(true);
-        e.preventDefault();
         try {
             const provider = new firebase.auth.FacebookAuthProvider();
             auth.signInWithPopup(provider);
+            AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
         } finally {
@@ -46,16 +47,14 @@ function SignIn({ setActivePage }) {
                 Notification(
                     "danger",
                     "Incorrect Password",
-                    "The Password is incorrect for this User!",
-                    5000
+                    "The Password is incorrect for this User!"
                 );
                 setPassword("");
             } else if (err.code === "auth/too-many-requests") {
                 Notification(
                     "danger",
                     "Access Temporarily Blocked",
-                    "Too many incorrect tries, Account Temporarily Blocked!",
-                    5000
+                    "Too many incorrect tries, Account Temporarily Blocked!"
                 );
                 setEmail("");
                 setPassword("");
@@ -68,7 +67,6 @@ function SignIn({ setActivePage }) {
                     "User with this Account does not Exist!"
                 );
             }
-            console.log(err);
         } finally {
             setLoading(false);
         }

@@ -24,15 +24,7 @@ function SignUp({ setActivePage }) {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             await auth.createUserWithEmailAndPassword(email, password);
-            await firebase.firestore().collection("users").doc(`${auth.currentUser.uid}`).set({
-                username: username,
-                profile: auth.currentUser.photoURL,
-                onlineStatus: true,
-                uid: auth.currentUser.uid,
-                typing: false,
-                groups: [],
-                chats: [],
-            });
+            AddUser(auth.currentUser, username);
         } catch (err) {
             console.log(err);
             if (err.code === "auth/invalid-email") {
@@ -47,7 +39,8 @@ function SignUp({ setActivePage }) {
     async function signInwithGoogle() {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider);
+            await auth.signInWithPopup(provider);
+            AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
         }
@@ -56,6 +49,7 @@ function SignUp({ setActivePage }) {
         try {
             const provider = new firebase.auth.FacebookAuthProvider();
             auth.signInWithPopup(provider);
+            AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
         }
@@ -126,3 +120,22 @@ function SignUp({ setActivePage }) {
 }
 
 export default SignUp;
+
+export async function AddUser(currentUser, username) {
+    const user = await firebase.firestore().collection("users").doc(`${currentUser.uid}`).get();
+    if (!user.exists) {
+        return await firebase
+            .firestore()
+            .collection("users")
+            .doc(`${currentUser.uid}`)
+            .set({
+                username: username || currentUser.displayName,
+                profile: currentUser.photoURL,
+                onlineStatus: true,
+                uid: currentUser.uid,
+                typing: false,
+                groups: [],
+                chats: [],
+            });
+    } else return;
+}

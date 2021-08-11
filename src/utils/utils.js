@@ -8,7 +8,7 @@ export function Notification(type, title, message, duration) {
         animationIn: ["animated", "jackInTheBox"],
         animationOut: ["animated", "bounceOut"],
         dismiss: {
-            duration: duration || 3000,
+            duration: duration || 5000,
             onScreen: true,
             showIcon: true,
             touch: true,
