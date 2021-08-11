@@ -232,16 +232,13 @@ a {
 .auth form .others {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 1fr;
-      grid-template-columns: 1fr 1fr;
-  gap: 20px;
 }
 
 .auth form .others .other {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: auto auto;
-      grid-template-columns: auto auto;
+  -ms-grid-columns: 40px auto;
+      grid-template-columns: 40px auto;
   background: rgba(220, 20, 60, 0.1);
   gap: 20px;
   padding: 10px;

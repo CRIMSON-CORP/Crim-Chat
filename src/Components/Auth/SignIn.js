@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import firebase, { auth } from "../../utils/firebase";
 import { BiEnvelope, BsEye, BiKey, BsEyeSlash } from "react-icons/all";
 import { ReactComponent as Google } from "../../img/google_colored.svg";
-import { ReactComponent as Facebook } from "../../img/facebook_colored.svg";
 import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { LoaderContext } from "../../utils/Contexts";
@@ -16,19 +15,7 @@ function SignIn({ setActivePage }) {
         setLoading(true);
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider);
-            AddUser(auth.currentUser);
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setLoading(false);
-        }
-    }
-    async function signInwithFacebook() {
-        setLoading(true);
-        try {
-            const provider = new firebase.auth.FacebookAuthProvider();
-            auth.signInWithPopup(provider);
+            await auth.signInWithPopup(provider);
             AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
@@ -111,15 +98,6 @@ function SignIn({ setActivePage }) {
                             }}
                         >
                             <Google /> <p>Sign In with Google</p>
-                        </div>
-                        <div
-                            className="signin-facebook other"
-                            onClick={() => {
-                                signInwithFacebook();
-                            }}
-                        >
-                            <Facebook />
-                            <p>Sign In with Facebook</p>
                         </div>
                     </div>
                 </form>

@@ -1,28 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import firebase, { auth } from "../../utils/firebase";
 import { BiEnvelope, BiUser, BsEye, BiKey, BsEyeSlash } from "react-icons/all";
 import { ReactComponent as Google } from "../../img/google_colored.svg";
-import { ReactComponent as Facebook } from "../../img/facebook_colored.svg";
 import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { Notification } from "../../utils/utils";
+import { LoaderContext } from "../../utils/Contexts";
 function SignUp({ setActivePage }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    async function signIn() {
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider);
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    const { setLoading } = useContext(LoaderContext);
 
     async function submit(e) {
         e.preventDefault();
+        setLoading(true);
         try {
-            const provider = new firebase.auth.GoogleAuthProvider();
             await auth.createUserWithEmailAndPassword(email, password);
             AddUser(auth.currentUser, username);
         } catch (err) {
@@ -33,25 +26,21 @@ function SignUp({ setActivePage }) {
             if (err.code === "auth/email-already-in-use") {
                 Notification("danger", "Email already in use!", err.message);
             }
+        } finally {
+            setLoading(false);
         }
     }
 
     async function signInwithGoogle() {
+        setLoading(true);
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             await auth.signInWithPopup(provider);
             AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
-        }
-    }
-    async function signInwithFacebook() {
-        try {
-            const provider = new firebase.auth.FacebookAuthProvider();
-            auth.signInWithPopup(provider);
-            AddUser(auth.currentUser);
-        } catch (err) {
-            console.log(err);
+        } finally {
+            setLoading(false);
         }
     }
     return (
@@ -102,15 +91,6 @@ function SignUp({ setActivePage }) {
                             }}
                         >
                             <Google /> <p>Sign Up with Google</p>
-                        </div>
-                        <div
-                            className="signin-facebook other"
-                            onClick={() => {
-                                signInwithFacebook();
-                            }}
-                        >
-                            <Facebook />
-                            <p>Sign Up with Facebook</p>
                         </div>
                     </div>
                 </form>

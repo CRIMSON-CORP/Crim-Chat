@@ -116,11 +116,9 @@
 
         .others {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
             .other {
                 display: grid;
-                grid-template-columns: auto auto;
+                grid-template-columns: 40px auto;
                 background: $main_faint;
                 gap: 20px;
                 padding: 10px;
