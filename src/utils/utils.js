@@ -1,5 +1,5 @@
 import { store } from "react-notifications-component";
-export function Notification(type, title, message) {
+export function Notification(type, title, message, duration) {
     store.addNotification({
         title,
         message,
@@ -8,7 +8,7 @@ export function Notification(type, title, message) {
         animationIn: ["animated", "jackInTheBox"],
         animationOut: ["animated", "bounceOut"],
         dismiss: {
-            duration: 3000,
+            duration: duration || 3000,
             onScreen: true,
             showIcon: true,
             touch: true,
