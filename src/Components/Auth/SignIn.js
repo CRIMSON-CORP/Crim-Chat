@@ -19,6 +19,9 @@ function SignIn({ setActivePage }) {
             AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
+            if (err == "auth/network-request-failed") {
+                Notification("danger", "Network Error", "Network connection is unstable!");
+            }
         } finally {
             setLoading(false);
         }
@@ -30,6 +33,7 @@ function SignIn({ setActivePage }) {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password);
         } catch (err) {
+            console.log(err);
             if (err.code === "auth/wrong-password") {
                 Notification(
                     "danger",
@@ -53,6 +57,9 @@ function SignIn({ setActivePage }) {
                     "No Account Found!",
                     "User with this Account does not Exist!"
                 );
+            }
+            if (err == "auth/network-request-failed") {
+                Notification("danger", "Network Error", "Network connection is unstable!");
             }
         } finally {
             setLoading(false);

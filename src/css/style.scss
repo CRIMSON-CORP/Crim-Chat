@@ -20,15 +20,15 @@ a {
 
 #root {
     height: 100%;
+    padding: 20px;
 }
 
 .logo {
-    display: grid;
     place-items: center;
-    gap: 20px;
     grid-template-columns: 55px auto;
     width: 200px;
-
+    font-size: 30px;
+    display: flex;
     .logo_main {
         background: $main_faint;
         border-radius: 50px 50px 50px 0px;
@@ -38,12 +38,13 @@ a {
         height: 55px;
         display: grid;
         place-items: center;
-        font-size: 30px;
+        font-size: 1em;
+        margin-right: 20px;
     }
     .logo_text {
         font-family: $Gisha;
         font-weight: bold;
-        font-size: 24px;
+        font-size: 0.8em;
         color: black;
     }
 }
@@ -65,3 +66,6 @@ a {
 
 @import "./_scss/auth";
 @import "./_scss/utils";
+@import "./_scss/tabs";
+@import "./_scss/navbar";
+@import "./_scss//mainpannel";

@@ -1,0 +1,15 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+
+    .signout-btn {
+        width: auto;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 0.2em 1.3em;
+    }
+    .logo_main {
+        width: 49px;
+        height: 49px;
+    }
+}

@@ -26,6 +26,9 @@ function SignUp({ setActivePage }) {
             if (err.code === "auth/email-already-in-use") {
                 Notification("danger", "Email already in use!", err.message);
             }
+            if (err == "auth/network-request-failed") {
+                Notification("danger", "Network Error", "Network connection is unstable!");
+            }
         } finally {
             setLoading(false);
         }
@@ -39,6 +42,9 @@ function SignUp({ setActivePage }) {
             AddUser(auth.currentUser);
         } catch (err) {
             console.log(err);
+            if (err == "auth/network-request-failed") {
+                Notification("danger", "Network Error", "Network connection is unstable!");
+            }
         } finally {
             setLoading(false);
         }
