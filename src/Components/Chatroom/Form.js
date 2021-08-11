@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import firebase, { auth, firestore } from "../utils/firebase";
+import firebase, { auth, firestore } from "../../utils/firebase";
 function Form() {
     const [text, setText] = useState("");
     return (

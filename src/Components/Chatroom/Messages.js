@@ -1,5 +1,5 @@
 import React from "react";
-import { firestore } from "../utils/firebase";
+import { firestore } from "../../utils/firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 function Messages() {
     const ref = firestore.collection("messages");

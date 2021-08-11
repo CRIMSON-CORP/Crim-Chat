@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "../utils/firebase";
+import { auth } from "../../utils/firebase";
 import Form from "./Form";
 import Messages from "./Messages";
 function ChatRoom() {

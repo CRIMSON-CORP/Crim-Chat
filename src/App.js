@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./utils/firebase";
 import Auth from "./Components/Auth/Auth";
-import ChatRoom from "./Components/ChatRoom";
+import ChatRoom from "./Components/Chatroom/ChatRoom";
 import { LoaderContext } from "./utils/Contexts";
 import { Loader } from "./utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
