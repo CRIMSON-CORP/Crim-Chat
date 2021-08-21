@@ -4,7 +4,7 @@ export function Notification(type, title, message, duration) {
         title,
         message,
         type,
-        container: "top-left",
+        container: "top-right",
         animationIn: ["animated", "jackInTheBox"],
         animationOut: ["animated", "bounceOut"],
         dismiss: {

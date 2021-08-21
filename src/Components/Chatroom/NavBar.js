@@ -1,8 +1,11 @@
 import Logo from "../Logo";
 import { auth } from "../../utils/firebase";
+import { UpdateUserOnlineStatus } from "../Auth/AddUser";
+import { useContext } from "react";
+import { UserContext } from "../../utils/Contexts";
 function NavBar() {
     return (
-        <div className="nav mb-20">
+        <div className="nav">
             <Logo fsize={24} />
             <SignOut />
         </div>
@@ -12,8 +15,9 @@ function NavBar() {
 export default NavBar;
 
 function SignOut() {
-    function signOut() {
-        auth.currentUser && auth.signOut();
+    async function signOut() {
+        await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+        auth.currentUser && (await auth.signOut());
     }
     return (
         <button className="signout-btn btn btn-fill" onClick={signOut}>

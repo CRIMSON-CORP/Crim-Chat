@@ -1,0 +1,129 @@
+@import "./variables";
+
+.dashboard {
+    display: grid;
+    grid-template-rows: 50px auto;
+    gap: 20px;
+    height: 100%;
+}
+.main-pannel {
+    display: flex;
+    gap: 20px;
+}
+.tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 10px;
+
+    .user-details {
+        width: 250px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        background: $main_faint;
+        border-radius: 10px;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+        font-family: $Gisha;
+        .profilePic {
+            display: grid;
+            place-items: center;
+            img,
+            .alt {
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                object-position: center;
+            }
+            .alt {
+                font-size: 60px;
+                display: grid;
+                place-items: center;
+                background: $main;
+                color: white;
+            }
+        }
+
+        .user-display-name {
+            font-weight: bold;
+            font-size: 2em;
+            text-align: center;
+        }
+        .user-email {
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+    }
+
+    .groups {
+        .groups-header {
+            font-weight: bolder;
+            font-size: 1.4em;
+            span {
+                background: $main;
+                padding: 2px 5px;
+                border-radius: 3px;
+                color: white;
+            }
+        }
+
+        .group {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            gap: 10px;
+            transition: 0.5s ease;
+            border-radius: 10px;
+            .group_profilePic {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                color: white;
+                background: $main;
+                object-fit: cover;
+                object-position: center;
+            }
+            .group_name {
+                font-size: 18px;
+                font-weight: bold;
+                font-family: $Gisha;
+                color: black;
+                margin: 0;
+            }
+            &:hover {
+                background: $main_faint;
+            }
+        }
+    }
+}
+
+.user-online-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.6em;
+    gap: 0.4em;
+    .online-status {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 50%;
+        &.Online {
+            background: rgb(32, 255, 69);
+        }
+        &.Offline {
+            background: $ashh;
+        }
+        &.Idle {
+            background: darkorange;
+        }
+    }
+}
+
+@import "./chat";

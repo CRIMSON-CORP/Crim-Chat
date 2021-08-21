@@ -3,9 +3,9 @@ import Messages from "./Messages";
 
 function ChatPannel() {
     return (
-        <div>
-            <Form />
+        <div className="chat-pannel">
             <Messages />
+            <Form />
         </div>
     );
 }

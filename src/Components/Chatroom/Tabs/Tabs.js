@@ -1,8 +1,7 @@
-import Logo from "../../Logo";
 import GroupChat from "./GroupChat";
 import User from "./User";
 
-function Tabs() {
+function Tabs({ user }) {
     return (
         <div className="tabs">
             <User />

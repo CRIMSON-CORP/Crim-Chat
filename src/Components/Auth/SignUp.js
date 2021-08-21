@@ -6,6 +6,7 @@ import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { Notification } from "../../utils/utils";
 import { LoaderContext } from "../../utils/Contexts";
+import { AddUser, UpdateUserOnlineStatus } from "./AddUser";
 function SignUp({ setActivePage }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ function SignUp({ setActivePage }) {
         setLoading(true);
         try {
             await auth.createUserWithEmailAndPassword(email, password);
-            AddUser(auth.currentUser, username);
+            await AddUser(auth.currentUser, username);
         } catch (err) {
             console.log(err);
             if (err.code === "auth/invalid-email") {
@@ -39,7 +40,8 @@ function SignUp({ setActivePage }) {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             await auth.signInWithPopup(provider);
-            AddUser(auth.currentUser);
+            await AddUser(auth.currentUser);
+            await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
         } catch (err) {
             console.log(err);
             if (err == "auth/network-request-failed") {
@@ -106,22 +108,3 @@ function SignUp({ setActivePage }) {
 }
 
 export default SignUp;
-
-export async function AddUser(currentUser, username) {
-    const user = await firebase.firestore().collection("users").doc(`${currentUser.uid}`).get();
-    if (!user.exists) {
-        return await firebase
-            .firestore()
-            .collection("users")
-            .doc(`${currentUser.uid}`)
-            .set({
-                username: username || currentUser.displayName,
-                profile: currentUser.photoURL,
-                onlineStatus: true,
-                uid: currentUser.uid,
-                typing: false,
-                groups: [],
-                chats: [],
-            });
-    } else return;
-}

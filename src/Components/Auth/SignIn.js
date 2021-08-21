@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { LoaderContext } from "../../utils/Contexts";
 import { Notification } from "../../utils/utils";
-import { AddUser } from "./SignUp";
+import { AddUser, UpdateUserOnlineStatus } from "./AddUser";
 function SignIn({ setActivePage }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,7 +16,8 @@ function SignIn({ setActivePage }) {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             await auth.signInWithPopup(provider);
-            AddUser(auth.currentUser);
+            await AddUser(auth.currentUser);
+            await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
         } catch (err) {
             console.log(err);
             if (err == "auth/network-request-failed") {
@@ -32,6 +33,7 @@ function SignIn({ setActivePage }) {
         setLoading(true);
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password);
+            await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
         } catch (err) {
             console.log(err);
             if (err.code === "auth/wrong-password") {

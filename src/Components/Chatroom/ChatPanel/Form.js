@@ -1,34 +1,52 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import firebase, { auth, firestore } from "../../../utils/firebase";
 function Form() {
     const [text, setText] = useState("");
+    const textarea = useRef();
+    async function submit(e) {
+        e.preventDefault();
+        try {
+            await firestore.collection("messages").add({
+                text,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                uid: auth.currentUser.uid,
+                profilePhoto: auth.currentUser.photoURL,
+            });
+            setText("");
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    function handleChange(txt) {
+        textarea.current.style.height = "inherit";
+        textarea.current.style.height = `${textarea.current.scrollHeight - 16}px`;
+
+        setText(txt);
+    }
     return (
-        <div>
-            <form
-                onSubmit={async (e) => {
-                    e.preventDefault();
-                    try {
-                        await firestore.collection("messages").add({
-                            text,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            uid: auth.currentUser.uid,
-                            profilePhoto: auth.currentUser.photoURL,
-                        });
-                        setText("");
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }}
-            >
-                <input
-                    type="text"
-                    placeholder="Type your message..."
-                    value={text}
-                    onChange={(e) => {
-                        setText(e.target.value);
-                    }}
-                />
-                <button className="submit">Send</button>
+        <div className="form">
+            <form onSubmit={submit}>
+                <div className="text-wrapper">
+                    <textarea
+                        type="text"
+                        placeholder="Type your message..."
+                        value={text}
+                        ref={textarea}
+                        onChange={(e) => {
+                            handleChange(e.target.value);
+                        }}
+                    ></textarea>
+                </div>
+                <button className="submit btn btn-fill">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z" />
+                    </svg>
+                </button>
             </form>
         </div>
     );

@@ -19,8 +19,10 @@ a {
 }
 
 #root {
-    height: 100%;
+    height: 100vh;
     padding: 20px;
+    position: absolute;
+    inset: 0;
 }
 
 .logo {
