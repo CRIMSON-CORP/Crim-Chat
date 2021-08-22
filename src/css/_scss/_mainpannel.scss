@@ -1,14 +1,14 @@
 @import "./variables";
 
 .dashboard {
-    display: grid;
-    grid-template-rows: 50px auto;
+    display: flex;
     gap: 20px;
     height: 100%;
 }
 .main-pannel {
     display: flex;
     gap: 20px;
+    flex: auto;
 }
 .tabs {
     display: flex;

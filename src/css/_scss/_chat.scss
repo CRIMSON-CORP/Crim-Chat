@@ -52,7 +52,7 @@
             display: grid;
             place-items: center;
             width: 100%;
-            max-height: 35px;
+            max-height: 40px;
             height: 100%;
             svg {
                 fill: white;
@@ -65,15 +65,31 @@
     padding: 10px;
     display: grid;
     grid-gap: 20px;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    height: calc(100% - 70px);
+    position: absolute;
+    width: 100%;
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: $main;
+    }
     .message {
         display: flex;
         align-items: flex-start;
         gap: 10px;
         .bubble {
             max-width: 80%;
+            .message_sender {
+                font-size: 10px;
+                color: #aaaaaa;
+            }
             .text {
                 border-radius: 10px;
-                padding: 10px;
+                padding: 10px 12px;
                 font-size: 14px;
                 font-weight: bold;
             }
@@ -83,29 +99,34 @@
                 font-weight: normal;
                 font-size: 10px;
                 line-height: 12px;
-
+                margin-top: 10px;
                 display: flex;
-                align-items: center;
-
                 color: rgba(0, 0, 0, 0.4);
+                padding: 0px 5px;
             }
         }
         &.sent {
-            flex-direction: row;
-            .bubble {
-                .text {
-                    background: white;
-                    color: #2b2b2b;
-                }
-            }
-        }
-        &.received {
             flex-direction: row-reverse;
             .bubble {
                 .text {
                     background: #424242;
                     color: white;
+                }
+                .timestamp {
+                    justify-content: flex-end;
+                }
+            }
+        }
+        &.received {
+            flex-direction: row;
+            .bubble {
+                .text {
+                    background: white;
+                    color: #2b2b2b;
                     box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
+                }
+                .timestamp {
+                    justify-content: flex-start;
                 }
             }
         }
@@ -113,13 +134,26 @@
         .img_profile {
             width: 46px;
             height: 46px;
+            background: $main;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            svg {
+                fill: white;
+                stroke-width: 0.5px;
+                stroke: white;
+            }
             img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
                 object-position: center;
-                border-radius: 50%;
             }
         }
     }
+}
+
+.no_groups {
+    font-size: 18px;
 }

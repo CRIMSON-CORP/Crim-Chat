@@ -1,17 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
+import { UserContext } from "../../../utils/Contexts";
 import firebase, { auth, firestore } from "../../../utils/firebase";
-function Form() {
+function Form({ dummy }) {
     const [text, setText] = useState("");
+    const { user } = useContext(UserContext);
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
         try {
-            await firestore.collection("messages").add({
+            const message = {
                 text,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 uid: auth.currentUser.uid,
-                profilePhoto: auth.currentUser.photoURL,
-            });
+                profilePhoto: auth.currentUser.photoURL || user.profilePic,
+                sender: user.displayName,
+            };
+            await firestore.collection("messages").add(message);
+            dummy.current.scrollIntoView({ behavior: "smooth" });
             setText("");
         } catch (err) {
             console.log(err);
@@ -23,6 +28,12 @@ function Form() {
 
         setText(txt);
     }
+    useEffect(() => {
+        dummy.current.scrollIntoView({ behavior: "smooth" });
+        return () => {
+            setText("");
+        };
+    }, []);
     return (
         <div className="form">
             <form onSubmit={submit}>

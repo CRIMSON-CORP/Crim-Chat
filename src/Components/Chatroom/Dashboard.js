@@ -31,11 +31,8 @@ function ChatRoom() {
     return (
         <div className="dashboard">
             <UserContext.Provider value={{ user, setUser }}>
-                <NavBar />
-                <div className="main-pannel">
-                    <Tabs />
-                    <ChatPannel />
-                </div>
+                <Tabs />
+                <ChatPannel />
             </UserContext.Provider>
         </div>
     );

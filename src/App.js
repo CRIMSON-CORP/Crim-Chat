@@ -10,6 +10,12 @@ function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        return async () => {
+            await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+            auth.currentUser && (await auth.signOut());
+        };
+    }, []);
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>
             {

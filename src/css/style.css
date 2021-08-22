@@ -487,10 +487,9 @@ span.loader {
 }
 
 .dashboard {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: 50px auto;
-      grid-template-rows: 50px auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   gap: 20px;
   height: 100%;
 }
@@ -500,6 +499,9 @@ span.loader {
   display: -ms-flexbox;
   display: flex;
   gap: 20px;
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
 }
 
 .tabs {
@@ -728,7 +730,7 @@ span.loader {
   display: grid;
   place-items: center;
   width: 100%;
-  max-height: 35px;
+  max-height: 40px;
   height: 100%;
 }
 
@@ -741,6 +743,20 @@ span.loader {
   display: -ms-grid;
   display: grid;
   grid-gap: 20px;
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  height: calc(100% - 70px);
+  position: absolute;
+  width: 100%;
+}
+
+.messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #dc143c;
 }
 
 .messages .message {
@@ -757,9 +773,14 @@ span.loader {
   max-width: 80%;
 }
 
+.messages .message .bubble .message_sender {
+  font-size: 10px;
+  color: #aaaaaa;
+}
+
 .messages .message .bubble .text {
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 12px;
   font-size: 14px;
   font-weight: bold;
 }
@@ -770,44 +791,67 @@ span.loader {
   font-weight: normal;
   font-size: 10px;
   line-height: 12px;
+  margin-top: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   color: rgba(0, 0, 0, 0.4);
+  padding: 0px 5px;
 }
 
 .messages .message.sent {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-}
-
-.messages .message.sent .bubble .text {
-  background: white;
-  color: #2b2b2b;
-}
-
-.messages .message.received {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: reverse;
       -ms-flex-direction: row-reverse;
           flex-direction: row-reverse;
 }
 
-.messages .message.received .bubble .text {
+.messages .message.sent .bubble .text {
   background: #424242;
   color: white;
+}
+
+.messages .message.sent .bubble .timestamp {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.messages .message.received {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.messages .message.received .bubble .text {
+  background: white;
+  color: #2b2b2b;
   -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
           box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
+}
+
+.messages .message.received .bubble .timestamp {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
 
 .messages .message .img_profile {
   width: 46px;
   height: 46px;
+  background: #dc143c;
+  border-radius: 50%;
+  overflow: hidden;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+.messages .message .img_profile svg {
+  fill: white;
+  stroke-width: 0.5px;
+  stroke: white;
 }
 
 .messages .message .img_profile img {
@@ -817,6 +861,9 @@ span.loader {
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
-  border-radius: 50%;
+}
+
+.no_groups {
+  font-size: 18px;
 }
 /*# sourceMappingURL=style.css.map */

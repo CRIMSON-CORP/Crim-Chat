@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { Notification } from "../../utils/utils";
 import { LoaderContext } from "../../utils/Contexts";
-import { AddUser, UpdateUserOnlineStatus } from "./AddUser";
+import { AddUser, UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
 function SignUp({ setActivePage }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");

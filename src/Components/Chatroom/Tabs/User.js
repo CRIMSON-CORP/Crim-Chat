@@ -3,7 +3,6 @@ import { UserContext } from "../../../utils/Contexts";
 
 function User() {
     const { user } = useContext(UserContext);
-    console.log(useContext(UserContext));
     return (
         <div className="user-details">
             <div className="profilePic">

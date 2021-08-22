@@ -1,4 +1,4 @@
-import firebase from "./firebase";
+import firebase, { auth, firestore } from "./firebase";
 
 export function UploadImage(image, path) {
     return new Promise(async (resolve, reject) => {
@@ -10,4 +10,42 @@ export function UploadImage(image, path) {
             reject(err.message());
         }
     });
+}
+
+export async function signOut() {
+    await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+    auth.currentUser && (await auth.signOut());
+}
+
+export async function UpdateUserOnlineStatus(uid, status) {
+    try {
+        return await firestore.collection("users").doc(`${uid}`).update({
+            onlineStatus: status,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export async function AddUser(currentUser, username) {
+    try {
+        const user = await firestore.collection("users").doc(`${currentUser.uid}`).get();
+        if (!user.exists) {
+            return await firestore
+                .collection("users")
+                .doc(`${currentUser.uid}`)
+                .set({
+                    displayName: username || currentUser.displayName,
+                    profilePic: currentUser.photoURL,
+                    email: currentUser.email,
+                    onlineStatus: "Online",
+                    uid: currentUser.uid,
+                    typing: false,
+                    groups: [],
+                    chats: [],
+                });
+        } else return;
+    } catch (err) {
+        console.log(err);
+    }
 }

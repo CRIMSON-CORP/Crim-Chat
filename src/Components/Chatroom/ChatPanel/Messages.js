@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore, auth } from "../../../utils/firebase";
-function Messages() {
+import { BiUser } from "react-icons/bi";
+function Messages({ dummy }) {
     const ref = firestore.collection("messages");
     const messageRef = ref.orderBy("createdAt").limit(25);
     const [messages] = useCollectionData(messageRef, { idField: "id" });
@@ -10,6 +11,7 @@ function Messages() {
         <div className="messages">
             {messages &&
                 messages.map((message, index) => <Message key={index} message={message} />)}
+            <div className="dummy" ref={dummy} style={{ marginTop: -5 }}></div>
         </div>
     );
 }
@@ -17,20 +19,36 @@ export default Messages;
 
 function Message({ message }) {
     const [user] = useAuthState(auth);
-    const time = new Date(message.createdAt.seconds * 1000 + message.createdAt.nanoseconds / 1e6);
+    const messageOwner = message.uid === user.uid;
+    const time =
+        message.createdAt !== null
+            ? new Date(
+                  message.createdAt.seconds * 1000 + message.createdAt.nanoseconds / 1e6
+              ).toLocaleTimeString()
+            : "";
+
     return (
-        <div className={`message ${message.uid === user.uid ? "sent" : "received"}`}>
+        <div className={`message ${messageOwner ? "sent" : "received"}`}>
             <div className="img_profile">
-                <img src={message.profilePhoto} alt="profile" />
-                <div className="user-online-status">
-                    <span className={`online-status ${user.onlineStatus}`}></span>
-                </div>
+                {message.profilePhoto === null ? (
+                    <BiUser size={22} />
+                ) : (
+                    <img src={message.profilePhoto} alt="profile" />
+                )}
+                {/* <div className="user-online-status">
+                   {messageOwner ? (
+                        <span className={`online-status ${user.onlineStatus}`}></span>
+                    ) : (
+                        <span className={`online-status ${sender.onlineStatus}`}></span>
+                    )}
+                </div> */}
             </div>
             <div className="bubble">
                 <div className="text">
+                    {!messageOwner && <div className="message_sender">{message.sender}</div>}
                     <p>{message.text}</p>
                 </div>
-                <div className="timestamp">{time.toLocaleTimeString()}</div>
+                <div className="timestamp">{time}</div>
             </div>
         </div>
     );
