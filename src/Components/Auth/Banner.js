@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../Logo";
+import { Logo } from "../../utils/CustomComponents";
 import chat_gif from "../../img/chat.gif";
 function Banner({ set, ban }) {
     return (

@@ -809,6 +809,7 @@ span.loader {
 .messages {
   padding: 10px;
   padding-top: 50px;
+  padding-bottom: 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -817,7 +818,6 @@ span.loader {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  scroll-behavior: smooth;
   overflow-y: auto;
   height: calc(100% - 70px);
   position: absolute;
@@ -858,8 +858,8 @@ span.loader {
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
-  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
-          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
+  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
   font-weight: bold;
 }
 
@@ -889,6 +889,8 @@ span.loader {
 .messages .message.sent .bubble .text {
   background: #424242;
   color: white;
+  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
+          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
 }
 
 .messages .message.sent .bubble .timestamp {
@@ -926,6 +928,9 @@ span.loader {
   display: -ms-grid;
   display: grid;
   place-items: center;
+  border: 3px solid white;
+  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
+          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
 }
 
 .messages .message .img_profile svg {

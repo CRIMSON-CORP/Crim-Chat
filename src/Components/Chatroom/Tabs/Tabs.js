@@ -1,4 +1,4 @@
-import Logo from "../../Logo";
+import Logo from "../../../utils/CustomComponents";
 import GroupChat from "./GroupChat";
 import User from "./User";
 

@@ -9,9 +9,10 @@ import { CSSTransition } from "react-transition-group";
 import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
 function App() {
     const [user] = useAuthState(auth);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(false);
         return async () => {
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
             auth.currentUser && (await auth.signOut());
