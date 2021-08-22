@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore, auth } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
-function Messages({ dummy }) {
+function Messages() {
     const ref = firestore.collection("messages");
     const messageRef = ref.orderBy("createdAt").limit(25);
     const [messages] = useCollectionData(messageRef, { idField: "id" });
+    const messageBoxRef = useRef();
+
+    useEffect(() => {
+        messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+    }, [messages]);
     return (
-        <div className="messages">
+        <div className="messages" ref={messageBoxRef}>
             {messages &&
                 messages.map((message, index) => <Message key={index} message={message} />)}
-            <div className="dummy" ref={dummy} style={{ marginTop: -5 }}></div>
         </div>
     );
 }
@@ -26,7 +30,6 @@ function Message({ message }) {
                   message.createdAt.seconds * 1000 + message.createdAt.nanoseconds / 1e6
               ).toLocaleTimeString()
             : "";
-
     return (
         <div className={`message ${messageOwner ? "sent" : "received"}`}>
             <div className="img_profile">
@@ -35,13 +38,6 @@ function Message({ message }) {
                 ) : (
                     <img src={message.profilePhoto} alt="profile" />
                 )}
-                {/* <div className="user-online-status">
-                   {messageOwner ? (
-                        <span className={`online-status ${user.onlineStatus}`}></span>
-                    ) : (
-                        <span className={`online-status ${sender.onlineStatus}`}></span>
-                    )}
-                </div> */}
             </div>
             <div className="bubble">
                 <div className="text">

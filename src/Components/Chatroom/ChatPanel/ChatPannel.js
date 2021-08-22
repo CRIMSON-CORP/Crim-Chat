@@ -3,15 +3,12 @@ import Form from "./Form";
 import Messages from "./Messages";
 import Options from "../Options";
 function ChatPannel() {
-    const dummy = useRef();
-
     return (
         <div className="main-pannel">
             <Options />
-
             <div className="chat-pannel">
-                <Messages dummy={dummy} />
-                <Form dummy={dummy} />
+                <Messages />
+                <Form />
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import firebase, { auth, firestore } from "../../../utils/firebase";
-function Form({ dummy }) {
+function Form() {
     const [text, setText] = useState("");
     const { user } = useContext(UserContext);
     const textarea = useRef();
@@ -16,7 +16,6 @@ function Form({ dummy }) {
                 sender: user.displayName,
             };
             await firestore.collection("messages").add(message);
-            dummy.current.scrollIntoView({ behavior: "smooth" });
             setText("");
         } catch (err) {
             console.log(err);
@@ -29,7 +28,6 @@ function Form({ dummy }) {
         setText(txt);
     }
     useEffect(() => {
-        dummy.current.scrollIntoView({ behavior: "smooth" });
         return () => {
             setText("");
         };
@@ -48,7 +46,7 @@ function Form({ dummy }) {
                         }}
                     ></textarea>
                 </div>
-                <button className="submit btn btn-fill">
+                <button className="submit btn btn-fill" disabled={text === ""}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"

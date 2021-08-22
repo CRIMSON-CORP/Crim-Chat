@@ -130,7 +130,10 @@
 .optionsIcon {
     display: flex;
     justify-content: flex-end;
-    padding-right: 10px;
+    .options_wrapper {
+        position: relative;
+        padding-right: 10px;
+    }
     svg {
         width: 20px;
         height: 20px;
@@ -138,4 +141,56 @@
     }
 }
 
+.options_dropdown {
+    position: absolute;
+    width: 200px;
+    left: 0;
+    top: 0;
+    transform: translate(-110%);
+    background: white;
+    padding: 10px;
+    z-index: 99;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
+    transition: 0.2s ease-out;
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+        li.dropDown_item {
+            display: grid;
+            grid-template-columns: auto 30px;
+            gap: 10px;
+            align-items: center;
+            height: 30px;
+            cursor: pointer;
+            svg {
+                width: 0.8em;
+                height: 0.8em;
+            }
+        }
+    }
+}
+
 @import "./chat";
+
+.fade-enter {
+    opacity: 0;
+    transform: translateY(10px) translate(-110%);
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transform: translateY(0px) translate(-110%);
+}
+
+.fade-exit {
+    opacity: 1;
+    transform: translateY(0px) translate(-110%);
+}
+.fade-exit-active {
+    opacity: 0;
+    transform: translateY(10px) translate(-110%);
+}

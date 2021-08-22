@@ -671,6 +671,10 @@ span.loader {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+}
+
+.optionsIcon .options_wrapper {
+  position: relative;
   padding-right: 10px;
 }
 
@@ -678,6 +682,50 @@ span.loader {
   width: 20px;
   height: 20px;
   cursor: pointer;
+}
+
+.options_dropdown {
+  position: absolute;
+  width: 200px;
+  left: 0;
+  top: 0;
+  -webkit-transform: translate(-110%);
+          transform: translate(-110%);
+  background: white;
+  padding: 10px;
+  z-index: 99;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
+          box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
+  -webkit-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+}
+
+.options_dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: -ms-grid;
+  display: grid;
+  gap: 10px;
+}
+
+.options_dropdown ul li.dropDown_item {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: auto 30px;
+      grid-template-columns: auto 30px;
+  gap: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 30px;
+  cursor: pointer;
+}
+
+.options_dropdown ul li.dropDown_item svg {
+  width: 0.8em;
+  height: 0.8em;
 }
 
 .chat-pannel {
@@ -760,9 +808,15 @@ span.loader {
 
 .messages {
   padding: 10px;
-  display: -ms-grid;
-  display: grid;
-  grid-gap: 20px;
+  padding-top: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   scroll-behavior: smooth;
   overflow-y: auto;
   height: calc(100% - 70px);
@@ -771,12 +825,13 @@ span.loader {
 }
 
 .messages::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 .messages::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: #dc143c;
+  opacity: 0.5;
 }
 
 .messages .message {
@@ -787,6 +842,7 @@ span.loader {
       -ms-flex-align: start;
           align-items: flex-start;
   gap: 10px;
+  max-width: 80%;
 }
 
 .messages .message .bubble {
@@ -802,6 +858,8 @@ span.loader {
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
+  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
+          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
   font-weight: bold;
 }
 
@@ -824,6 +882,8 @@ span.loader {
   -webkit-box-direction: reverse;
       -ms-flex-direction: row-reverse;
           flex-direction: row-reverse;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
 }
 
 .messages .message.sent .bubble .text {
@@ -838,6 +898,8 @@ span.loader {
 }
 
 .messages .message.received {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -847,8 +909,6 @@ span.loader {
 .messages .message.received .bubble .text {
   background: white;
   color: #2b2b2b;
-  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
-          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.1);
 }
 
 .messages .message.received .bubble .timestamp {
@@ -885,5 +945,29 @@ span.loader {
 
 .no_groups {
   font-size: 18px;
+}
+
+.fade-enter {
+  opacity: 0;
+  -webkit-transform: translateY(10px) translate(-110%);
+          transform: translateY(10px) translate(-110%);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  -webkit-transform: translateY(0px) translate(-110%);
+          transform: translateY(0px) translate(-110%);
+}
+
+.fade-exit {
+  opacity: 1;
+  -webkit-transform: translateY(0px) translate(-110%);
+          transform: translateY(0px) translate(-110%);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  -webkit-transform: translateY(10px) translate(-110%);
+          transform: translateY(10px) translate(-110%);
 }
 /*# sourceMappingURL=style.css.map */

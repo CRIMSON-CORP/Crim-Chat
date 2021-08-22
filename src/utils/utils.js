@@ -1,4 +1,5 @@
 import { store } from "react-notifications-component";
+import { useState } from "react";
 export function Notification(type, title, message, duration) {
     store.addNotification({
         title,
@@ -28,12 +29,4 @@ export function Copy(message, item) {
     document.execCommand("copy");
     body.removeChild(temp);
     Notification("success", "Copied", message);
-}
-
-export function useToggle(initial) {
-    const [toggle, setToggle] = useState(initial || false);
-    function Toggle() {
-        setToggle(!toggle);
-    }
-    return [toggle, Toggle];
 }

@@ -6,6 +6,7 @@ import Dashboard from "./Components/Chatroom/Dashboard";
 import { LoaderContext } from "./utils/Contexts";
 import { Loader } from "./utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
+import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(false);
