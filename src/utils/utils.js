@@ -29,3 +29,11 @@ export function Copy(message, item) {
     body.removeChild(temp);
     Notification("success", "Copied", message);
 }
+
+export function useToggle(initial) {
+    const [toggle, setToggle] = useState(initial || false);
+    function Toggle() {
+        setToggle(!toggle);
+    }
+    return [toggle, Toggle];
+}

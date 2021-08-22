@@ -498,10 +498,14 @@ span.loader {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  gap: 20px;
+  gap: 10px;
   -webkit-box-flex: 1;
       -ms-flex: auto;
           flex: auto;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .tabs {
@@ -658,6 +662,22 @@ span.loader {
 
 .user-online-status .online-status.Idle {
   background: darkorange;
+}
+
+.optionsIcon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.optionsIcon svg {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .chat-pannel {

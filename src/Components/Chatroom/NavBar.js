@@ -3,7 +3,8 @@ import { auth } from "../../utils/firebase";
 import { UpdateUserOnlineStatus } from "../Auth/AddUser";
 function NavBar() {
     return (
-        <div className="nav">
+        <div className="nav mb-20">
+            <Logo fsize={24} />
             <SignOut />
         </div>
     );

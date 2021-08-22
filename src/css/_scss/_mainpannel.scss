@@ -7,8 +7,9 @@
 }
 .main-pannel {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex: auto;
+    flex-direction: column;
 }
 .tabs {
     display: flex;
@@ -123,6 +124,17 @@
         &.Idle {
             background: darkorange;
         }
+    }
+}
+
+.optionsIcon {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+    svg {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
     }
 }
 
