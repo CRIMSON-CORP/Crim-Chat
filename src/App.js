@@ -14,8 +14,9 @@ function App() {
     useEffect(() => {
         setLoading(false);
         return async () => {
-            await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
-            auth.currentUser && (await auth.signOut());
+            auth.currentUser &&
+                (await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline"),
+                await auth.signOut());
         };
     }, []);
     return (

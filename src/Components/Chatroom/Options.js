@@ -1,12 +1,14 @@
 import { useContext, useState } from "react";
-import { FaEllipsisH, FaSignOutAlt, MdDehaze } from "react-icons/all";
+import { FaEllipsisH, FaSignOutAlt, MdAdd, MdDehaze } from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { MobileNav } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
+import { Modal, useModal } from "../../utils/CustomComponents";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
+    const [createGroupModal, setCreateGroupModal] = useModal();
     return (
         <div className="optionsIcon">
             <MdDehaze
@@ -28,7 +30,12 @@ function Options() {
                     />
                     <CSSTransition in={optionsToggle} classNames="fade" unmountOnExit timeout={400}>
                         <OptionsDropDown>
-                            <OptionsDropDownItem sufIcon={<FaSignOutAlt />}>
+                            <OptionsDropDownItem
+                                sufIcon={<MdAdd />}
+                                onClickExe={() => {
+                                    setCreateGroupModal(true);
+                                }}
+                            >
                                 Create Group
                             </OptionsDropDownItem>
                             <OptionsDropDownItem sufIcon={<FaSignOutAlt />} onClickExe={signOut}>
@@ -38,6 +45,9 @@ function Options() {
                     </CSSTransition>
                 </OnOutsiceClick>
             </div>
+            <Modal state={createGroupModal} setmodal={setCreateGroupModal}>
+                <CreateGroupModalUI />
+            </Modal>
         </div>
     );
 }
@@ -58,4 +68,8 @@ function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
             {children} <div className="sufIcon">{sufIcon}</div>
         </li>
     );
+}
+
+function CreateGroupModalUI() {
+    return <h3>Create a new Group</h3>;
 }

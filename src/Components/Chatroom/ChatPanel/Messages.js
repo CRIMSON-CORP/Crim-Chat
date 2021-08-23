@@ -35,7 +35,10 @@ export default Messages;
 
 function Message({ message, loaded }) {
     const [user] = useAuthState(auth);
-    const messageOwner = message.uid === user.uid;
+    let messageOwner;
+    if (message) {
+        messageOwner = message.uid === user.uid;
+    }
     const messageRef = useRef();
     useEffect(() => {
         if (loaded) {

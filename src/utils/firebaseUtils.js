@@ -1,5 +1,4 @@
 import firebase, { auth, firestore } from "./firebase";
-
 export function UploadImage(image, path) {
     return async (resolve, reject) => {
         try {
@@ -16,6 +15,7 @@ export async function signOut() {
     if (auth.currentUser) {
         await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
         await auth.signOut();
+        return null;
     }
 }
 
