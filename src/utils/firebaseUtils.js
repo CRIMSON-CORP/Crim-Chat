@@ -1,7 +1,7 @@
 import firebase, { auth, firestore } from "./firebase";
 
 export function UploadImage(image, path) {
-    return new Promise(async (resolve, reject) => {
+    return async (resolve, reject) => {
         try {
             const StorageRef = firebase.storage().ref(path);
             await StorageRef.put(image);
@@ -9,7 +9,7 @@ export function UploadImage(image, path) {
         } catch (err) {
             reject(err.message());
         }
-    });
+    };
 }
 
 export async function signOut() {

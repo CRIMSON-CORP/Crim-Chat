@@ -4,9 +4,10 @@ import Tabs from "./Tabs/Tabs";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../../utils/firebase";
-import { UserContext } from "../../utils/Contexts";
+import { MobileNav, UserContext } from "../../utils/Contexts";
 function ChatRoom() {
     const [userAuth] = useAuthState(auth);
+    const [mobileNav, setMobileNav] = useState(false);
     const [user, setUser] = useState({
         profilePic: null,
         displayName: "",
@@ -23,15 +24,17 @@ function ChatRoom() {
                     setUser(user.data());
                 });
         } catch (error) {
-            console.log(err);
+            console.log(error);
         }
         return unsub;
     }, []);
     return (
         <div className="dashboard">
             <UserContext.Provider value={{ user, setUser }}>
-                <Tabs />
-                <ChatPannel />
+                <MobileNav.Provider value={{ mobileNav, setMobileNav }}>
+                    <Tabs />
+                    <ChatPannel />
+                </MobileNav.Provider>
             </UserContext.Provider>
         </div>
     );

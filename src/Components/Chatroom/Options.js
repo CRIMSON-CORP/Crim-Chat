@@ -1,11 +1,20 @@
-import { useState } from "react";
-import { FaEllipsisH, FaSignOutAlt } from "react-icons/all";
+import { useContext, useState } from "react";
+import { FaEllipsisH, FaSignOutAlt, MdDehaze } from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
+import { MobileNav } from "../../utils/Contexts";
+import { signOut } from "../../utils/firebaseUtils";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
+    const { setMobileNav } = useContext(MobileNav);
     return (
         <div className="optionsIcon">
+            <MdDehaze
+                className="ham"
+                onClick={() => {
+                    setMobileNav(true);
+                }}
+            />
             <div className="options_wrapper">
                 <OnOutsiceClick
                     onOutsideClick={() => {
@@ -22,7 +31,7 @@ function Options() {
                             <OptionsDropDownItem sufIcon={<FaSignOutAlt />}>
                                 Create Group
                             </OptionsDropDownItem>
-                            <OptionsDropDownItem sufIcon={<FaSignOutAlt />}>
+                            <OptionsDropDownItem sufIcon={<FaSignOutAlt />} onClickExe={signOut}>
                                 Sign out
                             </OptionsDropDownItem>
                         </OptionsDropDown>
@@ -43,9 +52,9 @@ function OptionsDropDown({ children }) {
     );
 }
 
-function OptionsDropDownItem({ children, sufIcon }) {
+function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
     return (
-        <li className="dropDown_item">
+        <li className="dropDown_item" onClick={onClickExe}>
             {children} <div className="sufIcon">{sufIcon}</div>
         </li>
     );

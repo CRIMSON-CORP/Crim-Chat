@@ -16,7 +16,8 @@
     flex-direction: column;
     gap: 20px;
     font-size: 10px;
-
+    background: white;
+    z-index: 99;
     .user-details {
         width: 250px;
         display: flex;
@@ -130,6 +131,7 @@
 .optionsIcon {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     .options_wrapper {
         position: relative;
         padding-right: 10px;
@@ -148,7 +150,7 @@
     top: 0;
     transform: translate(-110%);
     background: white;
-    padding: 10px;
+    padding: 10px 16px;
     z-index: 99;
     border-radius: 10px;
     box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
@@ -166,6 +168,7 @@
             align-items: center;
             height: 30px;
             cursor: pointer;
+            align-items: center;
             svg {
                 width: 0.8em;
                 height: 0.8em;
@@ -193,4 +196,39 @@
 .fade-exit-active {
     opacity: 0;
     transform: translateY(10px) translate(-110%);
+}
+
+.tab_logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .cancel {
+        font-size: 16px;
+        display: none;
+        cursor: pointer;
+    }
+}
+
+.ham {
+    display: none;
+}
+
+@media only screen and (max-width: 700px) {
+    .tabs {
+        position: absolute;
+        height: 100%;
+        padding-right: 20px;
+        transform: translateX(-100%);
+        .cancel {
+            display: inline-block;
+        }
+    }
+
+    .ham {
+        display: inline-block;
+    }
+
+    .optionsIcon {
+        justify-content: space-between;
+    }
 }

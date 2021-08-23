@@ -23,6 +23,7 @@ a {
   padding: 20px;
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 .logo {
@@ -518,6 +519,8 @@ span.loader {
           flex-direction: column;
   gap: 20px;
   font-size: 10px;
+  background: white;
+  z-index: 99;
 }
 
 .tabs .user-details {
@@ -671,6 +674,9 @@ span.loader {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .optionsIcon .options_wrapper {
@@ -692,7 +698,7 @@ span.loader {
   -webkit-transform: translate(-110%);
           transform: translate(-110%);
   background: white;
-  padding: 10px;
+  padding: 10px 16px;
   z-index: 99;
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
@@ -721,6 +727,7 @@ span.loader {
           align-items: center;
   height: 30px;
   cursor: pointer;
+  align-items: center;
 }
 
 .options_dropdown ul li.dropDown_item svg {
@@ -929,8 +936,8 @@ span.loader {
   display: grid;
   place-items: center;
   border: 3px solid white;
-  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
-          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.3);
+  -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
+          box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
 }
 
 .messages .message .img_profile svg {
@@ -974,5 +981,48 @@ span.loader {
   opacity: 0;
   -webkit-transform: translateY(10px) translate(-110%);
           transform: translateY(10px) translate(-110%);
+}
+
+.tab_logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tab_logo .cancel {
+  font-size: 16px;
+  display: none;
+  cursor: pointer;
+}
+
+.ham {
+  display: none;
+}
+
+@media only screen and (max-width: 700px) {
+  .tabs {
+    position: absolute;
+    height: 100%;
+    padding-right: 20px;
+    -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+  }
+  .tabs .cancel {
+    display: inline-block;
+  }
+  .ham {
+    display: inline-block;
+  }
+  .optionsIcon {
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
 }
 /*# sourceMappingURL=style.css.map */

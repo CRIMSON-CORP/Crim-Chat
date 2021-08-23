@@ -17,13 +17,14 @@ function Form() {
             };
             await firestore.collection("messages").add(message);
             setText("");
+            textarea.current.style.height = "30px";
         } catch (err) {
             console.log(err);
         }
     }
     function handleChange(txt) {
         textarea.current.style.height = "inherit";
-        textarea.current.style.height = `${textarea.current.scrollHeight - 16}px`;
+        textarea.current.style.height = `${textarea.current.scrollHeight}px`;
 
         setText(txt);
     }
