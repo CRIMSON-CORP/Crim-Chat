@@ -13,9 +13,13 @@ export function UploadImage(image, path) {
 
 export async function signOut() {
     if (auth.currentUser) {
-        await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
-        await auth.signOut();
-        return null;
+        try {
+            await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+            await auth.signOut();
+            return null;
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 

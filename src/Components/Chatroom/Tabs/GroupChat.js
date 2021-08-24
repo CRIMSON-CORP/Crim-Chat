@@ -3,14 +3,12 @@ import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
 import { UserContext } from "../../../utils/Contexts";
 function GroupChat() {
-    const {
-        user: { groups },
-    } = useContext(UserContext);
+    const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
     useEffect(() => {
-        if (groups.length) {
+        if (userlocal) {
             try {
-                groups.forEach((group) => {
+                userlocal.groups.forEach((group) => {
                     firestore
                         .collection("groups-register")
                         .doc(`${group}`)
@@ -25,20 +23,24 @@ function GroupChat() {
                 console.log(err);
             }
         }
-    }, [groups.length]);
+    }, [userlocal]);
     return (
         <div className="groups">
-            <h2 className="groups-header">
-                Chat Rooms <span>{groups.length}</span>
-            </h2>
-            {groupsData.length !== 0 ? (
-                <div>
-                    {groupsData.map((group) => {
-                        return <GroupComponent group={group} key={group.group_id} />;
-                    })}
-                </div>
-            ) : (
-                <h2 className="no_groups">No Groups</h2>
+            {userlocal && (
+                <>
+                    <h2 className="groups-header">
+                        Chat Rooms <span>{userlocal.groups.length}</span>
+                    </h2>
+                    {groupsData.length !== 0 ? (
+                        <div>
+                            {groupsData.map((group) => {
+                                return <GroupComponent group={group} key={group.group_id} />;
+                            })}
+                        </div>
+                    ) : (
+                        <h2 className="no_groups">No Groups</h2>
+                    )}
+                </>
             )}
         </div>
     );

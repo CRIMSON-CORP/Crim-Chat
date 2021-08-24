@@ -1,5 +1,4 @@
-import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
@@ -65,29 +64,51 @@ export function useModal() {
 
     return [toggle, setModalState];
 }
-export function Modal({ children, state, setmodal }) {
-    const modal = useRef();
-    const modalContent = useRef();
-    useEffect(() => {
-        if (state) {
-            // gsap.to(modal, { opacity: 1 }).to(modalContent, { y: 0 });
-        }
-    }, [state]);
+export function Modal({ children, state, setmodal, classTag }) {
     return (
         <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
             <div className="modal-custom">
-                <div className="underlay"></div>
-                <div className="modal-content-custom">
-                    <span className="close">
-                        <MdClear
+                <div
+                    className="underlay"
+                    onClick={() => {
+                        setmodal(false);
+                    }}
+                ></div>
+                <CSSTransition
+                    in={state}
+                    unmountOnExit
+                    classNames="modal-content-anim"
+                    timeout={400}
+                >
+                    <div className={`modal-content-custom ${classTag}`}>
+                        <span
+                            className="close"
                             onClick={() => {
                                 setmodal(false);
                             }}
-                        />
-                    </span>
-                    {children}
-                </div>
+                        >
+                            <MdClear />
+                        </span>
+                        {children}
+                    </div>
+                </CSSTransition>
             </div>
         </CSSTransition>
+    );
+}
+
+export function ModalInput({ header, type, name, value, plh, onChange }) {
+    return (
+        <div className="modal_input_feild">
+            <h4>{header}</h4>
+            <input
+                type={type}
+                name={name}
+                value={value}
+                placeholder={plh}
+                onChange={onChange}
+                style={{ borderColor: `${value ? "#dc143c" : "grey"}` }}
+            />
+        </div>
     );
 }
