@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
+import { ProfilePic } from "../../../utils/CustomComponents";
 
 function User() {
     const { userlocal } = useContext(UserContext);
@@ -7,13 +8,7 @@ function User() {
         <div>
             {userlocal && (
                 <div className="user-details">
-                    <div className="profilePic">
-                        {userlocal.profilePic ? (
-                            <img src={userlocal.profilePic} alt="profile" />
-                        ) : (
-                            <div className="alt">{userlocal.displayName[0]}</div>
-                        )}
-                    </div>
+                    <ProfilePic img={userlocal.profilePic} d_n={userlocal.displayName[0]} />
                     <div className="user-display-name">{userlocal.displayName}</div>
                     <div className="user-email">{userlocal.email}</div>
                     <div className="user-online-status">

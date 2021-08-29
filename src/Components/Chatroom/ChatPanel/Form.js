@@ -3,7 +3,7 @@ import { UserContext } from "../../../utils/Contexts";
 import firebase, { auth, firestore } from "../../../utils/firebase";
 function Form() {
     const [text, setText] = useState("");
-    const { user } = useContext(UserContext);
+    const { userlocal } = useContext(UserContext);
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
@@ -12,8 +12,8 @@ function Form() {
                 text,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 uid: auth.currentUser.uid,
-                profilePhoto: auth.currentUser.photoURL || user.profilePic,
-                sender: user.displayName,
+                profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
+                sender: userlocal.displayName,
             };
             await firestore.collection("messages").add(message);
             setText("");

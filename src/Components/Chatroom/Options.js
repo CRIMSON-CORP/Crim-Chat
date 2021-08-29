@@ -4,7 +4,7 @@ import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { LoaderContext, MobileNav, UserContext } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
-import { BorderedInput, Loader, Modal, useModal } from "../../utils/CustomComponents";
+import { BorderedInput, Loader, Modal, ProfilePic, useModal } from "../../utils/CustomComponents";
 import firebase, { firestore } from "../../utils/firebase";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
@@ -246,7 +246,7 @@ function UsersList({ users }) {
                     <div className="user-online-status">
                         <span className={`online-status ${user.onlineStatus}`}></span>
                     </div>
-                    <img src={user.profilePic} alt="" className="profile" />
+                    <ProfilePic img={user.profilePic} d_n={user.displayName} />
                 </div>
                 <div className="user">
                     <h5> {user.displayName}</h5>

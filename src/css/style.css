@@ -554,32 +554,6 @@ span.loader {
   font-family: "Gisha";
 }
 
-.tabs .user-details .profilePic {
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-}
-
-.tabs .user-details .profilePic img,
-.tabs .user-details .profilePic .alt {
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  -o-object-fit: cover;
-     object-fit: cover;
-  -o-object-position: center;
-     object-position: center;
-}
-
-.tabs .user-details .profilePic .alt {
-  font-size: 60px;
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-  background: #dc143c;
-  color: white;
-}
-
 .tabs .user-details .user-display-name {
   font-weight: bold;
   font-size: 2em;
@@ -1405,5 +1379,31 @@ span.loader {
     -ms-grid-columns: 100%;
         grid-template-columns: 100%;
   }
+}
+
+.profilePic {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+.profilePic img,
+.profilePic .alt {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.profilePic .alt {
+  font-size: 60px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  background: #dc143c;
+  color: white;
 }
 /*# sourceMappingURL=style.css.map */

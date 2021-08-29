@@ -134,3 +134,11 @@ export function BorderedInput({ type = "text", label, value, onChange, name, hea
         </div>
     );
 }
+
+export function ProfilePic({ img, d_n }) {
+    return (
+        <div className="profilePic">
+            {img ? <img src={img} alt="profile" /> : <div className="alt">{d_n[0]}</div>}
+        </div>
+    );
+}

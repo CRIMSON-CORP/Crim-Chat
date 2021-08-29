@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { firestore, auth } from "../../../utils/firebase";
+import { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { UserContext } from "../../../utils/Contexts";
@@ -79,18 +78,30 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
     const bubble = useRef();
     useEffect(() => {
         if (loaded) {
-            gsap.fromTo(
-                bubble.current,
-                {
-                    scale: 0.5,
-                    rotate: "-20deg",
-                    transformOrigin: messageOwner ? "80% 20%" : "20% 20%",
-                },
-                {
-                    scale: 1,
-                    rotate: "0deg",
-                }
-            );
+            if (text.length > 200) {
+                gsap.fromTo(
+                    bubble.current,
+                    {
+                        scale: 0.8,
+                        opacity: 0,
+                        y: 10,
+                    },
+                    { scale: 1, opacity: 1, y: 0, duration: 2, ease: "expo.out" }
+                );
+            } else {
+                gsap.fromTo(
+                    bubble.current,
+                    {
+                        scale: 0.5,
+                        rotate: messageOwner ? "20deg" : "-20deg",
+                        transformOrigin: messageOwner ? "80% 20%" : "20% 20%",
+                    },
+                    {
+                        scale: 1,
+                        rotate: "0deg",
+                    }
+                );
+            }
         }
     }, []);
     return (
