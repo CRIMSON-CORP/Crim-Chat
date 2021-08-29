@@ -462,6 +462,15 @@ span.loader {
   }
 }
 
+.hover {
+  -webkit-transition: 0.5s ease;
+  transition: 0.5s ease;
+}
+
+.hover:hover {
+  background: rgba(220, 20, 60, 0.1);
+}
+
 .tabs {
   display: -ms-grid;
   display: grid;
@@ -1050,7 +1059,6 @@ span.loader {
 
 .modal-custom .modal-content-custom {
   max-height: 90vh;
-  max-width: 500px;
   background: white;
   position: relative;
   -webkit-box-shadow: 0rem 0.5rem 1rem rgba(220, 20, 60, 0.301), 0px 1.5rem 3rem rgba(220, 20, 60, 0.1);
@@ -1059,6 +1067,7 @@ span.loader {
   border-radius: 10px;
   -webkit-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
+  overflow: auto;
 }
 
 .modal-custom .modal-content-custom .close {
@@ -1119,7 +1128,7 @@ span.loader {
 }
 
 .create-group h4 {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .create-group label.profile_icon {
@@ -1197,6 +1206,11 @@ span.loader {
           transform: scale(0.95);
 }
 
+.create-group label.profile_icon span.edit svg {
+  width: 18px;
+  height: 18px;
+}
+
 .create-group form {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1205,10 +1219,29 @@ span.loader {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+}
+
+.create-group form .form_grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(320px, 500px))[2];
+      grid-template-columns: repeat(2, minmax(320px, 500px));
   padding: 20px 0px;
   gap: 30px;
   width: 100%;
   min-width: 340px;
+  gap: 40px;
+}
+
+.create-group form .btn {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+
+.create-group .group_details {
+  display: -ms-grid;
+  display: grid;
+  gap: 20px;
 }
 
 .create-group .modal_input_feild input {
@@ -1272,5 +1305,105 @@ span.loader {
   opacity: 0;
   -webkit-transform: scale(0.8);
           transform: scale(0.8);
+}
+
+.bordered_input_box {
+  position: relative;
+  font-size: 1.2rem;
+}
+
+.bordered_input_box input {
+  padding: 14px 20px;
+  border: 3px solid grey;
+  border-radius: 10px;
+  outline: none;
+  width: 100%;
+}
+
+.bordered_input_box input:focus, .bordered_input_box input:valid {
+  border-color: #dc143c;
+}
+
+.bordered_input_box input:focus + .label,
+.bordered_input_box input:valid + .label {
+  top: -15px;
+  left: 10px;
+  color: #dc143c;
+  background-color: white;
+  font-size: 0.8rem;
+}
+
+.bordered_input_box .label {
+  left: 15px;
+  top: 10px;
+  position: absolute;
+  -webkit-transition: 0.3s ease-out, background 0s;
+  transition: 0.3s ease-out, background 0s;
+  padding: 5px 10px;
+  pointer-events: none;
+}
+
+.users_list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.users_list li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.users_list li img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.users_list li h6 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+}
+
+.users_list li .profilepic {
+  position: relative;
+}
+
+.users_list li .profilepic .user-online-status {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+
+.users_list li .user h5 {
+  margin-bottom: 0px;
+}
+
+.users_list li .user span {
+  font-size: 12px;
+}
+
+@media screen and (max-width: 900px) {
+  .create-group form .form_grid {
+    -ms-grid-columns: 100%;
+        grid-template-columns: 100%;
+  }
 }
 /*# sourceMappingURL=style.css.map */

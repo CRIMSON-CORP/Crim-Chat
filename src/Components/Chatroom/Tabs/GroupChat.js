@@ -6,24 +6,24 @@ function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
     useEffect(() => {
-        if (userlocal) {
+        if (userlocal.groups) {
             try {
-                userlocal.groups.forEach((group) => {
-                    firestore
-                        .collection("groups-register")
-                        .doc(`${group}`)
-                        .get()
-                        .then((gr) => {
-                            setGroupsdata((prev) => {
-                                return [...prev, gr.data()];
-                            });
+                var unsub = firestore
+                    .collection("groups-register")
+                    .where("group_id", "in", userlocal.groups)
+                    .onSnapshot(async (collection) => {
+                        var list = [];
+                        collection.forEach((data) => {
+                            list.push(data.data());
                         });
-                });
+                        setGroupsdata(list);
+                    });
             } catch (err) {
                 console.log(err);
             }
         }
-    }, [userlocal]);
+        return unsub;
+    }, [userlocal.groups]);
     return (
         <div className="groups">
             {userlocal && (

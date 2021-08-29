@@ -48,7 +48,7 @@ export async function AddUser(currentUser, username) {
                     uid: currentUser.uid,
                     typing: false,
                     groups: [],
-                    chats: [],
+                    notif: [],
                 });
         } else return;
     } catch (err) {

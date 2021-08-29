@@ -102,7 +102,7 @@ export function Modal({ children, state, setmodal, classTag, header }) {
 
 export function ModalInput({ header, type, name, value, plh, onChange }) {
     return (
-        <div className="modal_input_feild">
+        <div className="modal_input_field">
             <h4>{header}</h4>
             <input
                 type={type}
@@ -112,6 +112,25 @@ export function ModalInput({ header, type, name, value, plh, onChange }) {
                 onChange={onChange}
                 style={{ borderColor: `${value ? "#dc143c" : "grey"}` }}
             />
+        </div>
+    );
+}
+
+export function BorderedInput({ type = "text", label, value, onChange, name, header, req = true }) {
+    return (
+        <div className="bordered_input_field">
+            <h4>{header}</h4>
+            <div className="bordered_input_box">
+                <input
+                    name={name}
+                    id={name}
+                    type={type}
+                    value={value}
+                    onChange={onChange}
+                    required={req}
+                />
+                <span className="label">{label}</span>
+            </div>
         </div>
     );
 }

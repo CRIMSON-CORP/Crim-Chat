@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore, auth } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
+import { UserContext } from "../../../utils/Contexts";
 function Messages() {
     const ref = firestore.collection("messages");
     const messageRef = ref.orderBy("createdAt").limit(25);
@@ -34,10 +35,10 @@ function Messages() {
 export default Messages;
 
 function Message({ message, loaded }) {
-    const [user] = useAuthState(auth);
+    const { userlocal } = useContext(UserContext);
     let messageOwner;
-    if (message) {
-        messageOwner = message.uid === user.uid;
+    if (message.uid) {
+        messageOwner = message.uid === userlocal.uid;
     }
     const messageRef = useRef();
     useEffect(() => {

@@ -15,7 +15,6 @@
     }
     .modal-content-custom {
         max-height: 90vh;
-        max-width: 500px;
         background: white;
         position: relative;
         box-shadow: 0rem 0.5rem 1rem rgba(220, 20, 60, 0.301),
@@ -23,6 +22,7 @@
         padding: 20px;
         border-radius: 10px;
         transition: 0.3s ease-out;
+        overflow: auto;
 
         .close {
             position: absolute;
@@ -78,7 +78,7 @@
         display: none;
     }
     h4 {
-        margin-bottom: 10px;
+        margin-bottom: 16px;
     }
     label.profile_icon {
         width: 100px;
@@ -135,16 +135,33 @@
             &:active {
                 transform: scale(0.95);
             }
+            svg {
+                width: 18px;
+                height: 18px;
+            }
         }
     }
 
     form {
         display: flex;
         flex-direction: column;
-        padding: 20px 0px;
-        gap: 30px;
-        width: 100%;
-        min-width: 340px;
+        .form_grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(320px, 500px));
+            padding: 20px 0px;
+            gap: 30px;
+            width: 100%;
+            min-width: 340px;
+            gap: 40px;
+        }
+
+        .btn {
+            align-self: flex-end;
+        }
+    }
+    .group_details {
+        display: grid;
+        gap: 20px;
     }
 
     .modal_input_feild {
@@ -198,4 +215,88 @@
 .profile_icon_switch_svg-exit-active {
     opacity: 0;
     transform: scale(0.8);
+}
+
+.bordered_input_box {
+    position: relative;
+    font-size: 1.2rem;
+    input {
+        padding: 14px 20px;
+        border: 3px solid grey;
+        border-radius: 10px;
+        outline: none;
+        width: 100%;
+        &:focus,
+        &:valid {
+            border-color: $main;
+        }
+        &:focus + .label,
+        &:valid + .label {
+            top: -15px;
+            left: 10px;
+            color: $main;
+            background-color: white;
+            font-size: 0.8rem;
+        }
+    }
+    .label {
+        left: 15px;
+        top: 10px;
+        position: absolute;
+        transition: 0.3s ease-out, background 0s;
+        padding: 5px 10px;
+        pointer-events: none;
+    }
+}
+
+.users_list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    li {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 10px;
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: contain;
+            object-position: center;
+        }
+        h6 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profilepic {
+            position: relative;
+            .user-online-status {
+                position: absolute;
+                top: 3px;
+                left: 3px;
+            }
+        }
+        .user {
+            h5 {
+                margin-bottom: 0px;
+            }
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .create-group {
+        form {
+            .form_grid {
+                grid-template-columns: 100%;
+            }
+        }
+    }
 }
