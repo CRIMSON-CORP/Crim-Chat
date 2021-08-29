@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
-import { FaEllipsisH, FaSignOutAlt, FaUserFriends, MdAdd, MdDehaze } from "react-icons/all";
+import { FaEllipsisH, FaSignOutAlt, FaUserFriends, MdAdd, MdDehaze, MdEdit } from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
-import { MobileNav } from "../../utils/Contexts";
+import { LoaderContext, MobileNav } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
-import { Modal, ModalInput, useModal } from "../../utils/CustomComponents";
+import { Loader, Modal, ModalInput, useModal } from "../../utils/CustomComponents";
+import firebase from "../../utils/firebase";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
@@ -45,7 +46,12 @@ function Options() {
                     </CSSTransition>
                 </OnOutsiceClick>
             </div>
-            <Modal state={createGroupModal} setmodal={setCreateGroupModal} classTag="create-group">
+            <Modal
+                header="Create a new Group"
+                state={createGroupModal}
+                setmodal={setCreateGroupModal}
+                classTag="create-group"
+            >
                 <CreateGroupModalUI />
             </Modal>
         </div>
@@ -71,28 +77,80 @@ function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
 }
 
 function CreateGroupModalUI() {
+    const { setLoading } = useContext(LoaderContext);
     const [groupDetails, setGroupDetails] = useState({
         profile_icon: "",
         name: "",
         descript: "",
     });
+    const [setImageLoader, setSetImageLoader] = useState(false);
+
+    async function setImage(e) {
+        const image = e.target.files[0];
+        setSetImageLoader(true);
+        try {
+            const ref = firebase.storage().ref("groups_profile_pic");
+            await ref.put(image);
+            const url = await ref.getDownloadURL();
+            setGroupDetails((prev) => {
+                return { ...prev, profile_icon: url };
+            });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setSetImageLoader(false);
+        }
+    }
+
+    function submit(e) {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            console.log("Hey");
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <>
-            <div className="modal-head">
-                <h3>Create a new Group</h3>
-            </div>
             <div className="form">
-                <form>
+                <form onSubmit={submit}>
                     <div className="profile_icon">
-                        <h4>Group Profile Icon</h4>
+                        <h4 style={{ marginBottom: 20 }}>Group Profile Icon</h4>
                         <input
                             type="file"
                             name="group-profile-icon"
                             accept="image/png, image/jpeg,image/jpg, image/JPEG, image/webpg"
                             id="profile-icon"
+                            onChange={setImage}
                         />
                         <label htmlFor="profile-icon" className="profile_icon">
-                            <FaUserFriends />
+                            <div className="cover">
+                                <CSSTransition
+                                    in={groupDetails.profile_icon != ""}
+                                    unmountOnExit
+                                    timeout={400}
+                                    classNames="profile_icon_switch_img"
+                                >
+                                    <img src={groupDetails.profile_icon} alt="profile icon" />
+                                </CSSTransition>
+                                <CSSTransition
+                                    in={groupDetails.profile_icon == ""}
+                                    unmountOnExit
+                                    timeout={400}
+                                    classNames="profile_icon_switch_svg"
+                                >
+                                    <span className="profile_icon_placeholder">
+                                        <FaUserFriends size={40} />
+                                    </span>
+                                </CSSTransition>
+                                {setImageLoader && <Loader />}
+                            </div>
+                            <span className="edit">
+                                <MdEdit />
+                            </span>
                         </label>
                     </div>
                     <div className="group_name">
@@ -116,7 +174,7 @@ function CreateGroupModalUI() {
                             name="group_description"
                             onChange={(e) => {
                                 setGroupDetails((prev) => {
-                                    return { ...prev, description: e.target.value };
+                                    return { ...prev, descript: e.target.value };
                                 });
                             }}
                             plh="Description"

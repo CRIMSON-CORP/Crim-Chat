@@ -64,7 +64,7 @@ export function useModal() {
 
     return [toggle, setModalState];
 }
-export function Modal({ children, state, setmodal, classTag }) {
+export function Modal({ children, state, setmodal, classTag, header }) {
     return (
         <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
             <div className="modal-custom">
@@ -89,6 +89,9 @@ export function Modal({ children, state, setmodal, classTag }) {
                         >
                             <MdClear />
                         </span>
+                        <div className="modal-head">
+                            <h3>{header}</h3>
+                        </div>
                         {children}
                     </div>
                 </CSSTransition>

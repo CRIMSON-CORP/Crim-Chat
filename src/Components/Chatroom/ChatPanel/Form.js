@@ -24,7 +24,7 @@ function Form() {
     }
     function handleChange(txt) {
         textarea.current.style.height = "inherit";
-        textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+        textarea.current.style.height = `${textarea.current.scrollHeight - 10}px`;
 
         setText(txt);
     }
