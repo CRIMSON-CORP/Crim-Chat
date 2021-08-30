@@ -1,11 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import { FaEllipsisH, FaSignOutAlt, FaUserFriends, MdAdd, MdDehaze, MdEdit } from "react-icons/all";
+import {
+    BiUserPlus,
+    FaEllipsisH,
+    FaSignOutAlt,
+    FaUserFriends,
+    MdAdd,
+    MdDehaze,
+    MdEdit,
+} from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { LoaderContext, MobileNav, UserContext } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
 import { BorderedInput, Loader, Modal, ProfilePic, useModal } from "../../utils/CustomComponents";
 import firebase, { firestore } from "../../utils/firebase";
+import { ImageTypes } from "../../utils/utils";
+import { v4 } from "uuid";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
@@ -35,11 +45,18 @@ function Options() {
                                 sufIcon={<MdAdd />}
                                 onClickExe={() => {
                                     setCreateGroupModal(true);
+                                    setOptionsToggle(false);
                                 }}
                             >
                                 Create Group
                             </OptionsDropDownItem>
-                            <OptionsDropDownItem sufIcon={<FaSignOutAlt />} onClickExe={signOut}>
+                            <OptionsDropDownItem
+                                sufIcon={<FaSignOutAlt />}
+                                onClickExe={() => {
+                                    signOut();
+                                    setOptionsToggle(false);
+                                }}
+                            >
                                 Sign out
                             </OptionsDropDownItem>
                         </OptionsDropDown>
@@ -83,11 +100,17 @@ function CreateGroupModalUI() {
         name: "",
         descript: "",
     });
+
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [setImageLoader, setSetImageLoader] = useState(false);
 
+    const {
+        userlocal: { displayName, uid },
+    } = useContext(UserContext);
     async function setImage(e) {
         const image = e.target.files[0];
         setSetImageLoader(true);
+        if (!ImageTypes.includes(image.type)) return;
         try {
             const ref = firebase.storage().ref("groups_profile_pic");
             await ref.put(image);
@@ -102,11 +125,52 @@ function CreateGroupModalUI() {
         }
     }
 
-    function submit(e) {
+    async function submit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            console.log("Hey");
+            const id = v4();
+            const notifid = v4();
+            await firestore
+                .collection("groups-register")
+                .doc(id)
+                .add({
+                    group_createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    group_creator: displayName,
+                    group_description: groupDetails.descript,
+                    group_id: id,
+                    group_name: groupDetails.name,
+                    group_profilePic: groupDetails.profile_icon,
+                    group_members: [uid],
+                });
+            await firestore
+                .collection("users")
+                .doc(uid)
+                .update({
+                    groups: firebase.firestore.FieldValue.arrayUnion(id),
+                });
+            if (selectedUsers.length !== 0) {
+                selectedUsers.forEach(async (user) => {
+                    await firestore
+                        .collection("users")
+                        .doc(user)
+                        .collection("notif")
+                        .doc(notifid)
+                        .set({
+                            notif_id: v4(),
+                            sender: displayName,
+                            type: "invite",
+                            group_id: id,
+                            sender_id: uid,
+                        });
+                });
+                await firestore.collection("groups-register").doc(id).collection("messages").add({
+                    type: "bubble",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    uid: uid,
+                    tag: "invite_sent",
+                });
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -169,6 +233,7 @@ function CreateGroupModalUI() {
                                     }}
                                     value={groupDetails.name}
                                     label="name"
+                                    req={true}
                                 />
                             </div>
                             <div className="group_descript">
@@ -186,17 +251,19 @@ function CreateGroupModalUI() {
                             </div>
                         </div>
                         <div className="add_users">
-                            <InviteUsers />
+                            <InviteUsers selected={selectedUsers} setSelected={setSelectedUsers} />
                         </div>
                     </div>
-                    <button className="btn btn-fill">Create Group</button>
+                    <button type="submit" className="btn btn-fill">
+                        Create Group
+                    </button>
                 </form>
             </div>
         </>
     );
 }
 
-function InviteUsers() {
+function InviteUsers({ selected, setSelected }) {
     const [users, setUsers] = useState([]);
     useEffect(() => {
         firestore
@@ -228,20 +295,32 @@ function InviteUsers() {
                 label="Search for Friends..."
                 name="search_for_friends"
                 onChange={search}
+                req={false}
             />
-            <UsersList users={users} />
+            <h6 style={{ marginTop: 20 }}>{selected.length} Users Invited</h6>
+            <UsersList users={users} selected={selected} setSelected={setSelected} />
         </div>
     );
 }
 
-function UsersList({ users }) {
+function UsersList({ users, selected, setSelected }) {
     const {
         userlocal: { uid },
     } = useContext(UserContext);
     const usersRefined = users.map((user) => user.data()).filter((user) => user.uid != uid);
     const usersJSX = usersRefined.map((user) => {
         return (
-            <li className="user hover" key={user.uid}>
+            <li
+                className="user hover mb-20"
+                key={user.uid}
+                onClick={() => {
+                    if (selected.includes(uid)) {
+                        setSelected(selected.filter((id) => id !== uid));
+                    } else {
+                        setSelected([...selected, uid]);
+                    }
+                }}
+            >
                 <div className="profilepic">
                     <div className="user-online-status">
                         <span className={`online-status ${user.onlineStatus}`}></span>
@@ -251,6 +330,9 @@ function UsersList({ users }) {
                 <div className="user">
                     <h5> {user.displayName}</h5>
                     <span>{user.email}</span>
+                </div>
+                <div className={`add_user ${selected.includes(uid) ? "added" : ""}`}>
+                    <BiUserPlus title="Add this User to this group" />
                 </div>
             </li>
         );

@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
-import { UserContext } from "../../../utils/Contexts";
+import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
     useEffect(() => {
-        if (userlocal.groups) {
+        if (userlocal.groups.length !== 0) {
             try {
                 var unsub = firestore
                     .collection("groups-register")
@@ -49,8 +49,14 @@ function GroupChat() {
 export default GroupChat;
 
 function GroupComponent({ group }) {
+    const { setSelectedChat } = useContext(SelectedChatContext);
     return (
-        <div className="group">
+        <div
+            className="group"
+            onClick={() => {
+                setSelectedChat(group.id);
+            }}
+        >
             <div className="group_profilePic">
                 {group.profilePic ? <img src={group.profilePic} /> : <FaUserFriends size="2em" />}
             </div>

@@ -80,7 +80,7 @@ export function Modal({ children, state, setmodal, classTag, header }) {
                     classNames="modal-content-anim"
                     timeout={400}
                 >
-                    <div className={`modal-content-custom ${classTag}`}>
+                    <div className={`modal-content-custom ${classTag} scroll`}>
                         <span
                             className="close"
                             onClick={() => {
@@ -117,17 +117,28 @@ export function ModalInput({ header, type, name, value, plh, onChange }) {
 }
 
 export function BorderedInput({ type = "text", label, value, onChange, name, header, req = true }) {
+    const [valid, setValid] = useState(false);
     return (
         <div className="bordered_input_field">
             <h4>{header}</h4>
-            <div className="bordered_input_box">
+            <div className={`bordered_input_box ${valid && "valid"}`}>
                 <input
                     name={name}
                     id={name}
                     type={type}
                     value={value}
                     onChange={onChange}
+                    onKeyUp={() => {
+                        value == "" ? setValid(false) : setValid(true);
+                    }}
                     required={req}
+                    autoComplete={"off"}
+                    onFocus={() => {
+                        setValid(true);
+                    }}
+                    onBlur={() => {
+                        !value && setValid(false);
+                    }}
                 />
                 <span className="label">{label}</span>
             </div>

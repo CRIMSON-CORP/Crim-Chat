@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
-import { UserContext } from "../../../utils/Contexts";
+import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import $ from "jquery";
 function Messages() {
-    const ref = firestore.collection("messages");
-    const messageRef = ref.orderBy("createdAt").limit(25);
-    const [messages] = useCollectionData(messageRef, { idField: "id" });
+    const { selectedChat } = useContext(SelectedChatContext);
     const messageBoxRef = useRef();
     const [loaded, setLoaded] = useState(false);
+    const [messages, setMessages] = useState([]);
     const dummy = useRef();
     useEffect(() => {
         if (messages && !loaded) {
@@ -21,12 +20,36 @@ function Messages() {
         loaded && dummy.current.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    useEffect(() => {
+        $.isEmptyObject(selectedChat) &&
+            firestore
+                .collection("groupd-register")
+                .doc(selectedChat)
+                .collection("messages")
+                .orderBy("createdAt")
+                .limit(25)
+                .onSnapshot((docs) => {
+                    const list = [];
+                    docs.forEach((doc) => {
+                        list.push(doc.data());
+                    });
+                    setMessages(list);
+                });
+    }, [selectedChat]);
+
     return (
-        <div className="messages" ref={messageBoxRef}>
-            {messages &&
-                messages.map((message, index) => (
-                    <Message key={index} message={message} loaded={loaded} />
-                ))}
+        <div className="messages scroll" ref={messageBoxRef}>
+            {messages ? (
+                messages.map((message, index) =>
+                    message.type === "message" ? (
+                        <Message key={index} message={message} loaded={loaded} />
+                    ) : (
+                        <InfoBubble key={index} message={message} />
+                    )
+                )
+            ) : (
+                <h4>Select a Group to Se messages</h4>
+            )}
             <div ref={dummy}></div>
         </div>
     );
@@ -113,4 +136,24 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
             <div className="timestamp">{time}</div>
         </div>
     );
+}
+
+function InfoBubble({ message }) {
+    const {
+        userlocal: { uid },
+    } = useContext(UserContext);
+    const messageOwner = message.uid === uid;
+    const [display_name, setDisplay_name] = useState();
+    let bubble;
+    useEffect(() => {
+        firestore
+            .collection("users")
+            .doc(message.uid)
+            .get((data) => setDisplay_name(data));
+    }, []);
+    switch (message.tag) {
+        case "invite_sent":
+            bubble = `${messageOwner ? "You" : message.sender} invited ${display_name}`;
+    }
+    return <div className="info_bubble">{bubble}</div>;
 }

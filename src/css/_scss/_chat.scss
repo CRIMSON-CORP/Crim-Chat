@@ -164,3 +164,14 @@
 .no_groups {
     font-size: 18px;
 }
+
+.scroll {
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: $main;
+        opacity: 0.5;
+    }
+}

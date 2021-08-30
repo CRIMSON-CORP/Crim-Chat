@@ -41,7 +41,8 @@ function App() {
         return async () => {
             auth.currentUser &&
                 (await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline"),
-                await auth.signOut());
+                await auth.signOut(),
+                localStorage.clear());
         };
     }, []);
     return (

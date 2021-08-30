@@ -89,16 +89,20 @@
         position: relative;
         cursor: pointer;
         .cover {
-            background: $main;
             overflow: hidden;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            background: white;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
         }
         img,
         .profile_icon_placeholder {
-            object-fit: cover;
-            object-position: center;
+            border-radius: 50%;
             position: absolute;
             inset: 0;
             display: inline-grid;
@@ -108,6 +112,9 @@
                 width: auto;
                 height: auto;
             }
+        }
+        .profile_icon_placeholder {
+            background: $main;
         }
         .loader-container {
             border-radius: 50%;
@@ -226,18 +233,6 @@
         border-radius: 10px;
         outline: none;
         width: 100%;
-        &:focus,
-        &:valid {
-            border-color: $main;
-        }
-        &:focus + .label,
-        &:valid + .label {
-            top: -15px;
-            left: 10px;
-            color: $main;
-            background-color: white;
-            font-size: 0.8rem;
-        }
     }
     .label {
         left: 15px;
@@ -247,6 +242,18 @@
         padding: 5px 10px;
         pointer-events: none;
     }
+    &.valid {
+        input {
+            border-color: $main;
+        }
+        .label {
+            top: -15px;
+            left: 10px;
+            color: $main;
+            background-color: white;
+            font-size: 0.8rem;
+        }
+    }
 }
 
 .users_list {
@@ -254,12 +261,13 @@
     padding: 0;
     margin-top: 20px;
     li {
-        display: flex;
+        display: grid;
+        grid-template-columns: 50px auto 50px;
         gap: 20px;
         align-items: center;
-        cursor: pointer;
         padding: 10px;
         border-radius: 10px;
+        cursor: pointer;
         img {
             width: 50px;
             height: 50px;
@@ -279,6 +287,16 @@
                 top: 3px;
                 left: 3px;
             }
+
+            .profilePic {
+                width: 50px;
+                height: 50px;
+                .alt {
+                    font-size: 24px;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
         .user {
             h5 {
@@ -286,6 +304,24 @@
             }
             span {
                 font-size: 12px;
+            }
+        }
+
+        svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .add_user {
+            padding: 10px;
+            border-radius: 50%;
+            transition: 0.5s ease-out;
+            &.added {
+                background: rgba(0, 163, 54, 0.582);
+                svg {
+                    transition: 0.5s ease-out;
+                    color: white;
+                }
             }
         }
     }

@@ -8,7 +8,7 @@ function User() {
         <div>
             {userlocal && (
                 <div className="user-details">
-                    <ProfilePic img={userlocal.profilePic} d_n={userlocal.displayName[0]} />
+                    <ProfilePic img={userlocal.profilePic} d_n={userlocal.displayName} />
                     <div className="user-display-name">{userlocal.displayName}</div>
                     <div className="user-email">{userlocal.email}</div>
                     <div className="user-online-status">

@@ -14,6 +14,7 @@ function Form() {
                 uid: auth.currentUser.uid,
                 profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
                 sender: userlocal.displayName,
+                type: "mesage",
             };
             await firestore.collection("messages").add(message);
             setText("");

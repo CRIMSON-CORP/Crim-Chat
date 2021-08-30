@@ -471,6 +471,32 @@ span.loader {
   background: rgba(220, 20, 60, 0.1);
 }
 
+.profilePic {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+.profilePic img,
+.profilePic .alt {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.profilePic .alt {
+  font-size: 60px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  background: #dc143c;
+  color: white;
+}
+
 .tabs {
   display: -ms-grid;
   display: grid;
@@ -944,6 +970,16 @@ span.loader {
   font-size: 18px;
 }
 
+.scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #dc143c;
+  opacity: 0.5;
+}
+
 .fade-enter {
   opacity: 0;
   -webkit-transform: translateY(10px) translate(-110%);
@@ -1117,19 +1153,24 @@ span.loader {
 }
 
 .create-group label.profile_icon .cover {
-  background: #dc143c;
   overflow: hidden;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  background: white;
 }
 
-.create-group label.profile_icon img,
-.create-group label.profile_icon .profile_icon_placeholder {
+.create-group label.profile_icon .cover img {
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
+}
+
+.create-group label.profile_icon img,
+.create-group label.profile_icon .profile_icon_placeholder {
+  border-radius: 50%;
   position: absolute;
   inset: 0;
   display: -ms-inline-grid;
@@ -1143,6 +1184,10 @@ span.loader {
 .create-group label.profile_icon .profile_icon_placeholder svg {
   width: auto;
   height: auto;
+}
+
+.create-group label.profile_icon .profile_icon_placeholder {
+  background: #dc143c;
 }
 
 .create-group label.profile_icon .loader-container {
@@ -1294,19 +1339,6 @@ span.loader {
   width: 100%;
 }
 
-.bordered_input_box input:focus, .bordered_input_box input:valid {
-  border-color: #dc143c;
-}
-
-.bordered_input_box input:focus + .label,
-.bordered_input_box input:valid + .label {
-  top: -15px;
-  left: 10px;
-  color: #dc143c;
-  background-color: white;
-  font-size: 0.8rem;
-}
-
 .bordered_input_box .label {
   left: 15px;
   top: 10px;
@@ -1317,6 +1349,18 @@ span.loader {
   pointer-events: none;
 }
 
+.bordered_input_box.valid input {
+  border-color: #dc143c;
+}
+
+.bordered_input_box.valid .label {
+  top: -15px;
+  left: 10px;
+  color: #dc143c;
+  background-color: white;
+  font-size: 0.8rem;
+}
+
 .users_list {
   list-style: none;
   padding: 0;
@@ -1324,16 +1368,17 @@ span.loader {
 }
 
 .users_list li {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 50px auto 50px;
+      grid-template-columns: 50px auto 50px;
   gap: 20px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  cursor: pointer;
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .users_list li img {
@@ -1366,6 +1411,17 @@ span.loader {
   left: 3px;
 }
 
+.users_list li .profilepic .profilePic {
+  width: 50px;
+  height: 50px;
+}
+
+.users_list li .profilepic .profilePic .alt {
+  font-size: 24px;
+  width: 100%;
+  height: 100%;
+}
+
 .users_list li .user h5 {
   margin-bottom: 0px;
 }
@@ -1374,36 +1430,32 @@ span.loader {
   font-size: 12px;
 }
 
+.users_list li svg {
+  width: 30px;
+  height: 30px;
+}
+
+.users_list li .add_user {
+  padding: 10px;
+  border-radius: 50%;
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+}
+
+.users_list li .add_user.added {
+  background: rgba(0, 163, 54, 0.582);
+}
+
+.users_list li .add_user.added svg {
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+  color: white;
+}
+
 @media screen and (max-width: 900px) {
   .create-group form .form_grid {
     -ms-grid-columns: 100%;
         grid-template-columns: 100%;
   }
-}
-
-.profilePic {
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-}
-
-.profilePic img,
-.profilePic .alt {
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  -o-object-fit: cover;
-     object-fit: cover;
-  -o-object-position: center;
-     object-position: center;
-}
-
-.profilePic .alt {
-  font-size: 60px;
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-  background: #dc143c;
-  color: white;
 }
 /*# sourceMappingURL=style.css.map */
