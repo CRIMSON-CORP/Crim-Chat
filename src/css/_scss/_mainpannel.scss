@@ -58,8 +58,8 @@
             align-items: center;
             padding: 10px;
             gap: 10px;
-            transition: 0.5s ease;
             border-radius: 10px;
+            cursor: pointer;
             .group_profilePic {
                 width: 45px;
                 height: 45px;
@@ -77,9 +77,6 @@
                 font-family: $Gisha;
                 color: black;
                 margin: 0;
-            }
-            &:hover {
-                background: $main_faint;
             }
         }
     }

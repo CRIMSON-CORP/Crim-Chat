@@ -3,7 +3,6 @@ import { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
-import $ from "jquery";
 function Messages() {
     const { selectedChat } = useContext(SelectedChatContext);
     const messageBoxRef = useRef();
@@ -21,25 +20,28 @@ function Messages() {
     }, [messages]);
 
     useEffect(() => {
-        $.isEmptyObject(selectedChat) &&
+        selectedChat &&
             firestore
-                .collection("groupd-register")
+                .collection("groups-register")
                 .doc(selectedChat)
                 .collection("messages")
                 .orderBy("createdAt")
                 .limit(25)
                 .onSnapshot((docs) => {
+                    setLoaded(false);
                     const list = [];
                     docs.forEach((doc) => {
                         list.push(doc.data());
                     });
                     setMessages(list);
+                    setLoaded(true);
                 });
     }, [selectedChat]);
 
     return (
         <div className="messages scroll" ref={messageBoxRef}>
-            {messages ? (
+            {selectedChat ? (
+                messages &&
                 messages.map((message, index) =>
                     message.type === "message" ? (
                         <Message key={index} message={message} loaded={loaded} />
@@ -48,8 +50,9 @@ function Messages() {
                     )
                 )
             ) : (
-                <h4>Select a Group to Se messages</h4>
+                <h1>Select a Chat to see messages</h1>
             )}
+            {}
             <div ref={dummy}></div>
         </div>
     );

@@ -1,9 +1,10 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
-import { UserContext } from "../../../utils/Contexts";
+import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import firebase, { auth, firestore } from "../../../utils/firebase";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
+    const { selectedChat } = useContext(SelectedChatContext);
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
@@ -14,9 +15,13 @@ function Form() {
                 uid: auth.currentUser.uid,
                 profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
                 sender: userlocal.displayName,
-                type: "mesage",
+                type: "message",
             };
-            await firestore.collection("messages").add(message);
+            await firestore
+                .collection("groups-register")
+                .doc(selectedChat)
+                .collection("messages")
+                .add(message);
             setText("");
             textarea.current.style.height = "30px";
         } catch (err) {

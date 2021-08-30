@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
-import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import { MobileNav, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
@@ -50,11 +50,13 @@ export default GroupChat;
 
 function GroupComponent({ group }) {
     const { setSelectedChat } = useContext(SelectedChatContext);
+    const { setMobileNav } = useContext(MobileNav);
     return (
         <div
-            className="group"
+            className="group hover"
             onClick={() => {
-                setSelectedChat(group.id);
+                setSelectedChat(group.group_id);
+                setMobileNav(false);
             }}
         >
             <div className="group_profilePic">

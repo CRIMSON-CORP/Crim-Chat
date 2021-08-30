@@ -5,7 +5,7 @@ import { useState } from "react";
 import { MobileNav, SelectedChatContext } from "../../utils/Contexts";
 function ChatRoom() {
     const [mobileNav, setMobileNav] = useState(false);
-    const [selectedChat, setSelectedChat] = useState({});
+    const [selectedChat, setSelectedChat] = useState("");
     return (
         <div className="dashboard">
             <MobileNav.Provider value={{ mobileNav, setMobileNav }}>
