@@ -15,6 +15,7 @@ export async function signOut() {
     if (auth.currentUser) {
         try {
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+            localStorage.clear();
             await auth.signOut();
             return null;
         } catch (err) {

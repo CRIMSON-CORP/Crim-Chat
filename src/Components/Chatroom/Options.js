@@ -10,7 +10,7 @@ import {
 } from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
-import { LoaderContext, MobileNav, UserContext } from "../../utils/Contexts";
+import { LoaderContext, MobileNav, SelectedChatContext, UserContext } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
 import { BorderedInput, Loader, Modal, ProfilePic, useModal } from "../../utils/CustomComponents";
 import firebase, { firestore } from "../../utils/firebase";
@@ -69,7 +69,7 @@ function Options() {
                 setmodal={setCreateGroupModal}
                 classTag="create-group"
             >
-                <CreateGroupModalUI />
+                <CreateGroupModalUI setmodal={setCreateGroupModal} />
             </Modal>
         </div>
     );
@@ -93,7 +93,7 @@ function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
     );
 }
 
-function CreateGroupModalUI() {
+function CreateGroupModalUI({ setmodal }) {
     const { setLoading } = useContext(LoaderContext);
     const [groupDetails, setGroupDetails] = useState({
         profile_icon: "",
@@ -107,6 +107,8 @@ function CreateGroupModalUI() {
     const {
         userlocal: { displayName, uid },
     } = useContext(UserContext);
+
+    const { setSelectedChat } = useContext(SelectedChatContext);
     async function setImage(e) {
         const image = e.target.files[0];
         setSetImageLoader(true);
@@ -131,10 +133,11 @@ function CreateGroupModalUI() {
         try {
             const id = v4();
             const notifid = v4();
+            // Adds new group to the register
             await firestore
                 .collection("groups-register")
                 .doc(id)
-                .add({
+                .set({
                     group_createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     group_creator: displayName,
                     group_description: groupDetails.descript,
@@ -143,14 +146,24 @@ function CreateGroupModalUI() {
                     group_profilePic: groupDetails.profile_icon,
                     group_members: [uid],
                 });
+            // Adds new group to user's list of groups
             await firestore
                 .collection("users")
                 .doc(uid)
                 .update({
                     groups: firebase.firestore.FieldValue.arrayUnion(id),
                 });
+            // Send Bubble that user has created the group
+            await firestore.collection("groups-register").doc(id).collection("messages").add({
+                type: "bubble",
+                tag: "group_created",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                uid: uid,
+            });
             if (selectedUsers.length !== 0) {
                 selectedUsers.forEach(async (user) => {
+                    // Send notifications to added users
+                    console.log(user);
                     await firestore
                         .collection("users")
                         .doc(user)
@@ -163,14 +176,22 @@ function CreateGroupModalUI() {
                             group_id: id,
                             sender_id: uid,
                         });
-                });
-                await firestore.collection("groups-register").doc(id).collection("messages").add({
-                    type: "bubble",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    uid: uid,
-                    tag: "invite_sent",
+                    // Adds Bubble for each invited user
+                    await firestore
+                        .collection("groups-register")
+                        .doc(id)
+                        .collection("messages")
+                        .add({
+                            type: "bubble",
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            uid: uid,
+                            tag: "invite_sent",
+                            invitee_id: user,
+                        });
                 });
             }
+            setSelectedChat(id);
+            setmodal(false);
         } catch (error) {
             console.log(error);
         } finally {
@@ -314,10 +335,10 @@ function UsersList({ users, selected, setSelected }) {
                 className="user hover mb-20"
                 key={user.uid}
                 onClick={() => {
-                    if (selected.includes(uid)) {
-                        setSelected(selected.filter((id) => id !== uid));
+                    if (selected.includes(user.uid)) {
+                        setSelected(selected.filter((id) => id !== user.uid));
                     } else {
-                        setSelected([...selected, uid]);
+                        setSelected([...selected, user.uid]);
                     }
                 }}
             >
@@ -331,7 +352,7 @@ function UsersList({ users, selected, setSelected }) {
                     <h5> {user.displayName}</h5>
                     <span>{user.email}</span>
                 </div>
-                <div className={`add_user ${selected.includes(uid) ? "added" : ""}`}>
+                <div className={`add_user ${selected.includes(user.uid) ? "added" : ""}`}>
                     <BiUserPlus title="Add this User to this group" />
                 </div>
             </li>

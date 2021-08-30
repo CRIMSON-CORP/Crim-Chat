@@ -61,7 +61,6 @@
 
     .messages {
         padding: 10px;
-        padding-top: 50px;
         padding-bottom: 0;
         display: flex;
         gap: 20px;
@@ -174,4 +173,53 @@
         background: $main;
         opacity: 0.5;
     }
+}
+
+.info_bubble {
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.801);
+    box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+}
+
+.messages_header {
+    position: sticky;
+    top: 0px;
+    right: 10px;
+    left: 10px;
+    display: grid;
+    grid-template-columns: auto 50px;
+    gap: 20px;
+    z-index: 100;
+    .head {
+        background: white;
+        border-radius: 10px;
+        display: grid;
+        grid-template-columns: 35px auto;
+        gap: 20px;
+        padding: 10px;
+        box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+        height: 55px;
+        align-items: center;
+    }
+    .messages_options {
+        border-radius: 50%;
+        height: 50px;
+        padding: 5px;
+        background: white;
+        box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+}
+
+.no-chat-selected {
+    position: absolute;
+    inset: 10px;
+    display: grid;
+    place-items: center;
 }

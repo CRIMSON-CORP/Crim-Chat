@@ -60,17 +60,7 @@
             gap: 10px;
             border-radius: 10px;
             cursor: pointer;
-            .group_profilePic {
-                width: 45px;
-                height: 45px;
-                border-radius: 50%;
-                display: grid;
-                place-items: center;
-                color: white;
-                background: $main;
-                object-fit: cover;
-                object-position: center;
-            }
+
             .group_name {
                 font-size: 18px;
                 font-weight: bold;
@@ -208,5 +198,43 @@
 
     .optionsIcon {
         justify-content: space-between;
+    }
+}
+
+.group_profilePic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: white;
+    background: $main;
+    object-fit: cover;
+    object-position: center;
+    overflow: hidden;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+.messages {
+    .head {
+        .name {
+            h5 {
+                font-size: 20px;
+                margin-bottom: 0px;
+            }
+            span {
+                font-size: 10px;
+            }
+        }
+
+        .group_profilePic {
+            width: 100%;
+            height: 100%;
+        }
     }
 }

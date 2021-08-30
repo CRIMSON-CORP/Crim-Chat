@@ -60,7 +60,11 @@ function GroupComponent({ group }) {
             }}
         >
             <div className="group_profilePic">
-                {group.profilePic ? <img src={group.profilePic} /> : <FaUserFriends size="2em" />}
+                {group.group_profilePic === null ? (
+                    <img src={group.group_profilePic} />
+                ) : (
+                    <FaUserFriends size="2em" />
+                )}
             </div>
             <h3 className="group_name">{group.group_name}</h3>
         </div>

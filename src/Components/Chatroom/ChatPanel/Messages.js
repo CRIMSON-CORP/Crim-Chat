@@ -3,43 +3,76 @@ import { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import { FaEllipsisH, FaUserFriends } from "react-icons/fa";
 function Messages() {
     const { selectedChat } = useContext(SelectedChatContext);
     const messageBoxRef = useRef();
     const [loaded, setLoaded] = useState(false);
     const [messages, setMessages] = useState([]);
+    const [groupDetails, setGroupDetails] = useState();
     const dummy = useRef();
     useEffect(() => {
-        if (messages && !loaded) {
-            messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
-            setLoaded(true);
+        if (messages) {
+            if (loaded) {
+                dummy.current.scrollIntoView({ behavior: "smooth" });
+            } else {
+                dummy.current.scrollIntoView({ behavior: "auto" });
+                setLoaded(true);
+            }
         }
-    }, [messages]);
-    useEffect(() => {
-        loaded && dummy.current.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
     useEffect(() => {
-        selectedChat &&
-            firestore
+        if (selectedChat) {
+            setLoaded(false);
+            var unsub1 = firestore
                 .collection("groups-register")
                 .doc(selectedChat)
                 .collection("messages")
                 .orderBy("createdAt")
                 .limit(25)
                 .onSnapshot((docs) => {
-                    setLoaded(false);
                     const list = [];
                     docs.forEach((doc) => {
                         list.push(doc.data());
                     });
                     setMessages(list);
-                    setLoaded(true);
                 });
+            var unsub2 = firestore
+                .collection("groups-register")
+                .doc(selectedChat)
+                .onSnapshot((docs) => {
+                    setGroupDetails(docs.data());
+                });
+        }
+        return () => {
+            unsub1;
+            unsub2;
+        };
     }, [selectedChat]);
 
     return (
         <div className="messages scroll" ref={messageBoxRef}>
+            {groupDetails && (
+                <div className="messages_header">
+                    <div className="head">
+                        <div className="group_profilePic">
+                            {groupDetails.group_profilePic === null ? (
+                                <img src={groupDetails.group_profilePic} />
+                            ) : (
+                                <FaUserFriends size={20} />
+                            )}
+                        </div>
+                        <div className="name">
+                            <h5>{groupDetails.group_name}</h5>
+                            {/* <span>{groupDetails.group_description}</span> */}
+                        </div>
+                    </div>
+                    <div className="messages_options">
+                        <FaEllipsisH />
+                    </div>
+                </div>
+            )}
             {selectedChat ? (
                 messages &&
                 messages.map((message, index) =>
@@ -50,7 +83,7 @@ function Messages() {
                     )
                 )
             ) : (
-                <h1>Select a Chat to see messages</h1>
+                <h1 className="no-chat-selected">Select a Chat to see messages</h1>
             )}
             {}
             <div ref={dummy}></div>
@@ -143,20 +176,26 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
 
 function InfoBubble({ message }) {
     const {
-        userlocal: { uid },
+        userlocal: { uid, displayName },
     } = useContext(UserContext);
     const messageOwner = message.uid === uid;
     const [display_name, setDisplay_name] = useState();
     let bubble;
     useEffect(() => {
-        firestore
-            .collection("users")
-            .doc(message.uid)
-            .get((data) => setDisplay_name(data));
+        message.invitee_id &&
+            firestore
+                .collection("users")
+                .doc(message.invitee_id)
+                .get()
+                .then((data) => setDisplay_name(data.data().displayName));
     }, []);
     switch (message.tag) {
+        case "group_created":
+            bubble = `${messageOwner ? "You" : displayName} created this group`;
+            break;
         case "invite_sent":
             bubble = `${messageOwner ? "You" : message.sender} invited ${display_name}`;
+            break;
     }
     return <div className="info_bubble">{bubble}</div>;
 }
