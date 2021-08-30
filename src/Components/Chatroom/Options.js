@@ -1,21 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import {
-    BiUserPlus,
-    FaEllipsisH,
-    FaSignOutAlt,
-    FaUserFriends,
-    MdAdd,
-    MdDehaze,
-    MdEdit,
-} from "react-icons/all";
+import { useContext, useState } from "react";
+import { FaEllipsisH, FaSignOutAlt, FaUserFriends, MdAdd, MdDehaze, MdEdit } from "react-icons/all";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { LoaderContext, MobileNav, SelectedChatContext, UserContext } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
-import { BorderedInput, Loader, Modal, ProfilePic, useModal } from "../../utils/CustomComponents";
+import { BorderedInput, Loader, Modal, useModal } from "../../utils/CustomComponents";
 import firebase, { firestore } from "../../utils/firebase";
 import { ImageTypes } from "../../utils/utils";
 import { v4 } from "uuid";
+import InviteUsers from "./CreateGroup/InviteUsers";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
@@ -282,81 +275,4 @@ function CreateGroupModalUI({ setmodal }) {
             </div>
         </>
     );
-}
-
-function InviteUsers({ selected, setSelected }) {
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        firestore
-            .collection("users")
-            .limit(10)
-            .get()
-            .then((usersList) => {
-                setUsers(usersList.docs);
-            });
-    }, []);
-    async function search(e) {
-        const text = e.target.value.trim();
-        const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
-        try {
-            const data = await firestore
-                .collection("users")
-                .where("displayName", ">=", text)
-                .where("displayName", "<", end)
-                .get();
-            setUsers(data.docs);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    return (
-        <div>
-            <BorderedInput
-                header="Invite Users"
-                label="Search for Friends..."
-                name="search_for_friends"
-                onChange={search}
-                req={false}
-            />
-            <h6 style={{ marginTop: 20 }}>{selected.length} Users Invited</h6>
-            <UsersList users={users} selected={selected} setSelected={setSelected} />
-        </div>
-    );
-}
-
-function UsersList({ users, selected, setSelected }) {
-    const {
-        userlocal: { uid },
-    } = useContext(UserContext);
-    const usersRefined = users.map((user) => user.data()).filter((user) => user.uid != uid);
-    const usersJSX = usersRefined.map((user) => {
-        return (
-            <li
-                className="user hover mb-20"
-                key={user.uid}
-                onClick={() => {
-                    if (selected.includes(user.uid)) {
-                        setSelected(selected.filter((id) => id !== user.uid));
-                    } else {
-                        setSelected([...selected, user.uid]);
-                    }
-                }}
-            >
-                <div className="profilepic">
-                    <div className="user-online-status">
-                        <span className={`online-status ${user.onlineStatus}`}></span>
-                    </div>
-                    <ProfilePic img={user.profilePic} d_n={user.displayName} />
-                </div>
-                <div className="user">
-                    <h5> {user.displayName}</h5>
-                    <span>{user.email}</span>
-                </div>
-                <div className={`add_user ${selected.includes(user.uid) ? "added" : ""}`}>
-                    <BiUserPlus title="Add this User to this group" />
-                </div>
-            </li>
-        );
-    });
-    return <ul className="users_list">{usersJSX}</ul>;
 }
