@@ -10,6 +10,7 @@ function GroupChat() {
             try {
                 var unsub = firestore
                     .collection("groups-register")
+                    .orderBy("updatedAt", "desc")
                     .where("group_id", "in", userlocal.groups)
                     .onSnapshot(async (collection) => {
                         var list = [];

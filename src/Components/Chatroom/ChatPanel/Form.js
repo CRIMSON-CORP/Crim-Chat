@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
-import firebase, { auth, firestore } from "../../../utils/firebase";
+import firebase, { auth, firestore, timeStamp } from "../../../utils/firebase";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
@@ -9,9 +9,10 @@ function Form() {
     async function submit(e) {
         e.preventDefault();
         try {
+            const time_stamp = timeStamp();
             const message = {
                 text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: time_stamp,
                 uid: auth.currentUser.uid,
                 profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
                 sender: userlocal.displayName,
@@ -22,6 +23,9 @@ function Form() {
                 .doc(selectedChat)
                 .collection("messages")
                 .add(message);
+            await firestore.collection("groups-register").doc(selectedChat).update({
+                updatedAt: time_stamp,
+            });
             setText("");
             textarea.current.style.height = "30px";
         } catch (err) {
