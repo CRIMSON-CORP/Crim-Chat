@@ -24,6 +24,9 @@ a {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
 }
 
 .logo {
@@ -80,7 +83,8 @@ a {
 
 .auth {
   position: relative;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .auth .banner {
@@ -497,6 +501,12 @@ span.loader {
   color: white;
 }
 
+.underlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.349);
+}
+
 .tabs {
   display: -ms-grid;
   display: grid;
@@ -530,6 +540,7 @@ span.loader {
   display: flex;
   gap: 20px;
   height: 100%;
+  width: 100%;
 }
 
 .main-pannel {
@@ -603,6 +614,10 @@ span.loader {
   color: white;
 }
 
+.tabs .groups .group_list {
+  position: relative;
+}
+
 .tabs .groups .group {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -614,6 +629,9 @@ span.loader {
   gap: 10px;
   border-radius: 10px;
   cursor: pointer;
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+  width: 100%;
 }
 
 .tabs .groups .group .group_name {
@@ -622,6 +640,12 @@ span.loader {
   font-family: "Gisha";
   color: black;
   margin: 0;
+}
+
+.tabs .groups .group .group_text {
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
 }
 
 .user-online-status {
@@ -732,6 +756,8 @@ span.loader {
   background: rgba(220, 20, 60, 0.1);
   border-radius: 10px;
   position: relative;
+  -webkit-transform-origin: 0% 50%;
+          transform-origin: 0% 50%;
 }
 
 .chat-pannel .form {
@@ -981,7 +1007,7 @@ span.loader {
   -ms-grid-columns: auto 50px;
       grid-template-columns: auto 50px;
   gap: 20px;
-  z-index: 100;
+  z-index: 90;
 }
 
 .messages_header .head {
@@ -1020,6 +1046,10 @@ span.loader {
   display: -ms-grid;
   display: grid;
   place-items: center;
+}
+
+.users_list {
+  max-height: 300px;
 }
 
 .fade-enter {
@@ -1072,9 +1102,11 @@ span.loader {
   .tabs {
     position: absolute;
     height: 100%;
-    padding-right: 20px;
+    padding: 20px;
     -webkit-transform: translateX(-100%);
             transform: translateX(-100%);
+    left: 0;
+    top: 0;
   }
   .tabs .cancel {
     display: inline-block;
@@ -1126,6 +1158,36 @@ span.loader {
 .messages .head .group_profilePic {
   width: 100%;
   height: 100%;
+}
+
+.unread {
+  justify-self: flex-end;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.unread .unread_circle {
+  border-radius: 50%;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  background: #dc143c;
+  color: white;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  opacity: 0;
 }
 
 .modal-custom {

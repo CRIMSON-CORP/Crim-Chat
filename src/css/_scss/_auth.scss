@@ -1,7 +1,8 @@
 @import "./signup";
 .auth {
     position: relative;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     .banner {
         display: grid;
         place-items: center;

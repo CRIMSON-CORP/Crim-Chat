@@ -6,6 +6,7 @@
     background: $main_faint;
     border-radius: 10px;
     position: relative;
+    transform-origin: 0% 50%;
     .form {
         display: grid;
         align-items: center;
@@ -193,7 +194,7 @@
     display: grid;
     grid-template-columns: auto 50px;
     gap: 20px;
-    z-index: 100;
+    z-index: 90;
     .head {
         background: white;
         border-radius: 10px;
@@ -222,4 +223,7 @@
     inset: 10px;
     display: grid;
     place-items: center;
+}
+.users_list {
+    max-height: 300px;
 }

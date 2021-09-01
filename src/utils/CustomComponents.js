@@ -153,3 +153,7 @@ export function ProfilePic({ img, d_n }) {
         </div>
     );
 }
+
+export function UnderLay({ zIndex, exe }) {
+    return <div className="underlay" style={{ zIndex }} onClick={exe}></div>;
+}

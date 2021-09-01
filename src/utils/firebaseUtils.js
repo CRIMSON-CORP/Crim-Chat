@@ -26,7 +26,7 @@ export async function signOut() {
 
 export async function UpdateUserOnlineStatus(uid, status) {
     try {
-        return await firestore.collection("users").doc(`${uid}`).update({
+        return await firestore.collection("users").doc(uid).update({
             onlineStatus: status,
         });
     } catch (err) {
@@ -36,7 +36,7 @@ export async function UpdateUserOnlineStatus(uid, status) {
 
 export async function AddUser(currentUser, username) {
     try {
-        const user = await firestore.collection("users").doc(`${currentUser.uid}`).get();
+        const user = await firestore.collection("users").doc(currentUser.uid).get();
         if (!user.exists) {
             return await firestore
                 .collection("users")

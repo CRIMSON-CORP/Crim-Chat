@@ -11,11 +11,16 @@ function Tabs() {
     useEffect(() => {
         if (window.innerWidth < 700) {
             if (mobileNav) {
+                gsap.to(".chat-pannel", { x: 270 });
+                gsap.to(".chat-pannel", { scale: 0.5, delay: 0.25, duration: 0.5 });
                 gsap.to(tab.current, {
                     x: "0%",
                     opacity: 1,
+                    duration: 0.5,
                 });
             } else {
+                gsap.to(".chat-pannel", { x: 0 });
+                gsap.to(".chat-pannel", { scale: 1 });
                 gsap.to(tab.current, {
                     x: "-100%",
                     opacity: 0,

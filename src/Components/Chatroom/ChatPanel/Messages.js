@@ -51,6 +51,14 @@ function Messages() {
         };
     }, [selectedChat]);
 
+    useEffect(() => {
+        return () => {
+            setGroupDetails([]);
+            setLoaded(false);
+            setMessages([]);
+        };
+    }, []);
+
     return (
         <div className="messages scroll" ref={messageBoxRef}>
             {groupDetails && (

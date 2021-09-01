@@ -36,7 +36,7 @@ function UsersList({ users, selected, setSelected }) {
             </li>
         );
     });
-    return <ul className="users_list">{usersJSX}</ul>;
+    return <ul className="users_list scroll">{usersJSX}</ul>;
 }
 
 export default UsersList;

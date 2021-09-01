@@ -4,6 +4,7 @@
     display: flex;
     gap: 20px;
     height: 100%;
+    width: 100%;
 }
 .main-pannel {
     display: flex;
@@ -52,6 +53,9 @@
                 color: white;
             }
         }
+        .group_list {
+            position: relative;
+        }
 
         .group {
             display: flex;
@@ -60,13 +64,17 @@
             gap: 10px;
             border-radius: 10px;
             cursor: pointer;
-
+            transition: 0.5s ease-out;
+            width: 100%;
             .group_name {
                 font-size: 18px;
                 font-weight: bold;
                 font-family: $Gisha;
                 color: black;
                 margin: 0;
+            }
+            .group_text {
+                flex: auto;
             }
         }
     }
@@ -185,8 +193,10 @@
     .tabs {
         position: absolute;
         height: 100%;
-        padding-right: 20px;
+        padding: 20px;
         transform: translateX(-100%);
+        left: 0;
+        top: 0;
         .cancel {
             display: inline-block;
         }
@@ -236,5 +246,24 @@
             width: 100%;
             height: 100%;
         }
+    }
+}
+
+.unread {
+    justify-self: flex-end;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .unread_circle {
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        width: 20px;
+        height: 20px;
+        background: $main;
+        color: white;
+        transform: scale(0);
+        opacity: 0;
     }
 }

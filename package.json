@@ -15,6 +15,7 @@
     "firebase": "^8.2.5",
     "gh-pages": "^3.1.0",
     "gsap": "^3.7.1",
+    "isotope-layout": "^3.0.6",
     "jquery": "^3.5.1",
     "jquery.easing": "^1.4.1",
     "rc-dropdown": "^3.2.0",
