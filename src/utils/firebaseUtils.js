@@ -1,21 +1,19 @@
-import firebase, { auth, firestore } from "./firebase";
-export function UploadImage(image, path) {
-    return async (resolve, reject) => {
-        try {
-            const StorageRef = firebase.storage().ref(path);
-            await StorageRef.put(image);
-            resolve(await StorageRef.getDownloadURL());
-        } catch (err) {
-            reject(err.message());
-        }
-    };
+import { auth, firestore, storage } from "./firebase";
+export async function UploadImage(image, path) {
+    try {
+        const StorageRef = storage.ref(path);
+        await StorageRef.put(image);
+        return await StorageRef.getDownloadURL();
+    } catch (err) {
+        return err;
+    }
 }
 
 export async function signOut() {
     if (auth.currentUser) {
         try {
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
-            localStorage.clear();
+            localStorage.removeItem("user");
             await auth.signOut();
             return null;
         } catch (err) {

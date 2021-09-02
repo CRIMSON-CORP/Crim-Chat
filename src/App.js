@@ -7,6 +7,7 @@ import { LoaderContext, UserContext } from "./utils/Contexts";
 import { Loader } from "./utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
 import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
+import { collections } from "./utils/FirebaseRefs";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(true);
@@ -19,20 +20,26 @@ function App() {
     });
 
     useEffect(() => {
-        try {
-            if (user) {
+        if (user) {
+            try {
                 var unsub = firestore
-                    .collection("users")
-                    .doc(`${user.uid}`)
-                    .onSnapshot((userdb) => {
-                        setUserLocal(userdb.data());
-                        localStorage.setItem("user", JSON.stringify(userdb.data()));
-                    });
+                    .collection(collections.users)
+                    .doc(user.uid)
+                    .onSnapshot(
+                        (userdb) => {
+                            if (!userdb.exists) {
+                                const local_user = JSON.parse(localStorage.getItem("user"));
+                                local_user && setUserLocal(local_user);
+                            } else {
+                                setUserLocal(userdb.data());
+                                localStorage.setItem("user", JSON.stringify(userdb.data()));
+                            }
+                        },
+                        (error) => console.log(error)
+                    );
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-            const local_user = JSON.parse(localStorage.getItem("user"));
-            local_user && setUserLocal(local_user);
         }
         return unsub;
     }, [user]);
@@ -41,8 +48,7 @@ function App() {
         return async () => {
             auth.currentUser &&
                 (await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline"),
-                await auth.signOut(),
-                localStorage.clear());
+                await auth.signOut());
         };
     }, []);
     return (

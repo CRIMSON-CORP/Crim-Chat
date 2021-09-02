@@ -1,9 +1,34 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import { ProfilePic } from "../../../utils/CustomComponents";
+import { UpdateUserOnlineStatus } from "../../../utils/firebaseUtils";
 
 function User() {
-    const { userlocal } = useContext(UserContext);
+    const { userlocal, setUserLocal } = useContext(UserContext);
+
+    useEffect(() => {
+        setUserLocal((prev) => {
+            return { ...prev, onlineStatus: navigator.onLine ? "Online" : "Offline" };
+        });
+
+        const online = () => {
+            setUserLocal((prev) => {
+                return { ...prev, onlineStatus: "Online" };
+            });
+        };
+        const offline = () => {
+            setUserLocal((prev) => {
+                return { ...prev, onlineStatus: "Offline" };
+            });
+        };
+        window.addEventListener("online", online);
+        window.addEventListener("offline", offline);
+
+        return () => {
+            window.removeEventListener("online", online);
+            window.removeEventListener("offline", offline);
+        };
+    }, []);
     return (
         <div>
             {userlocal && (

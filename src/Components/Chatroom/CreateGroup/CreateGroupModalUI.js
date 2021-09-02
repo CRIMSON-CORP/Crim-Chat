@@ -14,6 +14,7 @@ function CreateGroupModalUI({ setmodal }) {
         profile_icon: "",
         name: "",
         descript: "",
+        closed: true,
     });
 
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -184,6 +185,44 @@ function CreateGroupModalUI({ setmodal }) {
                                     label="description"
                                     value={groupDetails.descript}
                                 />
+                            </div>
+                            <div className="group_security">
+                                <h4 className="mb-3">Group Security</h4>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="security"
+                                        id="Method"
+                                        required="required"
+                                        checked={!groupDetails.closed}
+                                        onChange={() => {
+                                            setGroupDetails((prev) => {
+                                                return { ...prev, closed: false };
+                                            });
+                                        }}
+                                    />
+                                    <span className="label">Open</span>
+                                    <span className="bg"></span>
+                                    <span className="dot"></span>
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="security"
+                                        id="Method"
+                                        required="required"
+                                        value="Virtually"
+                                        checked={groupDetails.closed}
+                                        onChange={() => {
+                                            setGroupDetails((prev) => {
+                                                return { ...prev, closed: true };
+                                            });
+                                        }}
+                                    />
+                                    <span className="label">Closed</span>
+                                    <span className="bg"></span>
+                                    <span className="dot"></span>
+                                </label>
                             </div>
                         </div>
                         <div className="add_users">

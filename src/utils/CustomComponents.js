@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
+import OnOutsiceClick from "react-outclick";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (
@@ -149,11 +150,52 @@ export function BorderedInput({ type = "text", label, value, onChange, name, hea
 export function ProfilePic({ img, d_n }) {
     return (
         <div className="profilePic">
-            {img ? <img src={img} alt="profile" /> : <div className="alt">{d_n[0]}</div>}
+            {img == null || img == undefined ? (
+                <div className="alt">{d_n[0]}</div>
+            ) : (
+                <img src={img} alt="profile" />
+            )}
         </div>
     );
 }
 
 export function UnderLay({ zIndex, exe }) {
     return <div className="underlay" style={{ zIndex }} onClick={exe}></div>;
+}
+
+const Close = createContext(null);
+export function DropList({ open, closeComp, closeExe, children }) {
+    return (
+        <OnOutsiceClick onOutsideClick={closeExe}>
+            {closeComp}
+            <CSSTransition in={open} classNames="fade" unmountOnExit timeout={400}>
+                <Close.Provider value={{ closeExe }}>
+                    <OptionsDropDown close={closeExe}>{children}</OptionsDropDown>
+                </Close.Provider>
+            </CSSTransition>
+        </OnOutsiceClick>
+    );
+}
+
+export function OptionsDropDown({ children }) {
+    return (
+        <div className="options_dropdown">
+            <ul>{children}</ul>
+        </div>
+    );
+}
+
+export function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
+    const { closeExe } = useContext(Close);
+    return (
+        <li
+            className="dropDown_item"
+            onClick={() => {
+                onClickExe();
+                closeExe();
+            }}
+        >
+            {children} <div className="sufIcon">{sufIcon}</div>
+        </li>
+    );
 }

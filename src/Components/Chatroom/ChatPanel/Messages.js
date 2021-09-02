@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { firestore } from "../../../utils/firebase";
+import firebase, { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
-import { FaEllipsisH, FaUserFriends } from "react-icons/fa";
+import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
+import { DropList, OptionsDropDownItem } from "../../../utils/CustomComponents";
 function Messages() {
-    const { selectedChat } = useContext(SelectedChatContext);
+    const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
+    const {
+        userlocal: { uid, displayName },
+    } = useContext(UserContext);
     const messageBoxRef = useRef();
     const [loaded, setLoaded] = useState(false);
     const [messages, setMessages] = useState([]);
     const [groupDetails, setGroupDetails] = useState();
+    const [optionsToggle, setOptionsToggle] = useState(false);
     const dummy = useRef();
     useEffect(() => {
         if (messages) {
@@ -61,7 +66,7 @@ function Messages() {
 
     return (
         <div className="messages scroll" ref={messageBoxRef}>
-            {groupDetails && (
+            {groupDetails && selectedChat !== "" && (
                 <div className="messages_header">
                     <div className="head">
                         <div className="group_profilePic">
@@ -77,7 +82,48 @@ function Messages() {
                         </div>
                     </div>
                     <div className="messages_options">
-                        <FaEllipsisH />
+                        <DropList
+                            closeComp={
+                                <FaEllipsisH
+                                    onClick={() => {
+                                        setOptionsToggle(!optionsToggle);
+                                    }}
+                                />
+                            }
+                            closeExe={() => {
+                                setOptionsToggle(false);
+                            }}
+                            open={optionsToggle}
+                        >
+                            <OptionsDropDownItem
+                                onClickExe={async () => {
+                                    setSelectedChat("");
+                                    await firestore
+                                        .collection("users")
+                                        .doc(uid)
+                                        .update({
+                                            groups: firebase.firestore.FieldValue.arrayRemove(
+                                                selectedChat
+                                            ),
+                                        });
+                                    await firestore
+                                        .collection("groups-register")
+                                        .doc(selectedChat)
+                                        .collection("messages")
+                                        .add({
+                                            type: "bubble",
+                                            tag: "user_left",
+                                            createdAt:
+                                                firebase.firestore.FieldValue.serverTimestamp(),
+                                            uid: uid,
+                                            user_that_left: displayName,
+                                        });
+                                }}
+                                sufIcon={<FaSignOutAlt />}
+                            >
+                                Leave Group
+                            </OptionsDropDownItem>
+                        </DropList>
                     </div>
                 </div>
             )}
@@ -204,6 +250,8 @@ function InfoBubble({ message }) {
         case "invite_sent":
             bubble = `${messageOwner ? "You" : message.sender} invited ${display_name}`;
             break;
+        case "user_left":
+            bubble = `${message.user_that_left} left the Group`;
     }
     return <div className="info_bubble">{bubble}</div>;
 }

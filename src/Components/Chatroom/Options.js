@@ -1,10 +1,8 @@
 import { useContext, useState } from "react";
 import { FaEllipsisH, FaSignOutAlt, MdAdd, MdDehaze } from "react-icons/all";
-import { CSSTransition } from "react-transition-group";
-import OnOutsiceClick from "react-outclick";
 import { MobileNav } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
-import { Modal, useModal } from "../../utils/CustomComponents";
+import { DropList, Modal, OptionsDropDownItem, useModal } from "../../utils/CustomComponents";
 import CreateGroupModalUI from "./CreateGroup/CreateGroupModalUI";
 
 function Options() {
@@ -20,39 +18,36 @@ function Options() {
                 }}
             />
             <div className="options_wrapper">
-                <OnOutsiceClick
-                    onOutsideClick={() => {
+                <DropList
+                    open={optionsToggle}
+                    closeComp={
+                        <FaEllipsisH
+                            onClick={() => {
+                                setOptionsToggle(!optionsToggle);
+                            }}
+                        />
+                    }
+                    closeExe={() => {
                         setOptionsToggle(false);
                     }}
                 >
-                    <FaEllipsisH
-                        onClick={() => {
-                            setOptionsToggle(!optionsToggle);
+                    <OptionsDropDownItem
+                        sufIcon={<MdAdd />}
+                        onClickExe={() => {
+                            setCreateGroupModal(true);
                         }}
-                    />
-                    <CSSTransition in={optionsToggle} classNames="fade" unmountOnExit timeout={400}>
-                        <OptionsDropDown>
-                            <OptionsDropDownItem
-                                sufIcon={<MdAdd />}
-                                onClickExe={() => {
-                                    setCreateGroupModal(true);
-                                    setOptionsToggle(false);
-                                }}
-                            >
-                                Create Group
-                            </OptionsDropDownItem>
-                            <OptionsDropDownItem
-                                sufIcon={<FaSignOutAlt />}
-                                onClickExe={() => {
-                                    signOut();
-                                    setOptionsToggle(false);
-                                }}
-                            >
-                                Sign out
-                            </OptionsDropDownItem>
-                        </OptionsDropDown>
-                    </CSSTransition>
-                </OnOutsiceClick>
+                    >
+                        Create Group
+                    </OptionsDropDownItem>
+                    <OptionsDropDownItem
+                        sufIcon={<FaSignOutAlt />}
+                        onClickExe={() => {
+                            signOut();
+                        }}
+                    >
+                        Sign out
+                    </OptionsDropDownItem>
+                </DropList>
             </div>
             <Modal
                 header="Create a new Group"
@@ -67,19 +62,3 @@ function Options() {
 }
 
 export default Options;
-
-function OptionsDropDown({ children }) {
-    return (
-        <div className="options_dropdown">
-            <ul>{children}</ul>
-        </div>
-    );
-}
-
-function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
-    return (
-        <li className="dropDown_item" onClick={onClickExe}>
-            {children} <div className="sufIcon">{sufIcon}</div>
-        </li>
-    );
-}

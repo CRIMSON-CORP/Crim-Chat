@@ -46,6 +46,8 @@ function SignUp({ setActivePage }) {
             console.log(err);
             if (err == "auth/network-request-failed") {
                 Notification("danger", "Network Error", "Network connection is unstable!");
+            } else if (err == "auth/popup-closed-by-user") {
+                Notification("danger", "Popup Closed", err.message);
             }
         } finally {
             setLoading(false);

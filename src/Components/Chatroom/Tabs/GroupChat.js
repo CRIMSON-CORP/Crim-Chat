@@ -25,6 +25,8 @@ function GroupChat() {
             } catch (err) {
                 console.log(err);
             }
+        } else {
+            setGroupsdata([]);
         }
         return unsub;
     }, [userlocal.groups]);
