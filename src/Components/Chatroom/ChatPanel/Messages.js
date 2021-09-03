@@ -5,6 +5,8 @@ import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem } from "../../../utils/CustomComponents";
+import { collections, feilds } from "../../../utils/FirebaseRefs";
+import toast from "react-hot-toast";
 function Messages() {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -70,7 +72,7 @@ function Messages() {
                 <div className="messages_header">
                     <div className="head">
                         <div className="group_profilePic">
-                            {groupDetails.group_profilePic === null ? (
+                            {groupDetails.group_profilePic !== null ? (
                                 <img src={groupDetails.group_profilePic} />
                             ) : (
                                 <FaUserFriends size={20} />
@@ -83,23 +85,14 @@ function Messages() {
                     </div>
                     <div className="messages_options">
                         <DropList
-                            closeComp={
-                                <FaEllipsisH
-                                    onClick={() => {
-                                        setOptionsToggle(!optionsToggle);
-                                    }}
-                                />
-                            }
-                            closeExe={() => {
-                                setOptionsToggle(false);
-                            }}
+                            closeComp={<FaEllipsisH />}
+                            setter={setOptionsToggle}
                             open={optionsToggle}
                         >
                             <OptionsDropDownItem
                                 onClickExe={async () => {
-                                    setSelectedChat("");
                                     await firestore
-                                        .collection("users")
+                                        .collection(collections.users)
                                         .doc(uid)
                                         .update({
                                             groups: firebase.firestore.FieldValue.arrayRemove(
@@ -107,9 +100,18 @@ function Messages() {
                                             ),
                                         });
                                     await firestore
-                                        .collection("groups-register")
+                                        .collection(collections.groups_register)
                                         .doc(selectedChat)
-                                        .collection("messages")
+                                        .update({
+                                            [feilds.group_members]:
+                                                firebase.firestore.FieldValue.arrayRemove(uid),
+                                            updatedAt:
+                                                firebase.firestore.FieldValue.serverTimestamp(),
+                                        });
+                                    await firestore
+                                        .collection(collections.groups_register)
+                                        .doc(selectedChat)
+                                        .collection(collections.messages)
                                         .add({
                                             type: "bubble",
                                             tag: "user_left",
@@ -118,6 +120,10 @@ function Messages() {
                                             uid: uid,
                                             user_that_left: displayName,
                                         });
+                                    toast.success(
+                                        `You have successfully left ${groupDetails.group_name}!`
+                                    );
+                                    setSelectedChat("");
                                 }}
                                 sufIcon={<FaSignOutAlt />}
                             >
@@ -230,28 +236,24 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
 
 function InfoBubble({ message }) {
     const {
-        userlocal: { uid, displayName },
+        userlocal: { uid },
     } = useContext(UserContext);
     const messageOwner = message.uid === uid;
-    const [display_name, setDisplay_name] = useState();
     let bubble;
-    useEffect(() => {
-        message.invitee_id &&
-            firestore
-                .collection("users")
-                .doc(message.invitee_id)
-                .get()
-                .then((data) => setDisplay_name(data.data().displayName));
-    }, []);
     switch (message.tag) {
         case "group_created":
-            bubble = `${messageOwner ? "You" : displayName} created this group`;
+            bubble = `${messageOwner ? "You" : message.group_creator} created this group!`;
             break;
         case "invite_sent":
-            bubble = `${messageOwner ? "You" : message.sender} invited ${display_name}`;
+            bubble = `${messageOwner ? "You" : message.inviter} invited ${message.invitee_name}!`;
             break;
         case "user_left":
-            bubble = `${message.user_that_left} left the Group`;
+            bubble = `${message.uid == uid ? "You" : message.user_that_left} left the Group!`;
+            break;
+        case "user_joined":
+            bubble = `${
+                message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
+            } joined the Group!`;
     }
     return <div className="info_bubble">{bubble}</div>;
 }

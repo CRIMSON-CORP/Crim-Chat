@@ -7,6 +7,7 @@ import { InputForm } from "../../utils/CustomComponents";
 import { Notification } from "../../utils/utils";
 import { LoaderContext } from "../../utils/Contexts";
 import { AddUser, UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
+import toast from "react-hot-toast";
 function SignUp({ setActivePage }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -45,7 +46,7 @@ function SignUp({ setActivePage }) {
         } catch (err) {
             console.log(err);
             if (err == "auth/network-request-failed") {
-                Notification("danger", "Network Error", "Network connection is unstable!");
+                toast.error("A Network Error occured");
             } else if (err == "auth/popup-closed-by-user") {
                 Notification("danger", "Popup Closed", err.message);
             }

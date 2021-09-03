@@ -3,6 +3,7 @@ import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
 import { MobileNav, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import Isotope from "isotope-layout";
+import { collections, feilds } from "../../../utils/FirebaseRefs";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
@@ -12,9 +13,9 @@ function GroupChat() {
         if (userlocal.groups.length !== 0) {
             try {
                 var unsub = firestore
-                    .collection("groups-register")
+                    .collection(collections.groups_register)
                     .orderBy("updatedAt", "desc")
-                    .where("group_id", "in", userlocal.groups)
+                    .where(feilds.group_id, "in", [...userlocal.groups])
                     .onSnapshot(async (collection) => {
                         var list = [];
                         collection.forEach((data) => {
@@ -70,7 +71,7 @@ function GroupComponent({ group }) {
     return (
         <div className="group hover" data-filter="*">
             <div className="group_profilePic">
-                {group.group_profilePic === null ? (
+                {group.group_profilePic !== null ? (
                     <img src={group.group_profilePic} />
                 ) : (
                     <FaUserFriends size="2em" />

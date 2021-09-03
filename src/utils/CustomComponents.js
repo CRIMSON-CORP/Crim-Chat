@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
+import { FaUserFriends } from "react-icons/fa";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (
@@ -147,11 +148,17 @@ export function BorderedInput({ type = "text", label, value, onChange, name, hea
     );
 }
 
-export function ProfilePic({ img, d_n }) {
+export function ProfilePic({ img, d_n, tag = "user" }) {
     return (
         <div className="profilePic">
             {img == null || img == undefined ? (
-                <div className="alt">{d_n[0]}</div>
+                tag == "group" ? (
+                    <div className="alt">
+                        <FaUserFriends size="2em" />
+                    </div>
+                ) : (
+                    <div className="alt">{d_n[0]}</div>
+                )
             ) : (
                 <img src={img} alt="profile" />
             )}
@@ -164,13 +171,23 @@ export function UnderLay({ zIndex, exe }) {
 }
 
 const Close = createContext(null);
-export function DropList({ open, closeComp, closeExe, children }) {
+export function DropList({ open, closeComp, setter, children }) {
     return (
-        <OnOutsiceClick onOutsideClick={closeExe}>
-            {closeComp}
+        <OnOutsiceClick
+            onOutsideClick={() => {
+                setter(false);
+            }}
+        >
+            <div
+                onClick={() => {
+                    setter(!open);
+                }}
+            >
+                {closeComp}
+            </div>
             <CSSTransition in={open} classNames="fade" unmountOnExit timeout={400}>
-                <Close.Provider value={{ closeExe }}>
-                    <OptionsDropDown close={closeExe}>{children}</OptionsDropDown>
+                <Close.Provider value={{ setter }}>
+                    <OptionsDropDown>{children}</OptionsDropDown>
                 </Close.Provider>
             </CSSTransition>
         </OnOutsiceClick>
@@ -186,13 +203,13 @@ export function OptionsDropDown({ children }) {
 }
 
 export function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
-    const { closeExe } = useContext(Close);
+    const { setter } = useContext(Close);
     return (
         <li
             className="dropDown_item"
             onClick={() => {
                 onClickExe();
-                closeExe();
+                setter(false);
             }}
         >
             {children} <div className="sufIcon">{sufIcon}</div>

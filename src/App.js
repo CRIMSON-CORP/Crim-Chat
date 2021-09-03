@@ -8,6 +8,7 @@ import { Loader } from "./utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
 import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
 import { collections } from "./utils/FirebaseRefs";
+import { Toaster } from "react-hot-toast";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(true);
@@ -65,6 +66,7 @@ function App() {
             ) : (
                 <Auth />
             )}
+            <Toaster />
         </LoaderContext.Provider>
     );
 }

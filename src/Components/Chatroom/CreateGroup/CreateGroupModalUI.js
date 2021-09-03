@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { LoaderContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput, Loader } from "../../../utils/CustomComponents";
-import firebase, { firestore } from "../../../utils/firebase";
+import firebase, { firestore, timeStamp } from "../../../utils/firebase";
 import { ImageTypes } from "../../../utils/utils";
 import { v4 } from "uuid";
 import InviteUsers from "./InviteUsers";
@@ -49,18 +49,21 @@ function CreateGroupModalUI({ setmodal }) {
         try {
             const id = v4();
             const notifid = v4();
+            const timestamp = timeStamp();
             // Adds new group to the register
             await firestore
                 .collection("groups-register")
                 .doc(id)
                 .set({
-                    group_createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    group_creator: displayName,
+                    group_createdAt: timestamp,
                     group_description: groupDetails.descript,
                     group_id: id,
                     group_name: groupDetails.name,
                     group_profilePic: groupDetails.profile_icon,
                     group_members: [uid],
+                    group_security: groupDetails.closed,
+                    group_creator_id: uid,
+                    updatedAt: timestamp,
                 });
             // Adds new group to user's list of groups
             await firestore
@@ -74,12 +77,11 @@ function CreateGroupModalUI({ setmodal }) {
                 type: "bubble",
                 tag: "group_created",
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                uid: uid,
+                group_creator: displayName,
             });
             if (selectedUsers.length !== 0) {
                 selectedUsers.forEach(async (user) => {
                     // Send notifications to added users
-                    console.log(user);
                     await firestore
                         .collection("users")
                         .doc(user)
@@ -103,6 +105,8 @@ function CreateGroupModalUI({ setmodal }) {
                             uid: uid,
                             tag: "invite_sent",
                             invitee_id: user,
+                            invitee_name: user.displayName,
+                            inviter: displayName,
                         });
                 });
             }

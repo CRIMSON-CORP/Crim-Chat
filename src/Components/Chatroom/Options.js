@@ -4,11 +4,13 @@ import { MobileNav } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
 import { DropList, Modal, OptionsDropDownItem, useModal } from "../../utils/CustomComponents";
 import CreateGroupModalUI from "./CreateGroup/CreateGroupModalUI";
+import JoinGroupModalUI from "./JoinGroup/JoinGroupModalUI";
 
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
     const [createGroupModal, setCreateGroupModal] = useModal();
+    const [joinGroupModal, setJoinGroupModal] = useModal();
     return (
         <div className="optionsIcon">
             <MdDehaze
@@ -20,17 +22,16 @@ function Options() {
             <div className="options_wrapper">
                 <DropList
                     open={optionsToggle}
-                    closeComp={
-                        <FaEllipsisH
-                            onClick={() => {
-                                setOptionsToggle(!optionsToggle);
-                            }}
-                        />
-                    }
-                    closeExe={() => {
-                        setOptionsToggle(false);
-                    }}
+                    setter={setOptionsToggle}
+                    closeComp={<FaEllipsisH />}
                 >
+                    <OptionsDropDownItem
+                        onClickExe={() => {
+                            setJoinGroupModal(true);
+                        }}
+                    >
+                        Join Group
+                    </OptionsDropDownItem>
                     <OptionsDropDownItem
                         sufIcon={<MdAdd />}
                         onClickExe={() => {
@@ -56,6 +57,14 @@ function Options() {
                 classTag="create-group"
             >
                 <CreateGroupModalUI setmodal={setCreateGroupModal} />
+            </Modal>
+            <Modal
+                header="Join a Group"
+                state={joinGroupModal}
+                setmodal={setJoinGroupModal}
+                classTag="join-group"
+            >
+                <JoinGroupModalUI setmodal={setJoinGroupModal} />
             </Modal>
         </div>
     );

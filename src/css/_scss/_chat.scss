@@ -166,6 +166,7 @@
 }
 
 .scroll {
+    overflow-y: auto;
     &::-webkit-scrollbar {
         width: 5px;
     }
