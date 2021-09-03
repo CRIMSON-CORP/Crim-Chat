@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
@@ -171,32 +171,46 @@ export function UnderLay({ zIndex, exe }) {
 }
 
 const Close = createContext(null);
-export function DropList({ open, closeComp, setter, children }) {
+export function DropList({ open, closeComp, setter, children, height, tag, drop, notifIndicator }) {
     return (
-        <OnOutsiceClick
-            onOutsideClick={() => {
-                setter(false);
-            }}
-        >
-            <div
-                onClick={() => {
-                    setter(!open);
+        <div style={{ position: "relative" }}>
+            <OnOutsiceClick
+                onOutsideClick={() => {
+                    setter(false);
                 }}
             >
-                {closeComp}
-            </div>
-            <CSSTransition in={open} classNames="fade" unmountOnExit timeout={400}>
-                <Close.Provider value={{ setter }}>
-                    <OptionsDropDown>{children}</OptionsDropDown>
-                </Close.Provider>
-            </CSSTransition>
-        </OnOutsiceClick>
+                <div
+                    onClick={() => {
+                        setter(!open);
+                    }}
+                >
+                    {tag == "notif" && (
+                        <span className={`indicator ${notifIndicator ? "show" : "hide"}`}></span>
+                    )}
+                    {closeComp}
+                </div>
+                <CSSTransition in={open} classNames="fade" unmountOnExit timeout={400}>
+                    <Close.Provider value={{ setter }}>
+                        <OptionsDropDown height={height} tag={tag} drop={drop}>
+                            {children}
+                        </OptionsDropDown>
+                    </Close.Provider>
+                </CSSTransition>
+            </OnOutsiceClick>
+        </div>
     );
 }
 
-export function OptionsDropDown({ children }) {
+export function OptionsDropDown({ children, height, tag, drop }) {
     return (
-        <div className="options_dropdown">
+        <div
+            ref={drop}
+            className="options_dropdown"
+            style={{
+                overflowX: "hidden",
+                height: height + "px",
+            }}
+        >
             <ul>{children}</ul>
         </div>
     );
@@ -214,5 +228,32 @@ export function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
         >
             {children} <div className="sufIcon">{sufIcon}</div>
         </li>
+    );
+}
+
+export function NotifDropDownItem({ notif, gotoMenu, setActiveMenu, setSelectedNotif }) {
+    useEffect(() => {
+        return setActiveMenu("main");
+    }, []);
+    return (
+        <>
+            {notif.type == "invite" ? (
+                <li
+                    className="dropDown_item_notif hover"
+                    onClick={() => {
+                        setSelectedNotif(notif);
+                        setActiveMenu(gotoMenu);
+                    }}
+                >
+                    <h5>New Invitation</h5>
+                    <p>by {notif.sender}</p>
+                </li>
+            ) : (
+                <li className="dropDown_item_notif" onClick={() => {}}>
+                    <h5>{notif.header}</h5>
+                    <p>New Notification</p>
+                </li>
+            )}
+        </>
     );
 }

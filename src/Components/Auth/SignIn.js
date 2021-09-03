@@ -7,6 +7,7 @@ import { InputForm } from "../../utils/CustomComponents";
 import { LoaderContext } from "../../utils/Contexts";
 import { Notification } from "../../utils/utils";
 import { AddUser, UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
+import toast from "react-hot-toast";
 function SignIn({ setActivePage }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -59,9 +60,8 @@ function SignIn({ setActivePage }) {
                     "No Account Found!",
                     "User with this Account does not Exist!"
                 );
-            }
-            if (err == "auth/network-request-failed") {
-                Notification("danger", "Network Error", "Network connection is unstable!");
+            } else if (err.code == "auth/network-request-failed") {
+                return toast.error("Network Error");
             }
         } finally {
             setLoading(false);

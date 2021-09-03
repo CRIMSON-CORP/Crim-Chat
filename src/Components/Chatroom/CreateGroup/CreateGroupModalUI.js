@@ -88,7 +88,7 @@ function CreateGroupModalUI({ setmodal }) {
                         .collection("notif")
                         .doc(notifid)
                         .set({
-                            notif_id: v4(),
+                            notif_id: notifid,
                             sender: displayName,
                             type: "invite",
                             group_id: id,

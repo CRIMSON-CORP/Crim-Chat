@@ -124,13 +124,16 @@
     width: 200px;
     left: 0;
     top: 0;
-    transform: translate(-110%);
+    transform: translateX(-110%);
     background: white;
     padding: 10px 16px;
     z-index: 99;
     border-radius: 10px;
     box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
-    transition: 0.2s ease-out;
+    transition: height 0.5s ease, transform 0.3s ease;
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
     ul {
         list-style: none;
         padding: 0;
@@ -157,21 +160,21 @@
 
 .fade-enter {
     opacity: 0;
-    transform: translateY(10px) translate(-110%);
+    transform: translateY(10px) translateX(-110%);
 }
 
 .fade-enter-active {
     opacity: 1;
-    transform: translateY(0px) translate(-110%);
+    transform: translateY(0px) translateX(-110%);
 }
 
 .fade-exit {
     opacity: 1;
-    transform: translateY(0px) translate(-110%);
+    transform: translateY(0px) translateX(-110%);
 }
 .fade-exit-active {
     opacity: 0;
-    transform: translateY(10px) translate(-110%);
+    transform: translateY(-30px) translateX(-110%);
 }
 
 .fade_no_trans-enter {
@@ -280,5 +283,86 @@
         color: white;
         transform: scale(0);
         opacity: 0;
+    }
+}
+
+.options_wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+    position: relative;
+}
+
+.dropDown_item_notif {
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.notif_wrapper {
+    width: 100%;
+}
+
+.slide-enter {
+    // position: absolute;
+    transform: translateX(-110%);
+}
+.slide-enter-active {
+    transform: translateX(0%);
+    transition: all 0.5s ease;
+}
+.slide-exit {
+    position: absolute;
+}
+.slide-exit-active {
+    transform: translateX(-110%);
+    transition: all 0.5s ease;
+}
+
+.side-enter {
+    position: absolute;
+    transform: translateX(110%);
+}
+.side-enter-active {
+    transform: translateX(0%);
+    transition: all 0.5s ease;
+}
+.side-exit {
+}
+.side-exit-active {
+    position: absolute;
+    transform: translateX(110%);
+    transition: all 0.5s ease;
+}
+
+.action {
+    margin-bottom: 16px;
+    div {
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.indicator {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: $main;
+    top: 0;
+    right: 0px;
+    display: inline-block;
+    border-radius: 100%;
+    transition: 0.5s ease-out;
+    &.show {
+        transform: scale(1);
+    }
+    &.hide {
+        transform: scale(0);
     }
 }

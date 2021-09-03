@@ -105,6 +105,7 @@ function Messages({ setCaret }) {
                             setter={setOptionsToggle}
                             open={optionsToggle}
                         >
+                            <OptionsDropDownItem>Add a new User</OptionsDropDownItem>
                             {groupDetails.group_creator_id === uid && (
                                 <OptionsDropDownItem
                                     sufIcon={<MdEdit />}
