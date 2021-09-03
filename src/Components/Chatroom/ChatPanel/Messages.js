@@ -4,9 +4,11 @@ import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
-import { DropList, OptionsDropDownItem } from "../../../utils/CustomComponents";
+import { DropList, Modal, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
+import { MdEdit } from "react-icons/md";
+import EditGroupUI from "../EditGroup/EditGroup";
 function Messages() {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -17,6 +19,8 @@ function Messages() {
     const [messages, setMessages] = useState([]);
     const [groupDetails, setGroupDetails] = useState();
     const [optionsToggle, setOptionsToggle] = useState(false);
+
+    const [editGroupModal, setEditGroupModal] = useModal();
     const dummy = useRef();
     useEffect(() => {
         if (messages) {
@@ -89,6 +93,16 @@ function Messages() {
                             setter={setOptionsToggle}
                             open={optionsToggle}
                         >
+                            {groupDetails.group_creator_id === uid && (
+                                <OptionsDropDownItem
+                                    sufIcon={<MdEdit />}
+                                    onClickExe={() => {
+                                        setEditGroupModal(true);
+                                    }}
+                                >
+                                    Edit Group
+                                </OptionsDropDownItem>
+                            )}
                             <OptionsDropDownItem
                                 onClickExe={async () => {
                                     await firestore
@@ -147,6 +161,9 @@ function Messages() {
             )}
             {}
             <div ref={dummy}></div>
+            <Modal header="Edit Group Details" setmodal={setEditGroupModal} state={editGroupModal}>
+                <EditGroupUI setmodal={setEditGroupModal} />
+            </Modal>
         </div>
     );
 }
@@ -254,6 +271,12 @@ function InfoBubble({ message }) {
             bubble = `${
                 message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
             } joined the Group!`;
+            break;
+        case "group_updated":
+            bubble = `${
+                message.admin_uid == uid ? "You" : message.admin
+            } Updated the Group's Details!`;
+            break;
     }
     return <div className="info_bubble">{bubble}</div>;
 }

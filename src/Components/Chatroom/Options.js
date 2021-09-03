@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FaEllipsisH, FaSignOutAlt, MdAdd, MdDehaze } from "react-icons/all";
+import { FaEllipsisH, FaSignOutAlt, MdAdd, MdDehaze, MdEdit } from "react-icons/all";
 import { MobileNav } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
 import { DropList, Modal, OptionsDropDownItem, useModal } from "../../utils/CustomComponents";
@@ -11,6 +11,7 @@ function Options() {
     const { setMobileNav } = useContext(MobileNav);
     const [createGroupModal, setCreateGroupModal] = useModal();
     const [joinGroupModal, setJoinGroupModal] = useModal();
+    const [editProfileModal, setEditProfileModal] = useModal();
     return (
         <div className="optionsIcon">
             <MdDehaze
@@ -25,6 +26,14 @@ function Options() {
                     setter={setOptionsToggle}
                     closeComp={<FaEllipsisH />}
                 >
+                    <OptionsDropDownItem
+                        sufIcon={<MdEdit />}
+                        onClickExe={() => {
+                            setEditProfileModal(true);
+                        }}
+                    >
+                        Edit Profile
+                    </OptionsDropDownItem>
                     <OptionsDropDownItem
                         onClickExe={() => {
                             setJoinGroupModal(true);
@@ -65,6 +74,14 @@ function Options() {
                 classTag="join-group"
             >
                 <JoinGroupModalUI setmodal={setJoinGroupModal} />
+            </Modal>
+            <Modal
+                header="Edit Profile"
+                state={editProfileModal}
+                setmodal={setEditProfileModal}
+                classTag="edit-profile"
+            >
+                Hello!
             </Modal>
         </div>
     );

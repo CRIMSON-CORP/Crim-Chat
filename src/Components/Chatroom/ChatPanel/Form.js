@@ -50,7 +50,7 @@ function Form() {
     return (
         <>
             {selectedChat && (
-                <div className="form">
+                <div className="form_input">
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
                             <textarea
