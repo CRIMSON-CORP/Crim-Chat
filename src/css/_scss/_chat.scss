@@ -229,3 +229,18 @@
 .users_list {
     max-height: 300px;
 }
+
+.caret {
+    position: absolute;
+    bottom: 4.5rem;
+    right: 18px;
+    height: 35px;
+    width: 35px;
+    background: $main;
+    color: white;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    transition: 0.5s ease-out;
+    cursor: pointer;
+}

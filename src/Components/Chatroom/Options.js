@@ -5,6 +5,7 @@ import { signOut } from "../../utils/firebaseUtils";
 import { DropList, Modal, OptionsDropDownItem, useModal } from "../../utils/CustomComponents";
 import CreateGroupModalUI from "./CreateGroup/CreateGroupModalUI";
 import JoinGroupModalUI from "./JoinGroup/JoinGroupModalUI";
+import EditProfile from "./EditProfile/EditProfile";
 
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
@@ -81,7 +82,7 @@ function Options() {
                 setmodal={setEditProfileModal}
                 classTag="edit-profile"
             >
-                Hello!
+                <EditProfile setmodal={setEditProfileModal} />
             </Modal>
         </div>
     );

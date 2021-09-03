@@ -1057,6 +1057,23 @@ span.loader {
   max-height: 300px;
 }
 
+.caret {
+  position: absolute;
+  bottom: 4.5rem;
+  right: 18px;
+  height: 35px;
+  width: 35px;
+  background: #dc143c;
+  color: white;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+  cursor: pointer;
+}
+
 .fade-enter {
   opacity: 0;
   -webkit-transform: translateY(10px) translate(-110%);
@@ -1079,6 +1096,22 @@ span.loader {
   opacity: 0;
   -webkit-transform: translateY(10px) translate(-110%);
           transform: translateY(10px) translate(-110%);
+}
+
+.fade_no_trans-enter {
+  opacity: 0;
+}
+
+.fade_no_trans-enter-active {
+  opacity: 1;
+}
+
+.fade_no_trans-exit {
+  opacity: 1;
+}
+
+.fade_no_trans-exit-active {
+  opacity: 0;
 }
 
 .tab_logo {

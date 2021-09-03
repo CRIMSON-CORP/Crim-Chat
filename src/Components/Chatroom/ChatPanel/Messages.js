@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import firebase, { firestore } from "../../../utils/firebase";
-import { BiUser } from "react-icons/bi";
+import { BiCaretDown, BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
@@ -9,7 +9,8 @@ import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
 import { MdEdit } from "react-icons/md";
 import EditGroupUI from "../EditGroup/EditGroup";
-function Messages() {
+import $ from "jquery";
+function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
         userlocal: { uid, displayName },
@@ -62,6 +63,17 @@ function Messages() {
         };
     }, [selectedChat]);
 
+    useEffect(() => {
+        messageBoxRef.current.addEventListener("scroll", () => {
+            let scrolltop =
+                $(messageBoxRef.current).scrollTop() + $(messageBoxRef.current).height();
+            if (scrolltop < messageBoxRef.current.scrollHeight - 50) {
+                setCaret(true);
+            } else {
+                setCaret(false);
+            }
+        });
+    }, []);
     useEffect(() => {
         return () => {
             setGroupDetails([]);
@@ -159,8 +171,8 @@ function Messages() {
             ) : (
                 <h1 className="no-chat-selected">Select a Chat to see messages</h1>
             )}
-            {}
-            <div ref={dummy}></div>
+
+            <div className="dummy" ref={dummy}></div>
             <Modal header="Edit Group Details" setmodal={setEditGroupModal} state={editGroupModal}>
                 <EditGroupUI setmodal={setEditGroupModal} />
             </Modal>
