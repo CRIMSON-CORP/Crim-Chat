@@ -7,11 +7,11 @@ function UsersList({ users, selected, setSelected }) {
         userlocal: { uid },
     } = useContext(UserContext);
     const usersRefined = users.map((user) => user.data()).filter((user) => user.uid != uid);
-    const usersJSX = usersRefined.map((user) => {
+    const usersJSX = usersRefined.map((user, index) => {
         return (
             <li
                 className="user hover mb-20"
-                key={user.uid}
+                key={index}
                 onClick={() => {
                     if (selected.includes(user.uid)) {
                         setSelected(selected.filter((id) => id !== user.uid));

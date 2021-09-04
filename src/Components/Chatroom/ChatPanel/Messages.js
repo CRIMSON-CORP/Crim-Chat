@@ -7,9 +7,11 @@ import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, Modal, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
-import { MdEdit } from "react-icons/md";
+import { MdAdd, MdEdit, MdInfo, MdInfoOutline } from "react-icons/md";
 import EditGroupUI from "../EditGroup/EditGroup";
 import $ from "jquery";
+import AddUsers from "../AddUsers/AddUsers";
+import GroupInfoModal from "../GroupInfo/GroupInfoModal";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -20,8 +22,9 @@ function Messages({ setCaret }) {
     const [messages, setMessages] = useState([]);
     const [groupDetails, setGroupDetails] = useState();
     const [optionsToggle, setOptionsToggle] = useState(false);
-
-    const [editGroupModal, setEditGroupModal] = useModal();
+    const [editGroupModal, setEditGroupModal] = useModal(false);
+    const [addUsers, setAddUsers] = useState(false);
+    const [groupInfoModal, setGroupInfoModal] = useModal(false);
     const dummy = useRef();
     useEffect(() => {
         if (messages) {
@@ -105,16 +108,33 @@ function Messages({ setCaret }) {
                             setter={setOptionsToggle}
                             open={optionsToggle}
                         >
-                            <OptionsDropDownItem>Add a new User</OptionsDropDownItem>
+                            <OptionsDropDownItem
+                                sufIcon={<MdInfoOutline />}
+                                onClickExe={() => {
+                                    setGroupInfoModal(true);
+                                }}
+                            >
+                                Group Information
+                            </OptionsDropDownItem>
                             {groupDetails.group_creator_id === uid && (
-                                <OptionsDropDownItem
-                                    sufIcon={<MdEdit />}
-                                    onClickExe={() => {
-                                        setEditGroupModal(true);
-                                    }}
-                                >
-                                    Edit Group
-                                </OptionsDropDownItem>
+                                <>
+                                    <OptionsDropDownItem
+                                        sufIcon={<MdEdit />}
+                                        onClickExe={() => {
+                                            setEditGroupModal(true);
+                                        }}
+                                    >
+                                        Edit Group
+                                    </OptionsDropDownItem>
+                                    <OptionsDropDownItem
+                                        sufIcon={<MdAdd />}
+                                        onClickExe={() => {
+                                            setAddUsers(true);
+                                        }}
+                                    >
+                                        Add a new User
+                                    </OptionsDropDownItem>
+                                </>
                             )}
                             <OptionsDropDownItem
                                 onClickExe={async () => {
@@ -176,6 +196,17 @@ function Messages({ setCaret }) {
             <div className="dummy" ref={dummy}></div>
             <Modal header="Edit Group Details" setmodal={setEditGroupModal} state={editGroupModal}>
                 <EditGroupUI setmodal={setEditGroupModal} />
+            </Modal>
+            <Modal header="Add Users" setmodal={setAddUsers} state={addUsers}>
+                <AddUsers setmodal={setAddUsers} />
+            </Modal>
+            <Modal
+                header="Group Information"
+                setmodal={setGroupInfoModal}
+                state={groupInfoModal}
+                classTag="group-info"
+            >
+                <GroupInfoModal />
             </Modal>
         </div>
     );
@@ -289,6 +320,11 @@ function InfoBubble({ message }) {
             bubble = `${
                 message.admin_uid == uid ? "You" : message.admin
             } Updated the Group's Details!`;
+            break;
+        case "user_removed":
+            bubble = `${message.admin_uid == uid ? "You" : message.admin} removed ${
+                message.removed_user
+            }`;
             break;
     }
     return <div className="info_bubble">{bubble}</div>;

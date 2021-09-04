@@ -230,6 +230,12 @@ function Notification() {
                                                     user_that_joined_id: uid,
                                                     user_that_joined_name: displayName,
                                                 });
+                                            await firestore
+                                                .collection(collections.users)
+                                                .doc(uid)
+                                                .collection("notif")
+                                                .doc(selectedNotif.notif_id)
+                                                .delete();
                                             setSelectedChat(selectedNotif.group_id);
                                         } catch (err) {
                                             console.log(err);

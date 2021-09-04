@@ -322,6 +322,12 @@
                     color: white;
                 }
             }
+            &.red {
+                background: $main;
+                svg {
+                    color: white;
+                }
+            }
         }
     }
 }
@@ -420,5 +426,47 @@
     width: clamp(300px, 100%, 500px);
     .join-group-wrapper {
         margin: 20px 0;
+    }
+}
+
+.group-info {
+    .profilePic {
+        margin: 20px auto;
+        box-shadow: 0px 3px 8px $main_faint;
+        width: 200px;
+        height: 200px;
+        display: grid;
+        place-items: center;
+        color: white;
+        position: relative;
+        cursor: pointer;
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .alt {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .profilepic {
+        position: relative;
+        .user-online-status {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            z-index: 10;
+        }
+
+        .profilePic {
+            margin: 0;
+            width: 50px;
+            height: 50px;
+        }
     }
 }

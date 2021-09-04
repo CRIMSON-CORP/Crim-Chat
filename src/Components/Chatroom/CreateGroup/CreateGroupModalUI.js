@@ -105,7 +105,6 @@ function CreateGroupModalUI({ setmodal }) {
                             uid: uid,
                             tag: "invite_sent",
                             invitee_id: user,
-                            invitee_name: user.displayName,
                             inviter: displayName,
                         });
                 });
