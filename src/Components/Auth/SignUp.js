@@ -4,7 +4,6 @@ import { BiEnvelope, BiUser, BsEye, BiKey, BsEyeSlash } from "react-icons/all";
 import { ReactComponent as Google } from "../../img/google_colored.svg";
 import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
-import { Notification } from "../../utils/utils";
 import { LoaderContext } from "../../utils/Contexts";
 import { AddUser, UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
 import toast from "react-hot-toast";
@@ -23,13 +22,13 @@ function SignUp({ setActivePage }) {
         } catch (err) {
             console.log(err);
             if (err.code === "auth/invalid-email") {
-                Notification("danger", "Error", err.message);
+                toast.error(err.message);
             }
             if (err.code === "auth/email-already-in-use") {
-                Notification("danger", "Email already in use!", err.message);
+                toast.error("Email already in use!");
             }
             if (err == "auth/network-request-failed") {
-                Notification("danger", "Network Error", "Network connection is unstable!");
+                toast.error("Network Error");
             }
         } finally {
             setLoading(false);

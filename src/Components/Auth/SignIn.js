@@ -5,7 +5,6 @@ import { ReactComponent as Google } from "../../img/google_colored.svg";
 import { IconContext } from "react-icons";
 import { InputForm } from "../../utils/CustomComponents";
 import { LoaderContext } from "../../utils/Contexts";
-import { Notification } from "../../utils/utils";
 import { AddUser, UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
 import toast from "react-hot-toast";
 function SignIn({ setActivePage }) {
@@ -22,7 +21,7 @@ function SignIn({ setActivePage }) {
         } catch (err) {
             console.log(err);
             if (err.code == "auth/network-request-failed") {
-                Notification("danger", "Network Error", "Network connection is unstable!");
+                toast.error("Network Error");
             } else if (err.code == "auth/popup-closed-by-user") {
                 toast.error("You closed the Popup!");
             }
@@ -40,28 +39,16 @@ function SignIn({ setActivePage }) {
         } catch (err) {
             console.log(err);
             if (err.code === "auth/wrong-password") {
-                Notification(
-                    "danger",
-                    "Incorrect Password",
-                    "The Password is incorrect for this User!"
-                );
+                toast.error("The Password is incorrect for this User!");
                 setPassword("");
             } else if (err.code === "auth/too-many-requests") {
-                Notification(
-                    "danger",
-                    "Access Temporarily Blocked",
-                    "Too many incorrect tries, Account Temporarily Blocked!"
-                );
+                toast.error("Too many incorrect tries, Account Temporarily Blocked!");
                 setEmail("");
                 setPassword("");
             } else if (err.code === "auth/invalid-email") {
-                Notification("danger", "Error", err.message);
+                toast.error(err.message);
             } else if (err.code === "auth/user-not-found") {
-                Notification(
-                    "warning",
-                    "No Account Found!",
-                    "User with this Account does not Exist!"
-                );
+                toast.error("User with this Account does not Exist!");
             } else if (err.code == "auth/network-request-failed") {
                 return toast.error("Network Error");
             }

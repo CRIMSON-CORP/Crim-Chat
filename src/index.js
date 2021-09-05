@@ -6,13 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
 import "./css/style.css";
 import "./style.css";
-import ReactNotification from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
-import "animate.css/animate.compat.css";
-import "react-photoswipe/lib/photoswipe.css";
 ReactDOM.render(
     <>
-        <ReactNotification className="notif" />
         <App />
     </>,
     document.getElementById("root")
