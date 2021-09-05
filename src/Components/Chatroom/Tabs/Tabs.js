@@ -32,13 +32,6 @@ function Tabs() {
         <div className="tabs" ref={tab}>
             <div className="tab_logo">
                 <Logo fsize={24} />
-                <MdClose
-                    size={20}
-                    className="cancel"
-                    onClick={() => {
-                        setMobileNav(false);
-                    }}
-                />
             </div>
             <User />
             <GroupChat />

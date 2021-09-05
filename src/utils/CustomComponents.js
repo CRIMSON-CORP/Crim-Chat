@@ -3,7 +3,6 @@ import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { FaUserFriends } from "react-icons/fa";
-import { UserContext } from "./Contexts";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (
@@ -69,15 +68,9 @@ export function useModal() {
 }
 export function Modal({ children, state, setmodal, classTag, header }) {
     return (
-        <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
-            <div className="modal-custom">
-                <div
-                    className="underlay"
-                    onClick={() => {
-                        setmodal(false);
-                    }}
-                ></div>
-                <CSSTransition in={state} unmountOnExit classNames="modal-content-anim" timeout={0}>
+        <>
+            <CSSTransition in={state} unmountOnExit classNames="modal-content-anim" timeout={400}>
+                <div className="modal-custom">
                     <div className={`modal-content-custom ${classTag} scroll`}>
                         <span
                             className="close"
@@ -88,14 +81,25 @@ export function Modal({ children, state, setmodal, classTag, header }) {
                         >
                             <MdClear />
                         </span>
-                        <div className="modal-head">
-                            <h3>{header}</h3>
+                        <div className="modal-content-custom-wrapper">
+                            <div className="modal-head">
+                                <h3>{header}</h3>
+                            </div>
+                            {children}
                         </div>
-                        {children}
                     </div>
-                </CSSTransition>
-            </div>
-        </CSSTransition>
+                </div>
+            </CSSTransition>
+
+            {state && (
+                <UnderLay
+                    exe={() => {
+                        setmodal(false);
+                    }}
+                    zIndex={0}
+                />
+            )}
+        </>
     );
 }
 
@@ -164,7 +168,7 @@ export function ProfilePic({ img, d_n, tag = "user" }) {
 }
 
 export function UnderLay({ zIndex, exe }) {
-    return <div className="underlay" style={{ zIndex }} onClick={exe}></div>;
+    return <div className="underlay" style={{ zIndex }} onMouseDown={exe}></div>;
 }
 
 const Close = createContext(null);
@@ -198,7 +202,7 @@ export function DropList({ open, closeComp, setter, children, height, tag, drop,
     );
 }
 
-export function OptionsDropDown({ children, height, tag, drop }) {
+export function OptionsDropDown({ children, height, drop }) {
     return (
         <div
             ref={drop}

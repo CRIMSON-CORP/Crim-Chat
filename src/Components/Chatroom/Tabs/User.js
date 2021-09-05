@@ -4,42 +4,6 @@ import { ProfilePic } from "../../../utils/CustomComponents";
 function User() {
     const { userlocal, setUserLocal } = useContext(UserContext);
 
-    useEffect(() => {
-        if (userlocal.onlineStatus) {
-            setUserLocal((prev) => {
-                console.log("navigator", navigator.onLine);
-                return { ...prev, onlineStatus: navigator.online ? "Online" : "Offline" };
-            });
-        }
-    }, [navigator.onLine]);
-
-    useEffect(() => {
-        if (userlocal.onlineStatus) {
-            var online = () => {
-                console.log("Online");
-                setUserLocal((prev) => {
-                    return { ...prev, onlineStatus: "Online" };
-                });
-            };
-            var offline = () => {
-                console.log("Offline");
-                setUserLocal((prev) => {
-                    return { ...prev, onlineStatus: "Offline" };
-                });
-            };
-            window.addEventListener("online", online);
-            window.addEventListener("offline", offline);
-        }
-
-        return () => {
-            window.removeEventListener("online", online);
-            window.removeEventListener("offline", offline);
-        };
-    }, [navigator.onLine, userlocal.onlineStatus]);
-
-    // useEffect(() => {
-    //     console.log(userlocal.onlineStatus);
-    // }, [userlocal.onlineStatus]);
     return (
         <div>
             {userlocal && (

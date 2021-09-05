@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import firebase, { firestore } from "../../../utils/firebase";
-import { BiCaretDown, BiUser } from "react-icons/bi";
+import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, Modal, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
-import { MdAdd, MdEdit, MdInfo, MdInfoOutline } from "react-icons/md";
+import { MdAdd, MdEdit, MdInfoOutline } from "react-icons/md";
 import EditGroupUI from "../EditGroup/EditGroup";
 import $ from "jquery";
 import AddUsers from "../AddUsers/AddUsers";

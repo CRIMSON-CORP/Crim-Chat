@@ -3,7 +3,8 @@
     position: fixed;
     inset: 0;
     padding: 20px;
-    transition: 0.5s ease;
+    transition: 0.5s ease, transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1),
+        opacity 0.75s cubic-bezier(0.18, 0.72, 0.35, 1);
     z-index: 1000;
     display: grid;
     place-items: center;
@@ -20,10 +21,14 @@
         position: relative;
         box-shadow: 0rem 0.5rem 1rem rgba(220, 20, 60, 0.301),
             0px 1.5rem 3rem rgba(220, 20, 60, 0.1);
-        padding: 20px;
+
         border-radius: 10px;
         transition: 0.3s ease-out;
         overflow: auto;
+
+        .modal-content-custom-wrapper {
+            padding: 20px;
+        }
 
         .close {
             position: absolute;
@@ -183,10 +188,12 @@
     transform: scale(1) translateY(0px);
 }
 .modal-content-anim-exit {
+    opacity: 1;
     transform: scale(1) translateY(0px);
 }
 
 .modal-content-anim-exit-active {
+    opacity: 0;
     transform: scale(0.9) translateY(-20px);
 }
 

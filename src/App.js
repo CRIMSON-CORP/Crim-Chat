@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firestore } from "./utils/firebase";
+import { Toaster } from "react-hot-toast";
+import { CSSTransition } from "react-transition-group";
 import Auth from "./Components/Auth/Auth";
 import Dashboard from "./Components/Chatroom/Dashboard";
 import { LoaderContext, UserContext } from "./utils/Contexts";
 import { Loader } from "./utils/CustomComponents";
-import { CSSTransition } from "react-transition-group";
-import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
+import { auth, firestore } from "./utils/firebase";
 import { collections } from "./utils/FirebaseRefs";
-import toast, { Toaster } from "react-hot-toast";
+import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
+import { useNavigatorOnLine } from "./utils/utils";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(true);
@@ -20,10 +21,8 @@ function App() {
         groups: [],
         mode: "light",
     });
-    const warn = {
-        w: false,
-    };
 
+    const status = useNavigatorOnLine();
     useEffect(() => {
         if (user) {
             try {
@@ -31,16 +30,14 @@ function App() {
                     .collection(collections.users)
                     .doc(user.uid)
                     .onSnapshot(
-                        (userdb) => {
+                        async (userdb) => {
                             if (!userdb.exists) {
-                                toast.error("You're offline!");
-                                warn.w = true;
-                                const local_user = JSON.parse(localStorage.getItem("user"));
-                                local_user && setUserLocal(local_user);
-                            } else {
-                                if (warn.w) {
-                                    toast.success("You're back  online!");
+                                let local_user = await JSON.parse(localStorage.getItem("user"));
+                                if (local_user) {
+                                    local_user.onlineStatus = "Offline";
+                                    setUserLocal(local_user);
                                 }
+                            } else {
                                 setUserLocal(userdb.data());
                                 localStorage.setItem("user", JSON.stringify(userdb.data()));
                             }
@@ -62,6 +59,16 @@ function App() {
                 await auth.signOut());
         };
     }, []);
+
+    useEffect(() => {
+        setUserLocal((prev) => {
+            return {
+                ...prev,
+                onlineStatus: status ? "Online" : "Offline",
+            };
+        });
+    }, [status]);
+
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>
             {

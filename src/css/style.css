@@ -1371,8 +1371,10 @@ span.loader {
   position: fixed;
   inset: 0;
   padding: 20px;
-  -webkit-transition: 0.5s ease;
-  transition: 0.5s ease;
+  -webkit-transition: 0.5s ease, opacity 0.75s cubic-bezier(0.18, 0.72, 0.35, 1), -webkit-transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1);
+  transition: 0.5s ease, opacity 0.75s cubic-bezier(0.18, 0.72, 0.35, 1), -webkit-transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1);
+  transition: 0.5s ease, transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1), opacity 0.75s cubic-bezier(0.18, 0.72, 0.35, 1);
+  transition: 0.5s ease, transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1), opacity 0.75s cubic-bezier(0.18, 0.72, 0.35, 1), -webkit-transform 0.75s cubic-bezier(0.18, 0.72, 0.35, 1);
   z-index: 1000;
   display: -ms-grid;
   display: grid;
@@ -1395,11 +1397,14 @@ span.loader {
   position: relative;
   -webkit-box-shadow: 0rem 0.5rem 1rem rgba(220, 20, 60, 0.301), 0px 1.5rem 3rem rgba(220, 20, 60, 0.1);
           box-shadow: 0rem 0.5rem 1rem rgba(220, 20, 60, 0.301), 0px 1.5rem 3rem rgba(220, 20, 60, 0.1);
-  padding: 20px;
   border-radius: 10px;
   -webkit-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
   overflow: auto;
+}
+
+.modal-custom .modal-content-custom .modal-content-custom-wrapper {
+  padding: 20px;
 }
 
 .modal-custom .modal-content-custom .close {
@@ -1601,11 +1606,13 @@ span.loader {
 }
 
 .modal-content-anim-exit {
+  opacity: 1;
   -webkit-transform: scale(1) translateY(0px);
           transform: scale(1) translateY(0px);
 }
 
 .modal-content-anim-exit-active {
+  opacity: 0;
   -webkit-transform: scale(0.9) translateY(-20px);
           transform: scale(0.9) translateY(-20px);
 }
