@@ -11,7 +11,6 @@ function JoinGroupModalUI({ setmodal }) {
         await firestore
             .collection(collections.groups_register)
             .where("closed", "==", false)
-            .limit(10)
             .get()
             .then((groupsList) => {
                 setGroups(groupsList.docs);

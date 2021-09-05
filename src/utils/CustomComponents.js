@@ -3,6 +3,7 @@ import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { FaUserFriends } from "react-icons/fa";
+import { UserContext } from "./Contexts";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (
@@ -23,9 +24,9 @@ export function InputForm({ preicon, type, suficon, name, onChange, value, plh, 
     );
 }
 
-export function Loader() {
+export function Loader({ mode }) {
     return (
-        <div className="loader-container">
+        <div className={`loader-container ${mode}`}>
             <div className="loader-wrapper">
                 <span className="loader" style={{ "--i": 7 }}></span>
                 <span className="loader" style={{ "--i": 6 }}></span>
@@ -76,15 +77,11 @@ export function Modal({ children, state, setmodal, classTag, header }) {
                         setmodal(false);
                     }}
                 ></div>
-                <CSSTransition
-                    in={state}
-                    unmountOnExit
-                    classNames="modal-content-anim"
-                    timeout={400}
-                >
+                <CSSTransition in={state} unmountOnExit classNames="modal-content-anim" timeout={0}>
                     <div className={`modal-content-custom ${classTag} scroll`}>
                         <span
                             className="close"
+                            style={{ position: "sticky" }}
                             onClick={() => {
                                 setmodal(false);
                             }}
@@ -220,7 +217,7 @@ export function OptionsDropDownItem({ children, sufIcon, onClickExe }) {
     const { setter } = useContext(Close);
     return (
         <li
-            className="dropDown_item"
+            className="dropDown_item hover"
             onClick={() => {
                 onClickExe();
                 setter(false);

@@ -69,7 +69,14 @@ function GroupComponent({ group }) {
         group.group_id === selectedChat && isotope.reloadItems();
     }, [group.updatedAt]);
     return (
-        <div className="group hover" data-filter="*">
+        <div
+            className="group hover"
+            data-filter="*"
+            onClick={() => {
+                setSelectedChat(group.group_id);
+                setMobileNav(false);
+            }}
+        >
             <div className="group_profilePic">
                 {group.group_profilePic !== null ? (
                     <img src={group.group_profilePic} />
@@ -77,13 +84,7 @@ function GroupComponent({ group }) {
                     <FaUserFriends size="2em" />
                 )}
             </div>
-            <div
-                className="group_text"
-                onClick={() => {
-                    setSelectedChat(group.group_id);
-                    setMobileNav(false);
-                }}
-            >
+            <div className="group_text">
                 <h3 className="group_name">{group.group_name}</h3>
                 <span>{group.latestText}</span>
             </div>

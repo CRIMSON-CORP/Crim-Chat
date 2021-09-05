@@ -1,5 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import {
+    BiMoon,
+    BiSun,
     FaEllipsisH,
     FaSignOutAlt,
     MdAdd,
@@ -27,7 +29,9 @@ import toast from "react-hot-toast";
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
     const { setMobileNav } = useContext(MobileNav);
-
+    const {
+        userlocal: { mode, uid },
+    } = useContext(UserContext);
     const [createGroupModal, setCreateGroupModal] = useModal();
     const [joinGroupModal, setJoinGroupModal] = useModal();
     const [editProfileModal, setEditProfileModal] = useModal();
@@ -53,6 +57,19 @@ function Options() {
                         }}
                     >
                         Edit Profile
+                    </OptionsDropDownItem>
+                    <OptionsDropDownItem
+                        sufIcon={mode == "dark" ? <BiSun /> : <BiMoon />}
+                        onClickExe={async () => {
+                            await firestore
+                                .collection(collections.users)
+                                .doc(uid)
+                                .update({
+                                    mode: mode == "dark" ? "light" : "dark",
+                                });
+                        }}
+                    >
+                        {mode !== "dark" ? "Turn on Dark mode" : "Turn on Light mode"}
                     </OptionsDropDownItem>
                     <OptionsDropDownItem
                         onClickExe={() => {
@@ -123,7 +140,7 @@ function Notification() {
     const { setSelectedChat } = useContext(SelectedChatContext);
     const Drop = useRef();
     useEffect(() => {
-        firestore
+        const unsub = firestore
             .collection(collections.users)
             .doc(uid)
             .collection("notif")
@@ -135,6 +152,7 @@ function Notification() {
                 list.length == 0 ? setNotifIndicator(false) : setNotifIndicator(true);
                 setNotif(list);
             });
+        return unsub;
     }, [uid]);
 
     const notifJSX = notif.map((not) => {
@@ -198,7 +216,15 @@ function Notification() {
                                             if (groups.includes(selectedNotif.group_id)) {
                                                 return (
                                                     toast.success("You're already in the group!"),
-                                                    setSelectedChat(selectedNotif.group_id)
+                                                    setSelectedChat(selectedNotif.group_id),
+                                                    setActiveMenu("main"),
+                                                    setNotifToggle(false),
+                                                    await firestore
+                                                        .collection(collections.users)
+                                                        .doc(uid)
+                                                        .collection("notif")
+                                                        .doc(selectedNotif.notif_id)
+                                                        .delete()
                                                 );
                                             }
                                             await firestore

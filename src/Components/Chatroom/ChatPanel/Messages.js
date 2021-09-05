@@ -45,7 +45,7 @@ function Messages({ setCaret }) {
                 .doc(selectedChat)
                 .collection("messages")
                 .orderBy("createdAt")
-                .limit(25)
+                .limit(100)
                 .onSnapshot((docs) => {
                     const list = [];
                     docs.forEach((doc) => {
@@ -89,7 +89,12 @@ function Messages({ setCaret }) {
         <div className="messages scroll" ref={messageBoxRef}>
             {groupDetails && selectedChat !== "" && (
                 <div className="messages_header">
-                    <div className="head">
+                    <div
+                        className="head"
+                        onClick={() => {
+                            setGroupInfoModal(true);
+                        }}
+                    >
                         <div className="group_profilePic">
                             {groupDetails.group_profilePic !== null ? (
                                 <img src={groupDetails.group_profilePic} />
@@ -206,7 +211,7 @@ function Messages({ setCaret }) {
                 state={groupInfoModal}
                 classTag="group-info"
             >
-                <GroupInfoModal />
+                <GroupInfoModal setmodal={setGroupInfoModal} />
             </Modal>
         </div>
     );
@@ -258,37 +263,22 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
     const bubble = useRef();
     useEffect(() => {
         if (loaded) {
-            if (text.length > 200) {
-                gsap.fromTo(
-                    bubble.current,
-                    {
-                        scale: 0.8,
-                        opacity: 0,
-                        y: 10,
-                    },
-                    { scale: 1, opacity: 1, y: 0, duration: 2, ease: "expo.out" }
-                );
-            } else {
-                gsap.fromTo(
-                    bubble.current,
-                    {
-                        scale: 0.5,
-                        rotate: messageOwner ? "20deg" : "-20deg",
-                        transformOrigin: messageOwner ? "80% 20%" : "20% 20%",
-                    },
-                    {
-                        scale: 1,
-                        rotate: "0deg",
-                    }
-                );
-            }
+            gsap.fromTo(
+                bubble.current,
+                {
+                    scale: 0.7,
+                    opacity: 0,
+                    y: 10,
+                },
+                { scale: 1, opacity: 1, y: 0, duration: 1, ease: "expo.out" }
+            );
         }
     }, []);
     return (
         <div className="bubble" ref={bubble}>
             <div className="text">
                 {!messageOwner && <div className="message_sender">{sender}</div>}
-                <p>{text}</p>
+                <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{text}</p>
             </div>
             <div className="timestamp">{time}</div>
         </div>

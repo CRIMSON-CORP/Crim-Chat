@@ -86,12 +86,12 @@ function EditProfile({ setmodal }) {
             <div className="form">
                 <form onSubmit={submit}>
                     <div className="form_grid" style={{ gridTemplateColumns: "100%" }}>
-                        <div className="group_details">
+                        <div className="profile_details">
                             <div className="profile_icon">
-                                <h4 style={{ marginBottom: 20 }}>Group Profile Icon</h4>
+                                <h4 style={{ marginBottom: 20 }}>Profile Icon</h4>
                                 <input
                                     type="file"
-                                    name="group-profile-icon"
+                                    name="profile-icon"
                                     accept="image/png, image/jpeg,image/jpg, image/JPEG, image/webpg"
                                     id="profile-icon"
                                     onChange={setImage}
@@ -135,10 +135,10 @@ function EditProfile({ setmodal }) {
                                     </span>
                                 </label>
                             </div>
-                            <div className="group_name">
+                            <div className="display_name">
                                 <BorderedInput
-                                    name="group_name"
-                                    header="Group name"
+                                    name="display_name"
+                                    header="Display name"
                                     onChange={(e) => {
                                         setNewDetails((prev) => {
                                             return { ...prev, displayName: e.target.value };

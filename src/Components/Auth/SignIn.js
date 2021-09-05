@@ -21,8 +21,10 @@ function SignIn({ setActivePage }) {
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
         } catch (err) {
             console.log(err);
-            if (err == "auth/network-request-failed") {
+            if (err.code == "auth/network-request-failed") {
                 Notification("danger", "Network Error", "Network connection is unstable!");
+            } else if (err.code == "auth/popup-closed-by-user") {
+                toast.error("You closed the Popup!");
             }
         } finally {
             setLoading(false);

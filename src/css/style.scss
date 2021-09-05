@@ -26,6 +26,12 @@ a {
     overflow: hidden;
     display: grid;
     place-items: center;
+    color: black;
+    transition: 0.3s ease-out;
+}
+
+input {
+    transition: 0.3s ease-out;
 }
 
 .logo {
@@ -50,7 +56,6 @@ a {
         font-family: $Gisha;
         font-weight: bold;
         font-size: 0.8em;
-        color: black;
     }
 }
 
@@ -76,3 +81,4 @@ a {
 @import "./_scss/navbar";
 @import "./_scss//mainpannel";
 @import "./_scss/modals";
+@import "./_scss/dark_mode";

@@ -1,34 +1,45 @@
 import { useContext, useEffect } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import { ProfilePic } from "../../../utils/CustomComponents";
-import { UpdateUserOnlineStatus } from "../../../utils/firebaseUtils";
-
 function User() {
     const { userlocal, setUserLocal } = useContext(UserContext);
 
     useEffect(() => {
-        setUserLocal((prev) => {
-            return { ...prev, onlineStatus: navigator.onLine ? "Online" : "Offline" };
-        });
+        if (userlocal.onlineStatus) {
+            setUserLocal((prev) => {
+                console.log("navigator", navigator.onLine);
+                return { ...prev, onlineStatus: navigator.online ? "Online" : "Offline" };
+            });
+        }
+    }, [navigator.onLine]);
 
-        const online = () => {
-            setUserLocal((prev) => {
-                return { ...prev, onlineStatus: "Online" };
-            });
-        };
-        const offline = () => {
-            setUserLocal((prev) => {
-                return { ...prev, onlineStatus: "Offline" };
-            });
-        };
-        window.addEventListener("online", online);
-        window.addEventListener("offline", offline);
+    useEffect(() => {
+        if (userlocal.onlineStatus) {
+            var online = () => {
+                console.log("Online");
+                setUserLocal((prev) => {
+                    return { ...prev, onlineStatus: "Online" };
+                });
+            };
+            var offline = () => {
+                console.log("Offline");
+                setUserLocal((prev) => {
+                    return { ...prev, onlineStatus: "Offline" };
+                });
+            };
+            window.addEventListener("online", online);
+            window.addEventListener("offline", offline);
+        }
 
         return () => {
             window.removeEventListener("online", online);
             window.removeEventListener("offline", offline);
         };
-    }, []);
+    }, [navigator.onLine, userlocal.onlineStatus]);
+
+    // useEffect(() => {
+    //     console.log(userlocal.onlineStatus);
+    // }, [userlocal.onlineStatus]);
     return (
         <div>
             {userlocal && (

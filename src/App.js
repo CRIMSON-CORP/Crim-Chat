@@ -8,7 +8,7 @@ import { Loader } from "./utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
 import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
 import { collections } from "./utils/FirebaseRefs";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,11 @@ function App() {
         email: null,
         onlineStatus: null,
         groups: [],
+        mode: "light",
     });
+    const warn = {
+        w: false,
+    };
 
     useEffect(() => {
         if (user) {
@@ -29,9 +33,14 @@ function App() {
                     .onSnapshot(
                         (userdb) => {
                             if (!userdb.exists) {
+                                toast.error("You're offline!");
+                                warn.w = true;
                                 const local_user = JSON.parse(localStorage.getItem("user"));
                                 local_user && setUserLocal(local_user);
                             } else {
+                                if (warn.w) {
+                                    toast.success("You're back  online!");
+                                }
                                 setUserLocal(userdb.data());
                                 localStorage.setItem("user", JSON.stringify(userdb.data()));
                             }
@@ -44,6 +53,7 @@ function App() {
         }
         return unsub;
     }, [user]);
+
     useEffect(() => {
         setLoading(false);
         return async () => {
@@ -55,8 +65,8 @@ function App() {
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>
             {
-                <CSSTransition in={loading} classNames={"loading"} unmountOnExit timeout={400}>
-                    <Loader />
+                <CSSTransition in={loading} classNames="loading" unmountOnExit timeout={400}>
+                    <Loader mode={userlocal.mode} />
                 </CSSTransition>
             }
             {user ? (

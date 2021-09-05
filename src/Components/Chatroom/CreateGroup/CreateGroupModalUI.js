@@ -124,7 +124,7 @@ function CreateGroupModalUI({ setmodal }) {
                     <div className="form_grid">
                         <div className="group_details">
                             <div className="profile_icon">
-                                <h4 style={{ marginBottom: 20 }}>Group Profile Icon</h4>
+                                <h4 style={{ margin: "20px 0" }}>Group Profile Icon</h4>
                                 <input
                                     type="file"
                                     name="group-profile-icon"

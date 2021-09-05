@@ -8,7 +8,6 @@ function InviteUsers({ selected, setSelected }) {
     useEffect(() => {
         firestore
             .collection("users")
-            .limit(10)
             .get()
             .then((usersList) => {
                 setUsers(usersList.docs);

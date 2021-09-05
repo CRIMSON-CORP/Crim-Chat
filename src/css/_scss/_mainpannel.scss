@@ -70,7 +70,6 @@
                 font-size: 18px;
                 font-weight: bold;
                 font-family: $Gisha;
-                color: black;
                 margin: 0;
             }
             .group_text {
@@ -126,11 +125,10 @@
     top: 0;
     transform: translateX(-110%);
     background: white;
-    padding: 10px 16px;
     z-index: 99;
     border-radius: 10px;
     box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
-    transition: height 0.5s ease, transform 0.3s ease;
+    transition: height 0.5s ease, transform 0.4s ease, opacity 0.4s ease;
     &::-webkit-scrollbar {
         width: 0px;
     }
@@ -140,14 +138,15 @@
         margin: 0;
         display: grid;
         gap: 10px;
+        padding: 20px;
         li.dropDown_item {
             display: grid;
             grid-template-columns: auto 30px;
             gap: 10px;
             align-items: center;
-            height: 30px;
             cursor: pointer;
             align-items: center;
+            padding: 10px;
             svg {
                 width: 0.8em;
                 height: 0.8em;
@@ -160,7 +159,7 @@
 
 .fade-enter {
     opacity: 0;
-    transform: translateY(10px) translateX(-110%);
+    transform: translateY(20px) translateX(-110%);
 }
 
 .fade-enter-active {
@@ -174,7 +173,7 @@
 }
 .fade-exit-active {
     opacity: 0;
-    transform: translateY(-30px) translateX(-110%);
+    transform: translateY(30px) translateX(-110%);
 }
 
 .fade_no_trans-enter {

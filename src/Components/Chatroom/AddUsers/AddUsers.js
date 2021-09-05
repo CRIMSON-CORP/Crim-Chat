@@ -18,7 +18,6 @@ function AddUsers({ setmodal }) {
     async function fetchUsers() {
         await firestore
             .collection("users")
-            .limit(10)
             .get()
             .then((usersList) => {
                 setUsers(usersList.docs);

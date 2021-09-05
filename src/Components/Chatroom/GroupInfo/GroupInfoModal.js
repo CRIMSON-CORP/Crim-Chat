@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BiUserMinus, BiUserPlus } from "react-icons/bi";
+import { BiUserMinus } from "react-icons/bi";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { ProfilePic } from "../../../utils/CustomComponents";
 import firebase, { firestore } from "../../../utils/firebase";
@@ -13,25 +13,38 @@ function GroupInfoModal() {
     });
     const { selectedChat } = useContext(SelectedChatContext);
     useEffect(() => {
-        firestore
-            .collection(collections.groups_register)
-            .doc(selectedChat)
-            .get()
-            .then((data) => {
-                setgroupInfo(data.data());
-            });
+        if (selectedChat != undefined) {
+            var unsub = firestore
+                .collection(collections.groups_register)
+                .doc(selectedChat)
+                .onSnapshot((data) => {
+                    setgroupInfo(data.data());
+                });
+        }
+        return unsub;
     }, []);
 
-    const membersJSX = groupInfo.group_members.map((grp, index) => {
-        return <GroupMember member={grp} key={index} admin={groupInfo.group_creator_id} />;
-    });
     return (
         <div>
-            <ProfilePic tag="group" img={groupInfo.group_profilePic} />
-            <h4 className="mb-2">{groupInfo.group_name}</h4>
-            <p className="font-italic">{groupInfo.group_description}</p>
-            <h4 className="mt-3">Group Members</h4>
-            <ul className="users_list">{membersJSX}</ul>
+            {groupInfo && (
+                <>
+                    <ProfilePic tag="group" img={groupInfo.group_profilePic} />
+                    <h4 className="mb-2">{groupInfo.group_name}</h4>
+                    <p className="font-italic">{groupInfo.group_description}</p>
+                    <h4 className="mt-3">Group Members</h4>
+                    <ul className="users_list">
+                        {groupInfo.group_members.map((grp, index) => {
+                            return (
+                                <GroupMember
+                                    member={grp}
+                                    key={index}
+                                    admin={groupInfo.group_creator_id}
+                                />
+                            );
+                        })}
+                    </ul>
+                </>
+            )}
         </div>
     );
 }
@@ -58,6 +71,8 @@ function GroupMember({ member, admin }) {
                 setMem(data.data());
             });
     }, []);
+    let icon;
+
     return (
         <li className="user hover mb-20" key={member}>
             <div className="profilepic">
@@ -70,7 +85,7 @@ function GroupMember({ member, admin }) {
                 <h5> {mem.displayName}</h5>
                 <span>{mem.email}</span>
             </div>
-            {mem.uid !== admin && mem.uid !== uid && (
+            {mem.uid !== admin && uid !== mem.uid && (
                 <div
                     className={`add_user red`}
                     onClick={async () => {

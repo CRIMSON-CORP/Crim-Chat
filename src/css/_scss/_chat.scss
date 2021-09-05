@@ -19,6 +19,7 @@
         min-height: 50px;
         padding: 5px;
         box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
+        transition: 0.3s ease-out;
         form {
             display: grid;
             grid-template-columns: auto 70px;
@@ -40,6 +41,7 @@
                     width: 100%;
                     line-height: 1.3;
                     max-height: 150px;
+                    transition: 0.3s ease-out;
                 }
             }
             button {
@@ -83,11 +85,13 @@
             align-items: flex-start;
             gap: 10px;
             max-width: 80%;
+            transition: 0.3s ease-out;
             .bubble {
                 max-width: 80%;
                 .message_sender {
                     font-size: 10px;
                     color: #aaaaaa;
+                    margin-bottom: 5px;
                 }
                 .text {
                     border-radius: 10px;
@@ -95,6 +99,7 @@
                     font-size: 14px;
                     box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
                     font-weight: bold;
+                    transition: 0.3s ease-out;
                 }
                 .timestamp {
                     font-family: Gisha;
@@ -106,6 +111,7 @@
                     display: flex;
                     color: rgba(0, 0, 0, 0.4);
                     padding: 0px 5px;
+                    transition: 0.3s ease-out;
                 }
             }
             &.sent {
@@ -146,6 +152,7 @@
                 place-items: center;
                 border: 3px solid white;
                 box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
+                transition: 0.3s ease-out;
                 svg {
                     fill: white;
                     stroke-width: 0.5px;
@@ -185,6 +192,7 @@
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.801);
     box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+    transition: 0.3s ease-out;
 }
 
 .messages_header {
@@ -196,6 +204,7 @@
     grid-template-columns: auto 50px;
     gap: 20px;
     z-index: 90;
+    transition: 0.3s ease-out;
     .head {
         background: white;
         border-radius: 10px;
@@ -206,6 +215,8 @@
         box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
         height: 55px;
         align-items: center;
+        transition: 0.3s ease-out;
+        cursor: pointer;
     }
     .messages_options {
         border-radius: 50%;

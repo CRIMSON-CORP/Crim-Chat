@@ -47,8 +47,8 @@ function SignUp({ setActivePage }) {
             console.log(err);
             if (err == "auth/network-request-failed") {
                 toast.error("A Network Error occured");
-            } else if (err == "auth/popup-closed-by-user") {
-                Notification("danger", "Popup Closed", err.message);
+            } else if (err.code == "auth/popup-closed-by-user") {
+                toast.error("You closed the Popup!");
             }
         } finally {
             setLoading(false);

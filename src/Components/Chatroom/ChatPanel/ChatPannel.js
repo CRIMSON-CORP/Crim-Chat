@@ -1,10 +1,10 @@
+import gsap from "gsap";
+import { useEffect, useRef, useState } from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { CSSTransition } from "react-transition-group";
+import Options from "../Options";
 import Form from "./Form";
 import Messages from "./Messages";
-import Options from "../Options";
-import { useEffect, useRef, useState } from "react";
-import { CSSTransition } from "react-transition-group";
-import gsap from "gsap";
-import { MdKeyboardArrowDown } from "react-icons/md";
 function ChatPannel() {
     const [caret, setCaret] = useState(false);
     return (
@@ -35,7 +35,7 @@ function Caret() {
                 document.querySelector(".dummy").scrollIntoView({ behavior: "smooth" });
             }}
         >
-            <MdKeyboardArrowDown size={20} />
+            <MdKeyboardArrowDown size={30} style={{ marginTop: 4 }} />
         </div>
     );
 }

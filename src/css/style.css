@@ -27,6 +27,14 @@ a {
   display: -ms-grid;
   display: grid;
   place-items: center;
+  color: black;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+}
+
+input {
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .logo {
@@ -58,7 +66,6 @@ a {
   font-family: "Gisha";
   font-weight: bold;
   font-size: 0.8em;
-  color: black;
 }
 
 .loading-enter {
@@ -156,7 +163,6 @@ a {
 
 .auth h1 {
   font-family: "Gisha";
-  color: #000;
   font-size: 28px;
   font-weight: bold;
 }
@@ -469,6 +475,7 @@ span.loader {
 .hover {
   -webkit-transition: 0.5s ease;
   transition: 0.5s ease;
+  border-radius: 10px;
 }
 
 .hover:hover {
@@ -511,6 +518,8 @@ span.loader {
   display: -ms-grid;
   display: grid;
   gap: 20px;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .nav {
@@ -638,7 +647,6 @@ span.loader {
   font-size: 18px;
   font-weight: bold;
   font-family: "Gisha";
-  color: black;
   margin: 0;
 }
 
@@ -713,15 +721,14 @@ span.loader {
   -webkit-transform: translateX(-110%);
           transform: translateX(-110%);
   background: white;
-  padding: 10px 16px;
   z-index: 99;
   border-radius: 10px;
   -webkit-box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
           box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
-  -webkit-transition: height 0.5s ease, -webkit-transform 0.3s ease;
-  transition: height 0.5s ease, -webkit-transform 0.3s ease;
-  transition: height 0.5s ease, transform 0.3s ease;
-  transition: height 0.5s ease, transform 0.3s ease, -webkit-transform 0.3s ease;
+  -webkit-transition: height 0.5s ease, opacity 0.4s ease, -webkit-transform 0.4s ease;
+  transition: height 0.5s ease, opacity 0.4s ease, -webkit-transform 0.4s ease;
+  transition: height 0.5s ease, transform 0.4s ease, opacity 0.4s ease;
+  transition: height 0.5s ease, transform 0.4s ease, opacity 0.4s ease, -webkit-transform 0.4s ease;
 }
 
 .options_dropdown::-webkit-scrollbar {
@@ -735,6 +742,7 @@ span.loader {
   display: -ms-grid;
   display: grid;
   gap: 10px;
+  padding: 20px;
 }
 
 .options_dropdown ul li.dropDown_item {
@@ -746,9 +754,9 @@ span.loader {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  height: 30px;
   cursor: pointer;
   align-items: center;
+  padding: 10px;
 }
 
 .options_dropdown ul li.dropDown_item svg {
@@ -782,6 +790,8 @@ span.loader {
   padding: 5px;
   -webkit-box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
           box-shadow: 0px 2px 8px rgba(220, 20, 60, 0.1), 0px 2px 5px rgba(220, 20, 60, 0.1);
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .form_input form {
@@ -816,6 +826,8 @@ span.loader {
   width: 100%;
   line-height: 1.3;
   max-height: 150px;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .form_input form button {
@@ -872,6 +884,8 @@ span.loader {
           align-items: flex-start;
   gap: 10px;
   max-width: 80%;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .messages .message .bubble {
@@ -881,6 +895,7 @@ span.loader {
 .chat-pannel .messages .message .bubble .message_sender {
   font-size: 10px;
   color: #aaaaaa;
+  margin-bottom: 5px;
 }
 
 .chat-pannel .messages .message .bubble .text {
@@ -890,6 +905,8 @@ span.loader {
   -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
           box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
   font-weight: bold;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .messages .message .bubble .timestamp {
@@ -904,6 +921,8 @@ span.loader {
   display: flex;
   color: rgba(0, 0, 0, 0.4);
   padding: 0px 5px;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .messages .message.sent {
@@ -960,6 +979,8 @@ span.loader {
   border: 3px solid white;
   -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
           box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .chat-pannel .messages .message .img_profile svg {
@@ -1004,6 +1025,8 @@ span.loader {
   background: rgba(255, 255, 255, 0.801);
   -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
           box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .messages_header {
@@ -1018,6 +1041,8 @@ span.loader {
       grid-template-columns: auto 50px;
   gap: 20px;
   z-index: 90;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .messages_header .head {
@@ -1035,6 +1060,9 @@ span.loader {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  cursor: pointer;
 }
 
 .messages_header .messages_options {
@@ -1082,8 +1110,8 @@ span.loader {
 
 .fade-enter {
   opacity: 0;
-  -webkit-transform: translateY(10px) translateX(-110%);
-          transform: translateY(10px) translateX(-110%);
+  -webkit-transform: translateY(20px) translateX(-110%);
+          transform: translateY(20px) translateX(-110%);
 }
 
 .fade-enter-active {
@@ -1100,8 +1128,8 @@ span.loader {
 
 .fade-exit-active {
   opacity: 0;
-  -webkit-transform: translateY(-30px) translateX(-110%);
-          transform: translateY(-30px) translateX(-110%);
+  -webkit-transform: translateY(30px) translateX(-110%);
+          transform: translateY(30px) translateX(-110%);
 }
 
 .fade_no_trans-enter {
@@ -1357,6 +1385,8 @@ span.loader {
   inset: 0;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
 }
 
 .modal-custom .modal-content-custom {
@@ -1412,7 +1442,6 @@ span.loader {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  background: white;
 }
 
 .modal-custom label.profile_icon .cover img {
@@ -1497,7 +1526,17 @@ span.loader {
   position: relative;
 }
 
-.modal-custom .form .form_grid {
+.modal-custom .form form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.modal-custom .form form .form_grid {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (minmax(320px, 500px))[2];
@@ -1758,10 +1797,6 @@ span.loader {
   width: 120px;
   padding: 5px;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
   position: relative;
   margin-right: 20px;
   cursor: pointer;
@@ -1784,25 +1819,15 @@ span.loader {
   display: inline-block;
   top: 50%;
   left: 7%;
-  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
   border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
   background: rgba(220, 20, 60, 0.1);
   position: absolute;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
   z-index: 2;
   border: 5px solid transparent;
-  transition: 0.5s;
   -webkit-transition: 0.5s;
-  -moz-transition: 0.5s;
-  -ms-transition: 0.5s;
-  -o-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .group_security label span.bg {
@@ -1813,11 +1838,8 @@ span.loader {
   left: 0;
   display: inline-block;
   background: rgba(220, 20, 60, 0.1);
-  transition: 0.5s;
   -webkit-transition: 0.5s;
-  -moz-transition: 0.5s;
-  -ms-transition: 0.5s;
-  -o-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .group_security label input[type="radio"]:checked ~ span.label {
@@ -1835,8 +1857,13 @@ span.loader {
 
 @media screen and (max-width: 900px) {
   .create-group form .form_grid {
-    -ms-grid-columns: 100%;
-        grid-template-columns: 100%;
+    -ms-grid-columns: 100% !important;
+        grid-template-columns: 100% !important;
+  }
+  .modal-custom .form .btn {
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
   }
 }
 
@@ -1893,5 +1920,153 @@ span.loader {
   margin: 0;
   width: 50px;
   height: 50px;
+}
+
+@media screen and (max-width: 500px) {
+  .modal-custom {
+    top: 0;
+    left: 0;
+    padding: 0;
+  }
+  .modal-custom .form .form_grid {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .modal-custom .modal-content-custom {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+  .modal-content-anim-enter {
+    -webkit-transform: translateY(110%);
+            transform: translateY(110%);
+  }
+  .modal-content-anim-enter-active {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  .modal-content-anim-exit {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  .modal-content-anim-exit-active {
+    -webkit-transform: translateY(110%);
+            transform: translateY(110%);
+  }
+}
+
+.loader-container.dark {
+  background: #10155388;
+}
+
+#root.dark {
+  background: #050718;
+  color: white;
+}
+
+#root.dark .tabs {
+  background: #050718;
+}
+
+#root.dark .options_dropdown {
+  background: #050718;
+  -webkit-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.582);
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.582);
+  border: 2px solid white;
+}
+
+#root.dark .chat-pannel .form_input {
+  background: #050718;
+  -webkit-box-shadow: 0px 2px 8px #05071836, 0px 2px 5px #05071821;
+          box-shadow: 0px 2px 8px #05071836, 0px 2px 5px #05071821;
+}
+
+#root.dark .chat-pannel .form_input textarea {
+  background: #050718;
+  color: white;
+}
+
+#root.dark .messages_header .head,
+#root.dark .messages_header .messages_options {
+  background: #050718;
+  color: white;
+  -webkit-box-shadow: 0px 3px 15px #0507187c;
+          box-shadow: 0px 3px 15px #0507187c;
+}
+
+#root.dark input {
+  background: none;
+  color: white;
+}
+
+#root.dark input:-webkit-autofill {
+  border-radius: 5px;
+  background-color: rgba(220, 20, 60, 0.1) !important;
+}
+
+#root.dark .auth form .input_feild {
+  border-bottom: 3px solid #bebebe;
+}
+
+#root.dark .auth form .input_feild svg {
+  stroke: white;
+  color: white;
+}
+
+#root.dark .info_bubble {
+  background: #0507183d;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.247);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.247);
+}
+
+#root.dark .message .text {
+  -webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.199);
+          box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.199);
+  color: white;
+}
+
+#root.dark .message.sent .bubble .text {
+  background: #050718;
+}
+
+#root.dark .message.received .bubble .text {
+  background: rgba(220, 20, 60, 0.1);
+}
+
+#root.dark .message .timestamp {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#root.dark .chat-pannel .messages .message .img_profile {
+  -webkit-box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#root.dark p.or {
+  color: white;
+}
+
+#root.dark p.or::before {
+  background: none;
+}
+
+#root.dark p.or span {
+  background: rgba(220, 20, 60, 0.1);
+  border-radius: 5px;
+}
+
+#root.dark .modal-custom .underlay {
+  background: #10155388;
+}
+
+#root.dark .modal-custom .modal-content-custom {
+  background: #050718;
+  -webkit-box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
+          box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
+}
+
+#root.dark .bordered_input_box.valid .label {
+  background: #050718;
 }
 /*# sourceMappingURL=style.css.map */
