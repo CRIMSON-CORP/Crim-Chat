@@ -37,7 +37,7 @@ function GroupChat() {
             {userlocal && (
                 <>
                     <h2 className="groups-header">
-                        Chat Rooms <span>{userlocal.groups.length}</span>
+                        Group Chats <span>{userlocal.groups.length}</span>
                     </h2>
                     <div className="group_list" ref={groups_list}>
                         {groupsData.length !== 0 ? (
@@ -70,7 +70,7 @@ function GroupComponent({ group }) {
     }, [group.updatedAt]);
     return (
         <div
-            className="group hover"
+            className={`group hover ${group.group_id == selectedChat && "selected"}`}
             data-filter="*"
             onClick={() => {
                 setSelectedChat(group.group_id);

@@ -19,7 +19,7 @@ a {
 }
 
 #root {
-    height: 100vh;
+    height: 100%;
     padding: 20px;
     position: absolute;
     inset: 0;
@@ -82,3 +82,46 @@ input {
 @import "./_scss//mainpannel";
 @import "./_scss/modals";
 @import "./_scss/dark_mode";
+
+// Mobile Media Query
+@media screen and (max-width: 700px) {
+    .tabs {
+        border-radius: 0px 10px 10px 0px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .auth form {
+        padding: 0px;
+    }
+    .loader-wrapper {
+        scale: 0.6;
+    }
+    .no-chat-selected {
+        font-size: 20px !important;
+    }
+
+    #root {
+        padding: 10px;
+    }
+
+    .messages_header .head {
+        height: 45px;
+        grid-template-columns: 25px auto;
+        svg {
+            width: 15px;
+            height: 15;
+        }
+        h5 {
+            font-size: 18px;
+        }
+    }
+    .messages_header .messages_options {
+        height: 45px;
+    }
+
+    .messages_header {
+        grid-template-columns: auto 45px;
+        gap: 10px;
+    }
+}

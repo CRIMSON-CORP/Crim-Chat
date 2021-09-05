@@ -4,26 +4,25 @@ import Logo from "../../../utils/CustomComponents";
 import GroupChat from "./GroupChat";
 import User from "./User";
 import gsap from "gsap";
-import { MdClose } from "react-icons/md";
 function Tabs() {
-    const { mobileNav, setMobileNav } = useContext(MobileNav);
+    const { mobileNav } = useContext(MobileNav);
     const tab = useRef();
     useEffect(() => {
         if (window.innerWidth < 700) {
             if (mobileNav) {
                 gsap.to(".chat-pannel", { x: 270 });
-                gsap.to(".chat-pannel", { scale: 0.5, delay: 0.25, duration: 0.5 });
+                gsap.to(".chat-pannel", { scale: 0.5, delay: 0.2, duration: 0.3 });
                 gsap.to(tab.current, {
                     x: "0%",
-                    opacity: 1,
-                    duration: 0.5,
+                    duration: 0.25,
+                    ease: "expo.out()",
                 });
             } else {
                 gsap.to(".chat-pannel", { x: 0 });
                 gsap.to(".chat-pannel", { scale: 1 });
                 gsap.to(tab.current, {
                     x: "-100%",
-                    opacity: 0,
+                    duration: 0.25,
                 });
             }
         }
