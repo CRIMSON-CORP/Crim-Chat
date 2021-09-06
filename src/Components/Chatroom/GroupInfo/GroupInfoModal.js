@@ -32,7 +32,7 @@ function GroupInfoModal() {
                     <h4 className="mb-2">{groupInfo.group_name}</h4>
                     <p className="font-italic">{groupInfo.group_description}</p>
                     <h4 className="mt-3">Group Members</h4>
-                    <ul className="users_list">
+                    <ul className="users_list scroll">
                         {groupInfo.group_members.map((grp, index) => {
                             return (
                                 <GroupMember
@@ -52,12 +52,7 @@ function GroupInfoModal() {
 export default GroupInfoModal;
 
 function GroupMember({ member, admin }) {
-    const [mem, setMem] = useState({
-        profilePic: "",
-        onlineStatus: "offline",
-        displayName: "",
-        email: "",
-    });
+    const [mem, setMem] = useState(null);
     const {
         userlocal: { uid, displayName },
     } = useContext(UserContext);
@@ -71,59 +66,74 @@ function GroupMember({ member, admin }) {
                 setMem(data.data());
             });
     }, []);
-    let icon;
 
     return (
-        <li className="user hover mb-20" key={member}>
-            <div className="profilepic">
-                <div className="user-online-status">
-                    <span className={`online-status ${mem.onlineStatus}`}></span>
-                </div>
-                <ProfilePic img={mem.profilePic} d_n={mem.displayName} />
-            </div>
-            <div className="user">
-                <h5> {mem.displayName}</h5>
-                <span>{mem.email}</span>
-            </div>
-            {mem.uid !== admin && uid !== mem.uid && (
-                <div
-                    className={`add_user red`}
-                    onClick={async () => {
-                        const answer = confirm("Are you sure you want to remove this user?");
-                        if (answer) {
-                            await firestore
-                                .collection(collections.users)
-                                .doc(mem.uid)
-                                .update({
-                                    groups: firebase.firestore.FieldValue.arrayRemove(selectedChat),
-                                });
-                            await firestore
-                                .collection(collections.groups_register)
-                                .doc(selectedChat)
-                                .update({
-                                    group_members: firebase.firestore.FieldValue.arrayRemove(
-                                        mem.uid
-                                    ),
-                                });
-                            await firestore
-                                .collection(collections.groups_register)
-                                .doc(selectedChat)
-                                .collection(collections.messages)
-                                .add({
-                                    type: "bubble",
-                                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                    admin_uid: uid,
-                                    tag: "user_removed",
-                                    removed_user: mem.displayName,
-                                    admin: displayName,
-                                });
-                            toast.success("You removed " + mem.displayName);
-                        }
-                    }}
-                >
-                    <BiUserMinus title="Remove this User from this group" />
-                </div>
+        <>
+            {mem && (
+                <li className="user hover  mb-20" key={member}>
+                    <div className="profilepic">
+                        <div className="user-online-status">
+                            <span className={`online-status ${mem.onlineStatus}`}></span>
+                        </div>
+                        <ProfilePic img={mem.profilePic} d_n={mem.displayName} />
+                    </div>
+                    <div style={{ overflow: "hidden" }} className="user">
+                        <h5 style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
+                            {" "}
+                            {mem.displayName}
+                        </h5>
+                        <span style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
+                            {mem.email}
+                        </span>
+                    </div>
+                    {console.log(mem.uid, "mem.uid")}
+                    {console.log(admin, "admin")}
+                    {console.log(uid, "current user uid")}
+                    {uid === admin && mem.uid !== admin && (
+                        <div
+                            className={`add_user red`}
+                            onClick={async () => {
+                                const answer = confirm(
+                                    "Are you sure you want to remove this user?"
+                                );
+                                if (answer) {
+                                    await firestore
+                                        .collection(collections.users)
+                                        .doc(mem.uid)
+                                        .update({
+                                            groups: firebase.firestore.FieldValue.arrayRemove(
+                                                selectedChat
+                                            ),
+                                        });
+                                    await firestore
+                                        .collection(collections.groups_register)
+                                        .doc(selectedChat)
+                                        .update({
+                                            group_members:
+                                                firebase.firestore.FieldValue.arrayRemove(mem.uid),
+                                        });
+                                    await firestore
+                                        .collection(collections.groups_register)
+                                        .doc(selectedChat)
+                                        .collection(collections.messages)
+                                        .add({
+                                            type: "bubble",
+                                            createdAt:
+                                                firebase.firestore.FieldValue.serverTimestamp(),
+                                            admin_uid: uid,
+                                            tag: "user_removed",
+                                            removed_user: mem.displayName,
+                                            admin: displayName,
+                                        });
+                                    toast.success("You removed " + mem.displayName);
+                                }
+                            }}
+                        >
+                            <BiUserMinus title="Remove this User from this group" />
+                        </div>
+                    )}
+                </li>
             )}
-        </li>
+        </>
     );
 }

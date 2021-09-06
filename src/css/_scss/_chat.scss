@@ -143,26 +143,27 @@
             }
 
             .img_profile {
-                width: 46px;
-                height: 46px;
-                background: $main;
-                border-radius: 50%;
-                overflow: hidden;
                 display: grid;
                 place-items: center;
-                border: 3px solid white;
-                box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
                 transition: 0.3s ease-out;
+                svg,
+                img {
+                    border-radius: 50%;
+                    width: 46px;
+                    height: 46px;
+                    border: 3px solid white;
+                }
                 svg {
+                    background: $main;
                     fill: white;
                     stroke-width: 0.5px;
                     stroke: white;
+                    padding: 7px;
                 }
                 img {
-                    width: 100%;
-                    height: 100%;
                     object-fit: cover;
                     object-position: center;
+                    box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.4);
                 }
             }
         }

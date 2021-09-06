@@ -1,6 +1,5 @@
 @import "./signup";
 .auth {
-    position: relative;
     height: 100%;
     width: 100%;
     .banner {
@@ -64,19 +63,21 @@
     form {
         width: 100%;
         max-width: 400px;
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: 25px;
         padding: 20px;
         .input_feild {
             font-size: 22px;
             border-bottom: 3px solid $ashh;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
+            display: flex;
             align-items: center;
+            width: auto;
             svg {
                 stroke: $ashh;
                 color: $ashh;
                 overflow: visible;
+                flex: 30px;
             }
             input {
                 border: none;
@@ -84,6 +85,7 @@
                 padding: 0.5em 1em;
                 font-size: 20px;
                 font-weight: 500;
+                width: 100%;
                 &::placeholder {
                     color: $ashh;
                 }

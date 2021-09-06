@@ -107,4 +107,10 @@
     .bordered_input_box.valid .label {
         background: $dark_background;
     }
+
+    .banner-container {
+        img {
+            opacity: 0;
+        }
+    }
 }

@@ -150,6 +150,26 @@ function EditProfile({ setmodal }) {
                                 />
                             </div>
                         </div>
+                        <button
+                            className="btn-block btn-danger px-3 py-2 rounded"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const ans = confirm(
+                                    "Are you sure you want to delete your account? you can sign out instead"
+                                );
+                                if (ans) {
+                                    firebase
+                                        .auth()
+                                        .currentUser.delete(uid)
+                                        .then(() => {
+                                            localStorage.removeItem("user");
+                                            toast.success("Account Deleted!");
+                                        });
+                                }
+                            }}
+                        >
+                            Delete Account?
+                        </button>
                     </div>
                     <button type="submit" className="btn btn-fill">
                         Save Changes

@@ -15,7 +15,7 @@ function SignIn({ setActivePage }) {
         setLoading(true);
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
-            await auth.signInWithPopup(provider);
+            await auth.signInWithCredential(provider);
             await AddUser(auth.currentUser);
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
         } catch (err) {

@@ -5,27 +5,19 @@ body {
     min-height: 100vh;
 }
 
-body::-webkit-scrollbar {
-    width: 10px;
-}
-body::-webkit-scrollbar-thumb {
-    width: 10px;
-    background: var(--main);
-    border-radius: 10px;
-}
-
 a {
     text-decoration: none;
 }
 
 #root {
-    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    user-select: none;
     padding: 20px;
-    position: absolute;
-    inset: 0;
     overflow: hidden;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
     color: black;
     transition: 0.3s ease-out;
 }
@@ -91,8 +83,13 @@ input {
 }
 
 @media screen and (max-width: 400px) {
-    .auth form {
-        padding: 0px;
+    .auth {
+        .auth-wrapper {
+            padding: 0;
+            form {
+                padding: 20px;
+            }
+        }
     }
     .loader-wrapper {
         scale: 0.6;

@@ -22,7 +22,7 @@ p {
     font-size: 20px;
     padding: 0.6em 1.2em;
     border-radius: 10px;
-    width: clamp(300px, 100%, 400px);
+    width: clamp(200px, 100%, 400px);
     &-fill {
         background: $main;
         color: white;
