@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { auth, firestore, storage } from "./firebase";
 export async function UploadImage(image, path) {
     try {
@@ -10,14 +11,21 @@ export async function UploadImage(image, path) {
 }
 
 export async function signOut() {
+    async function signOutProm(auth) {
+        UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+        localStorage.removeItem("user");
+        auth.signOut();
+        return null;
+    }
     if (auth.currentUser) {
         try {
-            await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
-            localStorage.removeItem("user");
-            await auth.signOut();
-            return null;
-        } catch (err) {
-            console.log(err);
+            toast.promise(signOutProm(auth), {
+                loading: "Signing out...",
+                success: "Signed out Successfully!",
+                error: "An error occured while Signing out!",
+            });
+        } catch (error) {
+            console.log(error);
         }
     }
 }

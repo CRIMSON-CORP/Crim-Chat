@@ -12,12 +12,20 @@ function SignIn({ setActivePage }) {
     const [password, setPassword] = useState("");
     const { setLoading } = useContext(LoaderContext);
     async function signInwithGoogle() {
-        setLoading(true);
-        try {
+        async function signInProm() {
+            setLoading(true);
             const provider = new firebase.auth.GoogleAuthProvider();
-            await auth.signInWithCredential(provider);
+            await auth.signInWithPopup(provider);
             await AddUser(auth.currentUser);
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
+            return null;
+        }
+        try {
+            await toast.promise(signInProm(), {
+                loading: "Signing in...",
+                success: "Signed in Successfully",
+                error: "An Error Occured while Signing in",
+            });
         } catch (err) {
             console.log(err);
             if (err.code == "auth/network-request-failed") {

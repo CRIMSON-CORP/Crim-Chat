@@ -293,7 +293,6 @@ function InfoBubble({ message }) {
     let bubble;
     switch (message.tag) {
         case "group_created":
-            console.log(message, uid);
             bubble = `${messageOwner ? "You" : message.group_creator} created this group!`;
             break;
         case "invite_sent":
