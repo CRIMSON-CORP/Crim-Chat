@@ -293,13 +293,14 @@ function InfoBubble({ message }) {
     let bubble;
     switch (message.tag) {
         case "group_created":
+            console.log(message, uid);
             bubble = `${messageOwner ? "You" : message.group_creator} created this group!`;
             break;
         case "invite_sent":
             bubble = `${messageOwner ? "You" : message.inviter} invited ${message.invitee_name}!`;
             break;
         case "user_left":
-            bubble = `${message.uid == uid ? "You" : message.user_that_left} left the Group!`;
+            bubble = `${messageOwner ? "You" : message.user_that_left} left the Group!`;
             break;
         case "user_joined":
             bubble = `${
