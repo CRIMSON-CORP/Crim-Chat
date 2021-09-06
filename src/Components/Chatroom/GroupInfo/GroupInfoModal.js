@@ -86,9 +86,6 @@ function GroupMember({ member, admin }) {
                             {mem.email}
                         </span>
                     </div>
-                    {console.log(mem.uid, "mem.uid")}
-                    {console.log(admin, "admin")}
-                    {console.log(uid, "current user uid")}
                     {uid === admin && mem.uid !== admin && (
                         <div
                             className={`add_user red`}

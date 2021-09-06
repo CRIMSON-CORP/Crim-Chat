@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { auth, firestore, storage } from "./firebase";
+import { collections } from "./FirebaseRefs";
 export async function UploadImage(image, path) {
     try {
         const StorageRef = storage.ref(path);
@@ -32,7 +33,7 @@ export async function signOut() {
 
 export async function UpdateUserOnlineStatus(uid, status) {
     try {
-        return await firestore.collection("users").doc(uid).update({
+        return await firestore.collection(collections.users).doc(uid).update({
             onlineStatus: status,
         });
     } catch (err) {
@@ -42,22 +43,19 @@ export async function UpdateUserOnlineStatus(uid, status) {
 
 export async function AddUser(currentUser, username) {
     try {
-        const user = await firestore.collection("users").doc(currentUser.uid).get();
-        if (!user.exists) {
-            return await firestore
-                .collection("users")
-                .doc(`${currentUser.uid}`)
-                .set({
-                    displayName: username || currentUser.displayName,
-                    profilePic: currentUser.photoURL,
-                    email: currentUser.email,
-                    onlineStatus: "Online",
-                    uid: currentUser.uid,
-                    typing: false,
-                    groups: [],
-                    notif: [],
-                });
-        } else return;
+        return await firestore
+            .collection(collections.users)
+            .doc(currentUser.uid)
+            .set({
+                displayName: username || currentUser.displayName,
+                profilePic: currentUser.photoURL,
+                email: currentUser.email,
+                onlineStatus: "Online",
+                uid: currentUser.uid,
+                typing: false,
+                groups: [],
+                notif: [],
+            });
     } catch (err) {
         console.log(err);
     }

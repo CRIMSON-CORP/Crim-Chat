@@ -276,7 +276,6 @@ function Notification() {
                                     className="hover"
                                     onClick={() => {
                                         try {
-                                            console.log(selectedNotif.notif_id);
                                             firestore
                                                 .collection(collections.users)
                                                 .doc(uid)

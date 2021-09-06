@@ -8,6 +8,7 @@ import InviteUsers from "./InviteUsers";
 import { CSSTransition } from "react-transition-group";
 import { FaUserFriends } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { collections } from "../../../utils/FirebaseRefs";
 function CreateGroupModalUI({ setmodal }) {
     const { setLoading } = useContext(LoaderContext);
     const [groupDetails, setGroupDetails] = useState({
@@ -105,6 +106,11 @@ function CreateGroupModalUI({ setmodal }) {
                             uid: uid,
                             tag: "invite_sent",
                             invitee_id: user,
+                            invitee_name: await firestore
+                                .collection(collections.users)
+                                .doc(user)
+                                .get()
+                                .then((data) => data.data().displayName),
                             inviter: displayName,
                         });
                 });
