@@ -79,7 +79,6 @@ function GroupMember({ member, admin }) {
                     </div>
                     <div style={{ overflow: "hidden" }} className="user">
                         <h5 style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
-                            {" "}
                             {mem.displayName}
                         </h5>
                         <span style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
