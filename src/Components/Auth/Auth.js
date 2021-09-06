@@ -18,7 +18,7 @@ function Auth() {
                 timeout={500}
                 classNames="signup-tab"
             >
-                <div className="banner-wrapper">
+                <div className="banner-wrapper" style={{ overflow: "hidden" }}>
                     <Banner
                         ban={banner}
                         set={() => {
