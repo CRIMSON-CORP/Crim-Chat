@@ -39,7 +39,7 @@ function GroupChat() {
                     <h2 className="groups-header">
                         Group Chats <span>{userlocal.groups.length}</span>
                     </h2>
-                    <div className="group_list" ref={groups_list}>
+                    <div className="group_list scroll" ref={groups_list}>
                         {groupsData.length !== 0 ? (
                             <div>
                                 {groupsData.map((group) => {
@@ -61,10 +61,11 @@ export default GroupChat;
 function GroupComponent({ group }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const { setMobileNav } = useContext(MobileNav);
+    const { userlocal } = useContext(UserContext);
 
     useEffect(() => {
-        let isotope = new Isotope(".groups", {
-            itemSelector: ".groups .group",
+        let isotope = new Isotope(".group_list", {
+            itemSelector: ".group_list .group",
         });
         group.group_id === selectedChat && isotope.reloadItems();
     }, [group.updatedAt]);
@@ -75,18 +76,23 @@ function GroupComponent({ group }) {
             onClick={() => {
                 setSelectedChat(group.group_id);
                 setMobileNav(false);
+                localStorage.setItem("crimchat_current_group", group.group_id);
             }}
         >
             <div className="group_profilePic">
-                {group.group_profilePic !== null ? (
+                {group.group_profilePic ? (
                     <img src={group.group_profilePic} />
                 ) : (
                     <FaUserFriends size="2em" />
                 )}
             </div>
-            <div className="group_text">
-                <h3 className="group_name">{group.group_name}</h3>
-                <span>{group.latestText}</span>
+            <div className="group_text trim">
+                <h3 className="group_name trim-text">{group.group_name}</h3>
+                <span className="trim-text">
+                    {group.latestText_sender_uid == userlocal.uid
+                        ? group.latestText
+                        : group.latestText_sender + ": " + group.latestText}
+                </span>
             </div>
         </div>
     );

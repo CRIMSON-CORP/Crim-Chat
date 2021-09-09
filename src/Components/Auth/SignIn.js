@@ -14,9 +14,16 @@ function SignIn({ setActivePage }) {
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
-        try {
+        async function signin() {
             await firebase.auth().signInWithEmailAndPassword(email, password);
             await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
+        }
+        try {
+            await toast.promise(signin(), {
+                loading: "Signing in...",
+                success: "Signed in Successfully!",
+                error: "Failed to Sign in!",
+            });
         } catch (err) {
             console.log(err);
             if (err.code === "auth/wrong-password") {

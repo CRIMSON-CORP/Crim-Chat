@@ -7,7 +7,7 @@ import { UnderLay } from "../../utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
 function ChatRoom() {
     const [mobileNav, setMobileNav] = useState(false);
-    const [selectedChat, setSelectedChat] = useState("");
+    const [selectedChat, setSelectedChat] = useState();
     const {
         userlocal: { mode },
     } = useContext(UserContext);
@@ -18,6 +18,10 @@ function ChatRoom() {
             ? (root.classList.remove("light"), root.classList.add("dark"))
             : (root.classList.remove("dark"), root.classList.add("light"));
     }, [mode]);
+
+    useEffect(() => {
+        setSelectedChat(localStorage.getItem("crimchat_current_group"));
+    }, []);
     return (
         <div className={`dashboard ${mode}`}>
             <MobileNav.Provider value={{ mobileNav, setMobileNav }}>
@@ -27,6 +31,7 @@ function ChatRoom() {
                         <UnderLay
                             zIndex={80}
                             exe={() => {
+                                console.log(123);
                                 setMobileNav(false);
                             }}
                         />

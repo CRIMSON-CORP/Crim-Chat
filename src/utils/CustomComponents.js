@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { MdClear } from "react-icons/md";
+import { MdClear, MdKeyboardArrowRight } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { FaUserFriends } from "react-icons/fa";
@@ -92,12 +92,19 @@ export function Modal({ children, state, setmodal, classTag, header }) {
             </CSSTransition>
 
             {state && (
-                <UnderLay
-                    exe={() => {
-                        setmodal(false);
-                    }}
-                    zIndex={0}
-                />
+                <CSSTransition
+                    in={state}
+                    unmountOnExit
+                    classNames="modal-content-anim"
+                    timeout={400}
+                >
+                    <UnderLay
+                        exe={() => {
+                            setmodal(false);
+                        }}
+                        zIndex={100}
+                    />
+                </CSSTransition>
             )}
         </>
     );
@@ -143,7 +150,7 @@ export function BorderedInput({ type = "text", label, value, onChange, name, hea
                         !value && setValid(false);
                     }}
                 />
-                <span className="label">{label}</span>
+                <span className="label trim-text">{label}</span>
             </div>
         </div>
     );
@@ -152,7 +159,7 @@ export function BorderedInput({ type = "text", label, value, onChange, name, hea
 export function ProfilePic({ img, d_n, tag = "user" }) {
     return (
         <div className="profilePic">
-            {img == null || img == undefined ? (
+            {!img ? (
                 tag == "group" ? (
                     <div className="alt">
                         <FaUserFriends size="2em" />
@@ -168,7 +175,7 @@ export function ProfilePic({ img, d_n, tag = "user" }) {
 }
 
 export function UnderLay({ zIndex, exe }) {
-    return <div className="underlay" style={{ zIndex }} onMouseDown={exe}></div>;
+    return <div className="underlay" style={{ zIndex }} onMouseDown={exe} onTouchStart={exe}></div>;
 }
 
 const Close = createContext(null);
@@ -186,7 +193,9 @@ export function DropList({ open, closeComp, setter, children, height, tag, drop,
                     }}
                 >
                     {tag == "notif" && (
-                        <span className={`indicator ${notifIndicator ? "show" : "hide"}`}></span>
+                        <span className={`indicator ${notifIndicator ? "show" : "hide"}`}>
+                            {notifIndicator}
+                        </span>
                     )}
                     {closeComp}
                 </div>
@@ -246,8 +255,11 @@ export function NotifDropDownItem({ notif, gotoMenu, setActiveMenu, setSelectedN
                         setActiveMenu(gotoMenu);
                     }}
                 >
-                    <h5>New Invitation</h5>
-                    <p>by {notif.sender}</p>
+                    <div>
+                        <h5>New Invitation</h5>
+                        <p>by {notif.sender}</p>
+                    </div>
+                    <MdKeyboardArrowRight />
                 </li>
             ) : (
                 <li className="dropDown_item_notif" onClick={() => {}}>

@@ -29,6 +29,9 @@ function SignUp({ setActivePage }) {
             if (err.code == "auth/network-request-failed") {
                 toast.error("Network Error");
             }
+            if (err.code == "auth/weak-password") {
+                toast.error(err.message);
+            }
         } finally {
             setLoading(false);
         }

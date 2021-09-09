@@ -8,6 +8,9 @@ import {
     MdDehaze,
     MdEdit,
     MdNotifications,
+    MdKeyboardArrowLeft,
+    MdClear,
+    MdCheck,
 } from "react-icons/all";
 import { MobileNav, SelectedChatContext, UserContext } from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
@@ -133,7 +136,6 @@ function Notification() {
     const [menuHeight, setMenuHeight] = useState(null);
     const [selectedNotif, setSelectedNotif] = useState(null);
     const [notifToggle, setNotifToggle] = useState(false);
-    const [notifIndicator, setNotifIndicator] = useState(false);
     const {
         userlocal: { uid, displayName, groups },
     } = useContext(UserContext);
@@ -149,7 +151,6 @@ function Notification() {
                 notif.forEach((not) => {
                     list.push(not.data());
                 });
-                list.length == 0 ? setNotifIndicator(false) : setNotifIndicator(true);
                 setNotif(list);
             });
         return unsub;
@@ -179,7 +180,7 @@ function Notification() {
             height={menuHeight}
             tag="notif"
             drop={Drop}
-            notifIndicator={notifIndicator}
+            notifIndicator={notif.length}
         >
             <CSSTransition
                 in={activeMenu === "main"}
@@ -270,7 +271,8 @@ function Notification() {
                                         setSelectedNotif(false);
                                     }}
                                 >
-                                    Yes
+                                    <MdCheck />
+                                    <span>Yes</span>
                                 </div>
                                 <div
                                     className="hover"
@@ -290,14 +292,16 @@ function Notification() {
                                         toast.success("Invitation Declined!");
                                     }}
                                 >
-                                    No
+                                    <MdClear />
+                                    <span>No</span>
                                 </div>
                                 <div
                                     onClick={() => {
                                         setActiveMenu("main");
                                     }}
                                 >
-                                    Back
+                                    <MdKeyboardArrowLeft />
+                                    <span>Back</span>
                                 </div>
                             </div>
                         </>

@@ -493,6 +493,21 @@ span.loader {
   background: rgba(220, 20, 60, 0.1);
 }
 
+.trim {
+  overflow: hidden;
+}
+
+.trim-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+
+.bordered_input_box .label.trim-text {
+  max-width: 80%;
+}
+
 .profilePic {
   display: -ms-grid;
   display: grid;
@@ -635,12 +650,12 @@ span.loader {
 
 .tabs .groups .group_list {
   position: relative;
+  max-height: calc(100vh - 410px);
 }
 
 .tabs .groups .group {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -ms-grid;
+  display: grid;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -650,6 +665,8 @@ span.loader {
   cursor: pointer;
   -webkit-transition: 0.5s ease-out;
   transition: 0.5s ease-out;
+  -ms-grid-columns: 45px auto;
+      grid-template-columns: 45px auto;
   width: 100%;
 }
 
@@ -664,6 +681,7 @@ span.loader {
   -webkit-box-flex: 1;
       -ms-flex: auto;
           flex: auto;
+  max-width: 100%;
 }
 
 .user-online-status {
@@ -875,16 +893,6 @@ span.loader {
   width: 100%;
 }
 
-.chat-pannel .messages::-webkit-scrollbar {
-  width: 5px;
-}
-
-.chat-pannel .messages::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: #dc143c;
-  opacity: 0.5;
-}
-
 .chat-pannel .messages .message {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1019,13 +1027,12 @@ span.loader {
 }
 
 .scroll::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 .scroll::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: #dc143c;
-  opacity: 0.5;
+  background: #dc143c80;
 }
 
 .info_bubble {
@@ -1290,6 +1297,13 @@ span.loader {
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 20px;
 }
 
 .dropDown_item_notif:last-child {
@@ -1350,10 +1364,18 @@ span.loader {
 
 .action div {
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 0px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 20px auto;
+      grid-template-columns: 20px auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
 }
 
 .indicator {
@@ -1367,6 +1389,11 @@ span.loader {
   border-radius: 100%;
   -webkit-transition: 0.5s ease-out;
   transition: 0.5s ease-out;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 7px;
 }
 
 .indicator.show {
@@ -1377,6 +1404,38 @@ span.loader {
 .indicator.hide {
   -webkit-transform: scale(0);
           transform: scale(0);
+}
+
+@media only screen and (max-width: 400px) {
+  .options_dropdown {
+    position: absolute;
+    width: 80vw;
+    left: auto;
+    right: 0;
+    top: 150%;
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
+  }
+  .fade-enter {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+  }
+  .fade-enter-active {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  .fade-exit {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  .fade-exit-active {
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+            transform: translateY(30px);
+  }
 }
 
 .modal-custom {
@@ -1428,6 +1487,7 @@ span.loader {
   background: #dc143c;
   color: white;
   opacity: 1;
+  z-index: 10;
 }
 
 .modal-custom input[type="file"] {
@@ -1719,10 +1779,9 @@ span.loader {
 }
 
 .users_list li {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 50px auto 50px;
-      grid-template-columns: 50px auto 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   gap: 20px;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -1735,14 +1794,23 @@ span.loader {
 .users_list li img {
   width: 50px;
   height: 50px;
+  -webkit-box-flex: 50px;
+      -ms-flex: 50px;
+          flex: 50px;
   border-radius: 50%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  -o-object-fit: cover;
+     object-fit: cover;
   -o-object-position: center;
      object-position: center;
 }
 
-.users_list li h6 {
+.users_list li .user {
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
+}
+
+.users_list li .user h6 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1790,6 +1858,9 @@ span.loader {
   border-radius: 50%;
   -webkit-transition: 0.5s ease-out;
   transition: 0.5s ease-out;
+  justify-self: flex-end;
+  width: 50px;
+  height: 50px;
 }
 
 .users_list li .add_user.added {
@@ -1952,6 +2023,9 @@ span.loader {
     width: 100%;
     height: 100%;
     max-height: 100%;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+            box-shadow: none;
   }
   .modal-content-anim-enter {
     -webkit-transform: translateY(110%);
@@ -1968,6 +2042,12 @@ span.loader {
   .modal-content-anim-exit-active {
     -webkit-transform: translateY(110%);
             transform: translateY(110%);
+  }
+  .chat-pannel .messages .message {
+    max-width: 95%;
+  }
+  .messages .head .name h5 {
+    font-size: 14px;
   }
 }
 
@@ -2030,7 +2110,7 @@ span.loader {
 }
 
 #root.dark .info_bubble {
-  background: #0507183d;
+  background: #0507185d;
   -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.247);
           box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.247);
 }

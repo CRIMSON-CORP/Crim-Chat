@@ -74,12 +74,17 @@ function CreateGroupModalUI({ setmodal }) {
                     groups: firebase.firestore.FieldValue.arrayUnion(id),
                 });
             // Send Bubble that user has created the group
-            await firestore.collection("groups-register").doc(id).collection("messages").add({
-                type: "bubble",
-                tag: "group_created",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                group_creator: displayName,
-            });
+            await firestore
+                .collection(collections.groups_register)
+                .doc(id)
+                .collection(collections.messages)
+                .add({
+                    type: "bubble",
+                    tag: "group_created",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    group_creator: displayName,
+                    uid: uid,
+                });
             if (selectedUsers.length !== 0) {
                 selectedUsers.forEach(async (user) => {
                     // Send notifications to added users

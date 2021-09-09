@@ -22,7 +22,6 @@ function EditProfile({ setmodal }) {
         profilePic: null,
         displayName: "",
     });
-
     useEffect(() => {
         firestore
             .collection(collections.users)
@@ -152,19 +151,27 @@ function EditProfile({ setmodal }) {
                         </div>
                         <button
                             className="btn-block btn-danger px-3 py-2 rounded"
-                            onClick={(e) => {
+                            onClick={async (e) => {
                                 e.preventDefault();
                                 const ans = confirm(
                                     "Are you sure you want to delete your account? you can sign out instead"
                                 );
                                 if (ans) {
-                                    firebase
-                                        .auth()
-                                        .currentUser.delete(uid)
-                                        .then(() => {
-                                            localStorage.removeItem("user");
-                                            toast.success("Account Deleted!");
-                                        });
+                                    try {
+                                        await firestore
+                                            .collection(collections.users)
+                                            .doc(uid)
+                                            .delete();
+                                        await firebase
+                                            .auth()
+                                            .currentUser.delete(uid)
+                                            .then(() => {
+                                                localStorage.removeItem("user");
+                                                toast.success("Account Deleted!");
+                                            });
+                                    } catch {
+                                        toast.error("Faailed to Delete Account!");
+                                    }
                                 }
                             }}
                         >

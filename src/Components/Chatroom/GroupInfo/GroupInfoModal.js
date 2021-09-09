@@ -77,13 +77,9 @@ function GroupMember({ member, admin }) {
                         </div>
                         <ProfilePic img={mem.profilePic} d_n={mem.displayName} />
                     </div>
-                    <div style={{ overflow: "hidden" }} className="user">
-                        <h5 style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
-                            {mem.displayName}
-                        </h5>
-                        <span style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
-                            {mem.email}
-                        </span>
+                    <div className="user trim">
+                        <h5 className="trim-text">{mem.displayName}</h5>
+                        <span className="trim-text">{mem.email}</span>
                     </div>
                     {uid === admin && mem.uid !== admin && (
                         <div

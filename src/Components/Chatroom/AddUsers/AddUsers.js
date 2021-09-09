@@ -29,7 +29,7 @@ function AddUsers({ setmodal }) {
     async function search(e) {
         const text = e.target.value.trim();
         setText(text);
-        if (text == "") fetchUsers();
+        if (text == "") return fetchUsers();
         const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
         try {
             const data = await firestore

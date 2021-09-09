@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { auth, firestore, timeStamp } from "../../../utils/firebase";
+import { collections } from "../../../utils/FirebaseRefs";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
@@ -19,16 +20,18 @@ function Form() {
                 type: "message",
             };
             await firestore
-                .collection("groups-register")
+                .collection(collections.groups_register)
                 .doc(selectedChat)
-                .collection("messages")
+                .collection(collections.messages)
                 .add(message);
             await firestore
-                .collection("groups-register")
+                .collection(collections.groups_register)
                 .doc(selectedChat)
                 .update({
                     updatedAt: time_stamp,
                     latestText: text.length < 30 ? text : text.substring(0, 30) + "...",
+                    latestText_sender_uid: userlocal.uid,
+                    latestText_sender: userlocal.displayName.split(" ")[0],
                 });
             setText("");
             textarea.current.style.height = "30px";

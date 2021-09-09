@@ -102,3 +102,17 @@ span.loader {
 .selected {
     background: $main_faint;
 }
+
+.trim {
+    overflow: hidden;
+}
+.trim-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+}
+
+.bordered_input_box .label.trim-text {
+    max-width: 80%;
+}

@@ -19,12 +19,7 @@ function Auth() {
                 classNames="signup-tab"
             >
                 <div className="banner-wrapper" style={{ overflow: "hidden" }}>
-                    <Banner
-                        ban={banner}
-                        set={() => {
-                            setBanner("without-banner");
-                        }}
-                    />
+                    <Banner ban={banner} set={setBanner} />
                 </div>
             </CSSTransition>
             <CSSTransition

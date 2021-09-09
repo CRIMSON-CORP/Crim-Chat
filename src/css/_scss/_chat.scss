@@ -72,14 +72,14 @@
         height: calc(100% - 70px);
         position: absolute;
         width: 100%;
-        &::-webkit-scrollbar {
-            width: 5px;
-        }
-        &::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background: $main;
-            opacity: 0.5;
-        }
+        // &::-webkit-scrollbar {
+        //     width: 5px;
+        // }
+        // &::-webkit-scrollbar-thumb {
+        //     border-radius: 10px;
+        //     background: $main;
+        //     opacity: 0.5;
+        // }
         .message {
             display: flex;
             align-items: flex-start;
@@ -176,12 +176,11 @@
 .scroll {
     overflow-y: auto;
     &::-webkit-scrollbar {
-        width: 5px;
+        width: 3px;
     }
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: $main;
-        opacity: 0.5;
+        background: #dc143c80;
     }
 }
 

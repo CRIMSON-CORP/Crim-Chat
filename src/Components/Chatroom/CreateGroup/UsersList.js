@@ -26,13 +26,9 @@ function UsersList({ users, selected, setSelected }) {
                     </div>
                     <ProfilePic img={user.profilePic} d_n={user.displayName} />
                 </div>
-                <div style={{ overflow: "hidden" }} className="user">
-                    <h5 style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
-                        {user.displayName}
-                    </h5>
-                    <span style={{ textOverflow: "ellipsis", overflow: "hidden" }}>
-                        {user.email}
-                    </span>
+                <div className="user trim">
+                    <h5 className="trim_text">{user.displayName}</h5>
+                    <span className="trim_text">{user.email}</span>
                 </div>
                 <div className={`add_user ${selected.includes(user.uid) ? "added" : ""}`}>
                     <BiUserPlus title="Add this User to this group" />

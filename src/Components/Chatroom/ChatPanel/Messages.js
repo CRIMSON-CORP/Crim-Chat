@@ -4,14 +4,14 @@ import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
-import { DropList, Modal, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
+import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
 import { MdAdd, MdEdit, MdInfoOutline } from "react-icons/md";
-import EditGroupUI from "../EditGroup/EditGroup";
 import $ from "jquery";
-import AddUsers from "../AddUsers/AddUsers";
-import GroupInfoModal from "../GroupInfo/GroupInfoModal";
+import MessagesModal from "./MessagesModal";
+import aud from "../../../img/facebookchat.mp3";
+import useSound from "use-sound";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -25,11 +25,20 @@ function Messages({ setCaret }) {
     const [editGroupModal, setEditGroupModal] = useModal(false);
     const [addUsers, setAddUsers] = useState(false);
     const [groupInfoModal, setGroupInfoModal] = useModal(false);
+    const [play] = useSound(aud);
+    const [allowedToPlay, setAllowedToPlay] = useState(true);
     const dummy = useRef();
     useEffect(() => {
         if (messages) {
             if (loaded) {
                 dummy.current.scrollIntoView({ behavior: "smooth" });
+                if (allowedToPlay) {
+                    play();
+                    setAllowedToPlay(false);
+                }
+                setTimeout(() => {
+                    setAllowedToPlay(true);
+                }, 1500);
             } else {
                 dummy.current.scrollIntoView({ behavior: "auto" });
                 setLoaded(true);
@@ -41,7 +50,7 @@ function Messages({ setCaret }) {
         if (selectedChat) {
             setLoaded(false);
             var unsub1 = firestore
-                .collection("groups-register")
+                .collection(collections.groups_register)
                 .doc(selectedChat)
                 .collection("messages")
                 .orderBy("createdAt")
@@ -96,14 +105,14 @@ function Messages({ setCaret }) {
                         }}
                     >
                         <div className="group_profilePic">
-                            {groupDetails.group_profilePic !== null ? (
+                            {groupDetails.group_profilePic ? (
                                 <img src={groupDetails.group_profilePic} />
                             ) : (
                                 <FaUserFriends size={20} />
                             )}
                         </div>
-                        <div className="name">
-                            <h5>{groupDetails.group_name}</h5>
+                        <div className="name trim">
+                            <h5 className="trim-text">{groupDetails.group_name}</h5>
                             {/* <span>{groupDetails.group_description}</span> */}
                         </div>
                     </div>
@@ -199,20 +208,16 @@ function Messages({ setCaret }) {
             )}
 
             <div className="dummy" ref={dummy}></div>
-            <Modal header="Edit Group Details" setmodal={setEditGroupModal} state={editGroupModal}>
-                <EditGroupUI setmodal={setEditGroupModal} />
-            </Modal>
-            <Modal header="Add Users" setmodal={setAddUsers} state={addUsers}>
-                <AddUsers setmodal={setAddUsers} />
-            </Modal>
-            <Modal
-                header="Group Information"
-                setmodal={setGroupInfoModal}
-                state={groupInfoModal}
-                classTag="group-info"
-            >
-                <GroupInfoModal setmodal={setGroupInfoModal} />
-            </Modal>
+            <MessagesModal
+                props={{
+                    editGroupModal,
+                    setEditGroupModal,
+                    addUsers,
+                    setAddUsers,
+                    groupInfoModal,
+                    setGroupInfoModal,
+                }}
+            />
         </div>
     );
 }

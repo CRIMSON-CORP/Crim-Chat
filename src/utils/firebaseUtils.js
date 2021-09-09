@@ -13,9 +13,10 @@ export async function UploadImage(image, path) {
 
 export async function signOut() {
     async function signOutProm(auth) {
-        UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
-        localStorage.removeItem("user");
-        auth.signOut();
+        await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline");
+        await localStorage.removeItem("user");
+        await localStorage.removeItem("crimchat_current_group");
+        await auth.signOut();
         return null;
     }
     if (auth.currentUser) {

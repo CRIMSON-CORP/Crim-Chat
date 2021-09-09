@@ -9,8 +9,8 @@ function JoinGroupModalUI({ setmodal }) {
     const [groupsDb, setGroups] = useState([]);
     const fetchGroups = async () => {
         await firestore
-            .collection(collections.groups_register)
-            .where("closed", "==", false)
+            .collection("groups-register")
+            .where("group_security", "==", false)
             .get()
             .then((groupsList) => {
                 setGroups(groupsList.docs);
@@ -58,6 +58,7 @@ function GroupsList({ groupsDb, setmodal }) {
     const groupsRefined = groupsDb
         .map((item) => item.data())
         .filter((item) => !groups.includes(item.group_id));
+    console.log(groupsRefined);
     const groupsJSX = groupsRefined.map((group, index) => {
         return (
             <li

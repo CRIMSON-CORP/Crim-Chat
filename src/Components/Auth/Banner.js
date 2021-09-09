@@ -8,7 +8,12 @@ function Banner({ set }) {
                 <Logo />
                 <img src={chat_gif} alt="chat gif" />
                 {window.innerWidth <= 766 && (
-                    <button className="btn btn-fill" onClick={set}>
+                    <button
+                        className="btn btn-fill"
+                        onClick={() => {
+                            set("without-banner");
+                        }}
+                    >
                         Next
                     </button>
                 )}
