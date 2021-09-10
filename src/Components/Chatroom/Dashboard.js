@@ -31,7 +31,6 @@ function ChatRoom() {
                         <UnderLay
                             zIndex={80}
                             exe={() => {
-                                console.log(123);
                                 setMobileNav(false);
                             }}
                         />

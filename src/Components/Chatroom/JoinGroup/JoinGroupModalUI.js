@@ -32,7 +32,6 @@ function JoinGroupModalUI({ setmodal }) {
                 .where(feilds.group_name, "<", end)
                 .get()
                 .then((data) => {
-                    console.log(data);
                     setGroups(data.docs);
                 });
         } catch (err) {
