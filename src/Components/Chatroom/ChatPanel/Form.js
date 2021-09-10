@@ -70,14 +70,14 @@ function Form() {
                     >
                         <div className="reply">
                             <MdClear
-                                size={12}
+                                size={28}
                                 onClick={() => {
                                     setReply({ text: null, recipient: null, id: null });
                                 }}
                             />
                             <div>
                                 <span className="recipeint font-weight-bold">
-                                    {reply.recipient === userlocal.displayName
+                                    {reply.recipient === userlocal.displayName.split(" ")[0]
                                         ? "You"
                                         : reply.recipient}
                                 </span>

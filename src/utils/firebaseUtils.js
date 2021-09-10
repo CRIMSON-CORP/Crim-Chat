@@ -1,7 +1,12 @@
 import toast from "react-hot-toast";
 import { auth, firestore, storage } from "./firebase";
 import { collections } from "./FirebaseRefs";
-export async function UploadImage(image, path) {
+import { ImageTypes } from "./utils";
+export async function UploadImage(image, path, limit) {
+    if (!image) return;
+    if (image.size > limit)
+        return toast.error(`Please select a picture less than ${limit / 1e6}mb`);
+    if (!ImageTypes.includes(image.type)) return toast.error("Please select a picture");
     try {
         const StorageRef = storage.ref(path);
         await StorageRef.put(image);

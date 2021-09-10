@@ -175,7 +175,7 @@ export function ProfilePic({ img, d_n, tag = "user" }) {
 }
 
 export function UnderLay({ zIndex, exe }) {
-    return <div className="underlay" style={{ zIndex }} onMouseDown={exe} onTouchStart={exe}></div>;
+    return <div className="underlay" style={{ zIndex }} onMouseDown={exe}></div>;
 }
 
 const Close = createContext(null);

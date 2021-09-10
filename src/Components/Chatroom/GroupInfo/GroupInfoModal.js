@@ -53,6 +53,7 @@ export default GroupInfoModal;
 
 function GroupMember({ member, admin }) {
     const [mem, setMem] = useState(null);
+    const [adminState, setAdmin] = useState(null);
     const {
         userlocal: { uid, displayName },
     } = useContext(UserContext);
@@ -67,6 +68,12 @@ function GroupMember({ member, admin }) {
             });
     }, []);
 
+    useEffect(() => {
+        if (mem) {
+            setAdmin(uid === admin && mem.uid !== admin);
+        }
+    }, [mem]);
+
     return (
         <>
             {mem && (
@@ -78,10 +85,13 @@ function GroupMember({ member, admin }) {
                         <ProfilePic img={mem.profilePic} d_n={mem.displayName} />
                     </div>
                     <div className="user trim">
-                        <h5 className="trim-text">{mem.displayName}</h5>
+                        <h5 className="trim-text">
+                            {mem.displayName}{" "}
+                            {admin == mem.uid && <span className="admin_state">(Admin)</span>}
+                        </h5>
                         <span className="trim-text">{mem.email}</span>
                     </div>
-                    {uid === admin && mem.uid !== admin && (
+                    {adminState && (
                         <div
                             className={`add_user red`}
                             onClick={async () => {

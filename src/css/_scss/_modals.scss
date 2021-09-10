@@ -270,6 +270,7 @@
 .users_list {
     list-style: none;
     padding: 0;
+    margin: 0;
     margin-top: 20px;
     li {
         display: flex;
@@ -347,6 +348,9 @@
                     color: white;
                 }
             }
+        }
+        &:last-child {
+            margin-bottom: 0;
         }
     }
 }
@@ -427,7 +431,7 @@
 .join-group {
     width: clamp(300px, 100%, 500px);
     .join-group-wrapper {
-        margin: 20px 0;
+        margin: 20px 0 0;
     }
 }
 
@@ -511,4 +515,8 @@
     .messages .head .name h5 {
         font-size: 14px;
     }
+}
+
+.admin_state {
+    color: var(--green);
 }

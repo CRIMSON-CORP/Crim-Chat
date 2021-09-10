@@ -72,14 +72,6 @@
         height: calc(100% - 70px);
         position: absolute;
         width: 100%;
-        // &::-webkit-scrollbar {
-        //     width: 5px;
-        // }
-        // &::-webkit-scrollbar-thumb {
-        //     border-radius: 10px;
-        //     background: $main;
-        //     opacity: 0.5;
-        // }
         .message {
             display: flex;
             align-items: flex-start;
@@ -268,9 +260,11 @@
     cursor: pointer;
     svg {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 0px;
+        right: 0px;
         cursor: pointer;
+        padding: 5px;
+        z-index: 10;
     }
     .recipeint {
         opacity: 0.7;

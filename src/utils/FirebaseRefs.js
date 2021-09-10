@@ -8,4 +8,5 @@ export const feilds = {
     group_id: "group_id",
     group_name: "group_name",
     group_members: "group_members",
+    group_security: "group_security",
 };

@@ -18,10 +18,6 @@ function EditProfile({ setmodal }) {
         displayName: "",
     });
 
-    const [newDetails, setNewDetails] = useState({
-        profilePic: null,
-        displayName: "",
-    });
     useEffect(() => {
         firestore
             .collection(collections.users)
@@ -44,7 +40,7 @@ function EditProfile({ setmodal }) {
             const ref = firebase.storage().ref("users_profile_pic/" + image.name);
             await ref.put(image);
             const url = await ref.getDownloadURL();
-            setNewDetails((prev) => {
+            setProfileDetails((prev) => {
                 return { ...prev, profilePic: url };
             });
         } catch (err) {
@@ -58,19 +54,7 @@ function EditProfile({ setmodal }) {
         e.preventDefault();
         setLoading(true);
         try {
-            await firestore
-                .collection(collections.users)
-                .doc(uid)
-                .update({
-                    profilePic:
-                        newDetails.profilePic == ""
-                            ? profileDetails.profilePic
-                            : newDetails.profilePic,
-                    displayName:
-                        newDetails.displayName == ""
-                            ? profileDetails.displayName
-                            : newDetails.displayName,
-                });
+            await firestore.collection(collections.users).doc(uid).update(profileDetails);
 
             toast.success("Profile Details updated successfully");
             setmodal(false);
@@ -98,27 +82,18 @@ function EditProfile({ setmodal }) {
                                 <label htmlFor="profile-icon" className="profile_icon">
                                     <div className="cover">
                                         <CSSTransition
-                                            in={
-                                                profileDetails.profilePic != null ||
-                                                newDetails.profilePic != null
-                                            }
+                                            in={profileDetails.profilePic != null}
                                             unmountOnExit
                                             timeout={400}
                                             classNames="profile_icon_switch_img"
                                         >
                                             <img
-                                                src={
-                                                    newDetails.profilePic ||
-                                                    profileDetails.profilePic
-                                                }
+                                                src={profileDetails.profilePic}
                                                 alt="profile icon"
                                             />
                                         </CSSTransition>
                                         <CSSTransition
-                                            in={
-                                                profileDetails.profilePic == null &&
-                                                newDetails.profilePic == null
-                                            }
+                                            in={profileDetails.profilePic == null}
                                             unmountOnExit
                                             timeout={400}
                                             classNames="profile_icon_switch_svg"
@@ -139,11 +114,11 @@ function EditProfile({ setmodal }) {
                                     name="display_name"
                                     header="Display name"
                                     onChange={(e) => {
-                                        setNewDetails((prev) => {
+                                        setProfileDetails((prev) => {
                                             return { ...prev, displayName: e.target.value };
                                         });
                                     }}
-                                    value={newDetails.displayName}
+                                    value={" "}
                                     label={profileDetails.displayName}
                                     req={false}
                                 />

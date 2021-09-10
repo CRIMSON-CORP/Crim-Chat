@@ -110,7 +110,10 @@
 
     .banner-container {
         img {
-            opacity: 0;
+            display: none;
+        }
+        .logo {
+            transform: scale(1.7);
         }
     }
 }

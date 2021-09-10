@@ -81,18 +81,25 @@ function GroupComponent({ group }) {
         >
             <div className="group_profilePic">
                 {group.group_profilePic ? (
-                    <img src={group.group_profilePic} />
+                    <img
+                        src={group.group_profilePic}
+                        al="group_profile_pic"
+                        width={45}
+                        height={45}
+                    />
                 ) : (
                     <FaUserFriends size="2em" />
                 )}
             </div>
             <div className="group_text trim">
                 <h3 className="group_name trim-text">{group.group_name}</h3>
-                <span className="trim-text">
-                    {group.latestText_sender_uid == userlocal.uid
-                        ? group.latestText
-                        : group.latestText_sender + ": " + group.latestText}
-                </span>
+                {group.latestText && (
+                    <span className="trim-text">
+                        {group.latestText_sender_uid == userlocal.uid
+                            ? group.latestText
+                            : group.latestText_sender + ": " + group.latestText}
+                    </span>
+                )}
             </div>
         </div>
     );

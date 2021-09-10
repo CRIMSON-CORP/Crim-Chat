@@ -1,14 +1,18 @@
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
-import { ReplyContext } from "../../../utils/Contexts";
+import { ReplyContext, SelectedChatContext } from "../../../utils/Contexts";
 import Options from "../Options";
 import Form from "./Form";
 import Messages from "./Messages";
 function ChatPannel() {
     const [caret, setCaret] = useState(false);
+    const { selectedChat } = useContext(SelectedChatContext);
     const [reply, setReply] = useState({ text: null, recipient: null, id: null });
+    useEffect(() => {
+        setReply({ text: null, recipient: null, id: null });
+    }, [selectedChat]);
     return (
         <div className="main-pannel">
             <Options />

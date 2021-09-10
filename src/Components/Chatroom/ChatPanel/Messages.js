@@ -98,119 +98,125 @@ function Messages({ setCaret }) {
     }, []);
 
     return (
-        <div className="messages scroll" ref={messageBoxRef}>
-            {groupDetails && selectedChat !== "" && (
-                <div className="messages_header">
-                    <div
-                        className="head"
-                        onClick={() => {
-                            setGroupInfoModal(true);
-                        }}
-                    >
-                        <div className="group_profilePic">
-                            {groupDetails.group_profilePic ? (
-                                <img src={groupDetails.group_profilePic} />
-                            ) : (
-                                <FaUserFriends size={20} />
-                            )}
-                        </div>
-                        <div className="name trim">
-                            <h5 className="trim-text">{groupDetails.group_name}</h5>
-                            {/* <span>{groupDetails.group_description}</span> */}
-                        </div>
-                    </div>
-                    <div className="messages_options">
-                        <DropList
-                            closeComp={<FaEllipsisH />}
-                            setter={setOptionsToggle}
-                            open={optionsToggle}
+        <>
+            <div className="messages scroll" ref={messageBoxRef}>
+                {groupDetails && selectedChat !== "" && (
+                    <div className="messages_header">
+                        <div
+                            className="head"
+                            onClick={() => {
+                                setGroupInfoModal(true);
+                            }}
                         >
-                            <OptionsDropDownItem
-                                sufIcon={<MdInfoOutline />}
-                                onClickExe={() => {
-                                    setGroupInfoModal(true);
-                                }}
+                            <div className="group_profilePic">
+                                {groupDetails.group_profilePic ? (
+                                    <img
+                                        src={groupDetails.group_profilePic}
+                                        width={45}
+                                        height={45}
+                                    />
+                                ) : (
+                                    <FaUserFriends size={20} />
+                                )}
+                            </div>
+                            <div className="name trim">
+                                <h5 className="trim-text">{groupDetails.group_name}</h5>
+                                {/* <span>{groupDetails.group_description}</span> */}
+                            </div>
+                        </div>
+                        <div className="messages_options">
+                            <DropList
+                                closeComp={<FaEllipsisH />}
+                                setter={setOptionsToggle}
+                                open={optionsToggle}
                             >
-                                Group Information
-                            </OptionsDropDownItem>
-                            {groupDetails.group_creator_id === uid && (
-                                <>
-                                    <OptionsDropDownItem
-                                        sufIcon={<MdEdit />}
-                                        onClickExe={() => {
-                                            setEditGroupModal(true);
-                                        }}
-                                    >
-                                        Edit Group
-                                    </OptionsDropDownItem>
-                                    <OptionsDropDownItem
-                                        sufIcon={<MdAdd />}
-                                        onClickExe={() => {
-                                            setAddUsers(true);
-                                        }}
-                                    >
-                                        Add a new User
-                                    </OptionsDropDownItem>
-                                </>
-                            )}
-                            <OptionsDropDownItem
-                                onClickExe={async () => {
-                                    await firestore
-                                        .collection(collections.users)
-                                        .doc(uid)
-                                        .update({
-                                            groups: firebase.firestore.FieldValue.arrayRemove(
-                                                selectedChat
-                                            ),
-                                        });
-                                    await firestore
-                                        .collection(collections.groups_register)
-                                        .doc(selectedChat)
-                                        .update({
-                                            [feilds.group_members]:
-                                                firebase.firestore.FieldValue.arrayRemove(uid),
-                                            updatedAt:
-                                                firebase.firestore.FieldValue.serverTimestamp(),
-                                        });
-                                    await firestore
-                                        .collection(collections.groups_register)
-                                        .doc(selectedChat)
-                                        .collection(collections.messages)
-                                        .add({
-                                            type: "bubble",
-                                            tag: "user_left",
-                                            createdAt:
-                                                firebase.firestore.FieldValue.serverTimestamp(),
-                                            uid: uid,
-                                            user_that_left: displayName,
-                                        });
-                                    toast.success(
-                                        `You have successfully left ${groupDetails.group_name}!`
-                                    );
-                                    setSelectedChat("");
-                                }}
-                                sufIcon={<FaSignOutAlt />}
-                            >
-                                Leave Group
-                            </OptionsDropDownItem>
-                        </DropList>
+                                <OptionsDropDownItem
+                                    sufIcon={<MdInfoOutline />}
+                                    onClickExe={() => {
+                                        setGroupInfoModal(true);
+                                    }}
+                                >
+                                    Group Information
+                                </OptionsDropDownItem>
+                                {groupDetails.group_creator_id === uid && (
+                                    <>
+                                        <OptionsDropDownItem
+                                            sufIcon={<MdEdit />}
+                                            onClickExe={() => {
+                                                setEditGroupModal(true);
+                                            }}
+                                        >
+                                            Edit Group
+                                        </OptionsDropDownItem>
+                                        <OptionsDropDownItem
+                                            sufIcon={<MdAdd />}
+                                            onClickExe={() => {
+                                                setAddUsers(true);
+                                            }}
+                                        >
+                                            Add a new User
+                                        </OptionsDropDownItem>
+                                    </>
+                                )}
+                                <OptionsDropDownItem
+                                    onClickExe={async () => {
+                                        await firestore
+                                            .collection(collections.users)
+                                            .doc(uid)
+                                            .update({
+                                                groups: firebase.firestore.FieldValue.arrayRemove(
+                                                    selectedChat
+                                                ),
+                                            });
+                                        await firestore
+                                            .collection(collections.groups_register)
+                                            .doc(selectedChat)
+                                            .update({
+                                                [feilds.group_members]:
+                                                    firebase.firestore.FieldValue.arrayRemove(uid),
+                                                updatedAt:
+                                                    firebase.firestore.FieldValue.serverTimestamp(),
+                                            });
+                                        await firestore
+                                            .collection(collections.groups_register)
+                                            .doc(selectedChat)
+                                            .collection(collections.messages)
+                                            .add({
+                                                type: "bubble",
+                                                tag: "user_left",
+                                                createdAt:
+                                                    firebase.firestore.FieldValue.serverTimestamp(),
+                                                uid: uid,
+                                                user_that_left: displayName,
+                                            });
+                                        toast.success(
+                                            `You have successfully left ${groupDetails.group_name}!`
+                                        );
+                                        setSelectedChat("");
+                                    }}
+                                    sufIcon={<FaSignOutAlt />}
+                                >
+                                    Leave Group
+                                </OptionsDropDownItem>
+                            </DropList>
+                        </div>
                     </div>
-                </div>
-            )}
-            {selectedChat ? (
-                messages &&
-                messages.map(({ message, id }, index) =>
-                    message.type === "message" ? (
-                        <Message key={id} message={message} id={id} loaded={loaded} />
-                    ) : (
-                        <InfoBubble key={index} message={message} />
+                )}
+                {selectedChat ? (
+                    messages &&
+                    messages.map(({ message, id }, index) =>
+                        message.type === "message" ? (
+                            <Message key={id} message={message} id={id} loaded={loaded} />
+                        ) : (
+                            <InfoBubble key={index} message={message} />
+                        )
                     )
-                )
-            ) : (
-                <h1 className="no-chat-selected">Select a Chat to see messages</h1>
-            )}
+                ) : (
+                    <h1 className="no-chat-selected">Select a Chat to see messages</h1>
+                )}
 
-            <div className="dummy" ref={dummy}></div>
+                <div className="dummy" ref={dummy}></div>
+            </div>
             <MessagesModal
                 props={{
                     editGroupModal,
@@ -221,7 +227,7 @@ function Messages({ setCaret }) {
                     setGroupInfoModal,
                 }}
             />
-        </div>
+        </>
     );
 }
 export default Messages;

@@ -1142,9 +1142,11 @@ span.loader {
 
 .reply svg {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0px;
+  right: 0px;
   cursor: pointer;
+  padding: 5px;
+  z-index: 10;
 }
 
 .reply .recipeint {
@@ -1826,6 +1828,7 @@ span.loader {
 .users_list {
   list-style: none;
   padding: 0;
+  margin: 0;
   margin-top: 20px;
 }
 
@@ -1932,6 +1935,10 @@ span.loader {
   color: white;
 }
 
+.users_list li:last-child {
+  margin-bottom: 0;
+}
+
 .group_security label {
   display: inline-block;
   width: 120px;
@@ -2012,7 +2019,7 @@ span.loader {
 }
 
 .join-group .join-group-wrapper {
-  margin: 20px 0;
+  margin: 20px 0 0;
 }
 
 .group-info .profilePic {
@@ -2100,6 +2107,10 @@ span.loader {
   .messages .head .name h5 {
     font-size: 14px;
   }
+}
+
+.admin_state {
+  color: var(--green);
 }
 
 .loader-container.dark {
@@ -2217,7 +2228,12 @@ span.loader {
 }
 
 #root.dark .banner-container img {
-  opacity: 0;
+  display: none;
+}
+
+#root.dark .banner-container .logo {
+  -webkit-transform: scale(1.7);
+          transform: scale(1.7);
 }
 
 @media screen and (max-width: 700px) {

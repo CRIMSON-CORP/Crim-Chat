@@ -7,10 +7,11 @@ import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
 function JoinGroupModalUI({ setmodal }) {
     const [groupsDb, setGroups] = useState([]);
+    const [text, setText] = useState("");
     const fetchGroups = async () => {
         await firestore
-            .collection("groups-register")
-            .where("group_security", "==", false)
+            .collection(collections.groups_register)
+            .where(feilds.group_security, "==", false)
             .get()
             .then((groupsList) => {
                 setGroups(groupsList.docs);
@@ -18,33 +19,44 @@ function JoinGroupModalUI({ setmodal }) {
     };
     useEffect(() => {
         fetchGroups();
+        return setGroups(null);
     }, []);
-    async function search(e) {
-        const text = e.target.value.trim();
+    async function search(text) {
         if (text == "") return fetchGroups();
         const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
         try {
-            const data = await firestore
+            await firestore
                 .collection(collections.groups_register)
-                .where("closed", "==", false)
+                .where(feilds.group_security, "==", false)
                 .where(feilds.group_name, ">=", text)
                 .where(feilds.group_name, "<", end)
-                .get();
-            setGroups(data.docs);
+                .get()
+                .then((data) => {
+                    console.log(data);
+                    setGroups(data.docs);
+                });
         } catch (err) {
             console.log(err);
         }
     }
+
+    useEffect(() => {
+        search(text);
+        return setText("");
+    }, [text]);
     return (
         <div className="join-group-wrapper">
             <BorderedInput
                 header="Search Groups"
                 label="Search for Groups..."
                 name="search_groups"
-                onChange={search}
+                onChange={(e) => {
+                    setText(e.target.value);
+                }}
+                value={text}
             />
             <h4 className="mt-3">Suggested Groups</h4>
-            <GroupsList groupsDb={groupsDb} setmodal={setmodal} />
+            {groupsDb && <GroupsList groupsDb={groupsDb} setmodal={setmodal} />}
         </div>
     );
 }
