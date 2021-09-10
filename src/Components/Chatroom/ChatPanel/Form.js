@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import { MdClear } from "react-icons/md";
+import { CSSTransition } from "react-transition-group";
+import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { auth, firestore, timeStamp } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
     const { selectedChat } = useContext(SelectedChatContext);
+    const { reply, setReply } = useContext(ReplyContext);
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
@@ -18,6 +21,9 @@ function Form() {
                 profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
                 sender: userlocal.displayName,
                 type: "message",
+                replyMessage: reply.text ? reply.text.substring(0, 20) : null,
+                replyRecipient: reply.recipient ? reply.recipient : null,
+                replyMessage_id: reply.id,
             };
             await firestore
                 .collection(collections.groups_register)
@@ -34,6 +40,7 @@ function Form() {
                     latestText_sender: userlocal.displayName.split(" ")[0],
                 });
             setText("");
+            setReply({ text: null, recipient: null, id: null });
             textarea.current.style.height = "30px";
         } catch (err) {
             console.log(err);
@@ -50,10 +57,34 @@ function Form() {
             setText("");
         };
     }, []);
+
     return (
         <>
             {selectedChat && (
                 <div className="form_input">
+                    <CSSTransition
+                        in={reply.text != null}
+                        classNames="fade-trans"
+                        timeout={100}
+                        unmountOnExit
+                    >
+                        <div className="reply">
+                            <MdClear
+                                size={12}
+                                onClick={() => {
+                                    setReply({ text: null, recipient: null, id: null });
+                                }}
+                            />
+                            <div>
+                                <span className="recipeint font-weight-bold">
+                                    {reply.recipient === userlocal.displayName
+                                        ? "You"
+                                        : reply.recipient}
+                                </span>
+                                <p className="reply_text font-italic">{reply.text}</p>
+                            </div>
+                        </div>
+                    </CSSTransition>
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
                             <textarea

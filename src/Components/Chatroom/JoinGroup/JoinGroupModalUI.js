@@ -58,7 +58,6 @@ function GroupsList({ groupsDb, setmodal }) {
     const groupsRefined = groupsDb
         .map((item) => item.data())
         .filter((item) => !groups.includes(item.group_id));
-    console.log(groupsRefined);
     const groupsJSX = groupsRefined.map((group, index) => {
         return (
             <li

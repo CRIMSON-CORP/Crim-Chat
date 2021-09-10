@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import firebase, { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
-import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
@@ -58,7 +58,10 @@ function Messages({ setCaret }) {
                 .onSnapshot((docs) => {
                     const list = [];
                     docs.forEach((doc) => {
-                        list.push(doc.data());
+                        list.push({
+                            id: doc.id,
+                            message: doc.data(),
+                        });
                     });
                     setMessages(list);
                 });
@@ -196,9 +199,9 @@ function Messages({ setCaret }) {
             )}
             {selectedChat ? (
                 messages &&
-                messages.map((message, index) =>
+                messages.map(({ message, id }, index) =>
                     message.type === "message" ? (
-                        <Message key={index} message={message} loaded={loaded} />
+                        <Message key={id} message={message} id={id} loaded={loaded} />
                     ) : (
                         <InfoBubble key={index} message={message} />
                     )
@@ -223,7 +226,7 @@ function Messages({ setCaret }) {
 }
 export default Messages;
 
-function Message({ message, loaded }) {
+function Message({ message, loaded, id }) {
     const { userlocal } = useContext(UserContext);
     let messageOwner;
     if (message.uid) {
@@ -246,7 +249,7 @@ function Message({ message, loaded }) {
         }
     }, []);
     return (
-        <div ref={messageRef} className={`message ${messageOwner ? "sent" : "received"}`}>
+        <div ref={messageRef} className={`message ${messageOwner ? "sent" : "received"} ${id}`}>
             <div className="img_profile">
                 {message.profilePhoto === null ? (
                     <BiUser size={22} />
@@ -254,18 +257,28 @@ function Message({ message, loaded }) {
                     <img src={message.profilePhoto} alt="profile" />
                 )}
             </div>
-            <Bubble message={message} messageOwner={messageOwner} loaded={loaded} />
+            <Bubble message={message} id={id} messageOwner={messageOwner} loaded={loaded} />
         </div>
     );
 }
 
-function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) {
+function Bubble({
+    message: { text, createdAt, sender, replyRecipient, replyMessage, replyMessage_id },
+    messageOwner,
+    loaded,
+    id,
+}) {
+    const { reply, setReply } = useContext(ReplyContext);
+    const {
+        userlocal: { displayName },
+    } = useContext(UserContext);
     const time =
         createdAt !== null && createdAt !== undefined
             ? new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1e6).toLocaleTimeString()
             : "";
 
     const bubble = useRef();
+    const textRef = useRef();
     useEffect(() => {
         if (loaded) {
             gsap.fromTo(
@@ -278,14 +291,49 @@ function Bubble({ message: { text, createdAt, sender }, messageOwner, loaded }) 
                 { scale: 1, opacity: 1, y: 0, duration: 1, ease: "expo.out" }
             );
         }
+        bubble.current.addEventListener("dblclick", () => {
+            setReply({
+                text,
+                recipient: sender.split(" ")[0],
+                id,
+            });
+        });
     }, []);
     return (
         <div className="bubble" ref={bubble}>
             <div className="text">
+                {replyMessage && (
+                    <div
+                        className="reply"
+                        onClick={() => {
+                            document
+                                .querySelector(`.${replyMessage_id}`)
+                                .scrollIntoView({ behavior: "smooth", block: "center" });
+                            gsap.fromTo(
+                                `.${replyMessage_id}`,
+                                { backgroundColor: "rgba(225, 225 225, 0)" },
+                                {
+                                    backgroundColor: "rgba(225, 225 225, .8)",
+                                    duration: 0.5,
+                                    repeat: 5,
+                                    yoyo: true,
+                                    yoyoEase: true,
+                                }
+                            );
+                        }}
+                    >
+                        <span className="recipeint font-weight-bold">
+                            {replyRecipient === displayName ? "You" : replyRecipient}
+                        </span>
+                        <p className="reply_text font-italic">{replyMessage}</p>
+                    </div>
+                )}
                 {!messageOwner && <div className="message_sender">{sender}</div>}
                 <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{text}</p>
             </div>
-            <div className="timestamp">{time}</div>
+            <div className="timestamp" ref={textRef}>
+                {time}
+            </div>
         </div>
     );
 }
