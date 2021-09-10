@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import firebase, { auth } from "../../utils/firebase";
-import { BiEnvelope, BsEye, BiKey, BsEyeSlash } from "react-icons/all";
-import { IconContext } from "react-icons";
-import { InputForm } from "../../utils/CustomComponents";
-import { LoaderContext } from "../../utils/Contexts";
-import { UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
 import toast from "react-hot-toast";
+import { IconContext } from "react-icons";
+import { BiEnvelope, BiKey, BsEye, BsEyeSlash } from "react-icons/all";
+import { LoaderContext } from "../../utils/Contexts";
+import { InputForm } from "../../utils/CustomComponents";
+import firebase, { auth } from "../../utils/firebase";
+import { UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
 function SignIn({ setActivePage }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

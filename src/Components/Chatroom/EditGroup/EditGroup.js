@@ -1,12 +1,11 @@
-import { useState, useContext, useEffect } from "react";
-import { LoaderContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
-import { BorderedInput, Loader } from "../../../utils/CustomComponents";
-import firebase, { firestore, timeStamp } from "../../../utils/firebase";
-import { ImageTypes } from "../../../utils/utils";
-import { CSSTransition } from "react-transition-group";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaUserFriends } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import toast from "react-hot-toast";
+import { CSSTransition } from "react-transition-group";
+import { LoaderContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
+import { BorderedInput, Loader } from "../../../utils/CustomComponents";
+import { firestore, timeStamp } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
 import { UploadImage } from "../../../utils/firebaseUtils";
 function EditGroupUI({ setmodal }) {

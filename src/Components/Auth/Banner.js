@@ -1,6 +1,6 @@
 import React from "react";
-import { Logo } from "../../utils/CustomComponents";
 import chat_gif from "../../img/chat.gif";
+import { Logo } from "../../utils/CustomComponents";
 function Banner({ set }) {
     return (
         <div className="banner">

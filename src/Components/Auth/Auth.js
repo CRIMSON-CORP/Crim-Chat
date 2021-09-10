@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { CSSTransition } from "react-transition-group";
 import Banner from "./Banner";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
-import { CSSTransition } from "react-transition-group";
 function Auth() {
     const [banner, setBanner] = useState(window.innerWidth >= 766 ? "both" : "with-banner");
     const [activePage, setActivePage] = useState("signup");
