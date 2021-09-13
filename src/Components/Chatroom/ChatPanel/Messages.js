@@ -5,22 +5,20 @@ import gsap from "gsap";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
-import { collections, feilds } from "../../../utils/FirebaseRefs";
-import toast from "react-hot-toast";
+import { collections } from "../../../utils/FirebaseRefs";
 import { MdAdd, MdEdit, MdInfoOutline } from "react-icons/md";
 import $ from "jquery";
 import MessagesModal from "./MessagesModal";
 import aud from "../../../img/facebookchat.mp3";
 import useSound from "use-sound";
+import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
+import { leaveGroup } from "../../../utils/firebaseUtils";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
         userlocal: { uid, displayName },
     } = useContext(UserContext);
     const messageBoxRef = useRef();
-    const [loaded, setLoaded] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [groupDetails, setGroupDetails] = useState();
     const [optionsToggle, setOptionsToggle] = useState(false);
     const [editGroupModal, setEditGroupModal] = useModal(false);
     const [addUsers, setAddUsers] = useState(false);
@@ -28,9 +26,21 @@ function Messages({ setCaret }) {
     const [play] = useSound(aud);
     const [allowedToPlay, setAllowedToPlay] = useState(true);
     const dummy = useRef();
+    const groupDetailsRef = firebase
+        .firestore()
+        .collection(collections.groups_register)
+        .doc(selectedChat);
+    const groupMessagesRef = firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .collection("messages")
+        .orderBy("createdAt")
+        .limit(100);
+    const [groupMessages, loading] = useCollectionData(groupMessagesRef, { idField: "id" });
+    const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
     useEffect(() => {
-        if (messages) {
-            if (loaded) {
+        if (groupMessages) {
+            if (!loading) {
                 dummy.current.scrollIntoView({ behavior: "smooth" });
                 if (allowedToPlay) {
                     play();
@@ -41,42 +51,9 @@ function Messages({ setCaret }) {
                 }, 1500);
             } else {
                 dummy.current.scrollIntoView({ behavior: "auto" });
-                setLoaded(true);
             }
         }
-    }, [messages]);
-
-    useEffect(() => {
-        if (selectedChat) {
-            setLoaded(false);
-            var unsub1 = firestore
-                .collection(collections.groups_register)
-                .doc(selectedChat)
-                .collection("messages")
-                .orderBy("createdAt")
-                .limit(100)
-                .onSnapshot((docs) => {
-                    const list = [];
-                    docs.forEach((doc) => {
-                        list.push({
-                            id: doc.id,
-                            message: doc.data(),
-                        });
-                    });
-                    setMessages(list);
-                });
-            var unsub2 = firestore
-                .collection("groups-register")
-                .doc(selectedChat)
-                .onSnapshot((docs) => {
-                    setGroupDetails(docs.data());
-                });
-        }
-        return () => {
-            unsub1;
-            unsub2;
-        };
-    }, [selectedChat]);
+    }, [loading, groupMessages]);
 
     useEffect(() => {
         messageBoxRef.current.addEventListener("scroll", () => {
@@ -88,13 +65,6 @@ function Messages({ setCaret }) {
                 setCaret(false);
             }
         });
-    }, []);
-    useEffect(() => {
-        return () => {
-            setGroupDetails([]);
-            setLoaded(false);
-            setMessages([]);
-        };
     }, []);
 
     return (
@@ -160,37 +130,11 @@ function Messages({ setCaret }) {
                                 )}
                                 <OptionsDropDownItem
                                     onClickExe={async () => {
-                                        await firestore
-                                            .collection(collections.users)
-                                            .doc(uid)
-                                            .update({
-                                                groups: firebase.firestore.FieldValue.arrayRemove(
-                                                    selectedChat
-                                                ),
-                                            });
-                                        await firestore
-                                            .collection(collections.groups_register)
-                                            .doc(selectedChat)
-                                            .update({
-                                                [feilds.group_members]:
-                                                    firebase.firestore.FieldValue.arrayRemove(uid),
-                                                updatedAt:
-                                                    firebase.firestore.FieldValue.serverTimestamp(),
-                                            });
-                                        await firestore
-                                            .collection(collections.groups_register)
-                                            .doc(selectedChat)
-                                            .collection(collections.messages)
-                                            .add({
-                                                type: "bubble",
-                                                tag: "user_left",
-                                                createdAt:
-                                                    firebase.firestore.FieldValue.serverTimestamp(),
-                                                uid: uid,
-                                                user_that_left: displayName,
-                                            });
-                                        toast.success(
-                                            `You have successfully left ${groupDetails.group_name}!`
+                                        leaveGroup(
+                                            uid,
+                                            selectedChat,
+                                            displayName,
+                                            groupDetails.group_name
                                         );
                                         setSelectedChat("");
                                     }}
@@ -202,10 +146,15 @@ function Messages({ setCaret }) {
                         </div>
                     </div>
                 )}
-                {messages &&
-                    messages.map(({ message, id }, index) =>
+                {groupMessages !== undefined &&
+                    groupMessages.map((message, index) =>
                         message.type === "message" ? (
-                            <Message key={id} message={message} id={id} loaded={loaded} />
+                            <Message
+                                key={message.id}
+                                message={message}
+                                id={message.id}
+                                loaded={loading}
+                            />
                         ) : (
                             <InfoBubble key={index} message={message} />
                         )
@@ -308,19 +257,15 @@ function Bubble({
                     <div
                         className="reply"
                         onClick={() => {
-                            document
-                                .querySelector(`.${replyMessage_id}`)
-                                .scrollIntoView({ behavior: "smooth", block: "center" });
-                            gsap.fromTo(
-                                `.${replyMessage_id}`,
-                                { backgroundColor: "rgba(225, 225 225, 0)" },
-                                {
-                                    backgroundColor: "rgba(225, 225 225, .8)",
-                                    duration: 0.5,
-                                    repeat: 5,
-                                    yoyo: true,
-                                }
-                            );
+                            const target = document.querySelector(`.${replyMessage_id}`);
+                            target &&
+                                target.scrollIntoView({ behavior: "smooth", block: "center" });
+                            gsap.to(`.${replyMessage_id}`, {
+                                backgroundColor: "rgba(225, 225 225, .8)",
+                                duration: 0.5,
+                                repeat: 5,
+                                yoyo: true,
+                            });
                         }}
                     >
                         <span className="recipeint font-weight-bold">

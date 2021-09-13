@@ -919,6 +919,7 @@ span.loader {
   transition: 0.3s ease-out;
   border-radius: 10px;
   width: 100%;
+  background-color: transparent;
 }
 
 .chat-pannel .messages .message .bubble {

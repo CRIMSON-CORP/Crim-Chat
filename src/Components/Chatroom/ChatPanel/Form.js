@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdClear } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
-import { auth, firestore, timeStamp } from "../../../utils/firebase";
-import { collections } from "../../../utils/FirebaseRefs";
+import { sendMessage } from "../../../utils/firebaseUtils";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
@@ -12,44 +11,7 @@ function Form() {
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
-        try {
-            const time_stamp = timeStamp();
-            const message = {
-                text,
-                createdAt: time_stamp,
-                uid: auth.currentUser.uid,
-                profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
-                sender: userlocal.displayName,
-                type: "message",
-                replyMessage: reply.text ? reply.text.substring(0, 20) : null,
-                replyRecipient: reply.recipient ? reply.recipient : null,
-                replyMessage_id: reply.id,
-            };
-            const replyMessage = reply.text && {
-                replyMessage: reply.text.substring(0, 20),
-                replyRecipient: reply.recipient,
-                replyMessage_id: reply.id,
-            };
-            await firestore
-                .collection(collections.groups_register)
-                .doc(selectedChat)
-                .collection(collections.messages)
-                .add({ ...message, ...(replyMessage && replyMessage) });
-            await firestore
-                .collection(collections.groups_register)
-                .doc(selectedChat)
-                .update({
-                    updatedAt: time_stamp,
-                    latestText: text.length < 30 ? text : text.substring(0, 30) + "...",
-                    latestText_sender_uid: userlocal.uid,
-                    latestText_sender: userlocal.displayName.split(" ")[0],
-                });
-            setText("");
-            setReply({ text: null, recipient: null, id: null });
-            textarea.current.style.height = "30px";
-        } catch (err) {
-            console.log(err);
-        }
+        await sendMessage(text, userlocal, reply, selectedChat, setText, setReply, textarea);
     }
     function handleChange(txt) {
         textarea.current.style.height = "inherit";

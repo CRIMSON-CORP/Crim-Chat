@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
-import firebase, { auth, firestore, storage } from "./firebase";
-import { collections } from "./FirebaseRefs";
+import firebase, { auth, firestore, storage, timeStamp } from "./firebase";
+import { collections, feilds } from "./FirebaseRefs";
 import { ImageTypes } from "./utils";
 import { v4 } from "uuid";
 export async function UploadImage(image, path, limit) {
@@ -155,7 +155,7 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
             .collection("messages")
             .add({
                 type: "bubble",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: timeStamp(),
                 uid: uid,
                 tag: "invite_sent",
                 invitee_id: user,
@@ -170,4 +170,80 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
         toast.success("Invite Sent");
         setmodal(false);
     });
+}
+
+export async function sendMessage(
+    text,
+    userlocal,
+    reply,
+    selectedChat,
+    setText,
+    setReply,
+    textarea
+) {
+    try {
+        const time_stamp = timeStamp();
+        const message = {
+            text,
+            createdAt: time_stamp,
+            uid: auth.currentUser.uid,
+            profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
+            sender: userlocal.displayName,
+            type: "message",
+            replyMessage: reply.text ? reply.text.substring(0, 20) : null,
+            replyRecipient: reply.recipient ? reply.recipient : null,
+            replyMessage_id: reply.id,
+        };
+        const replyMessage = reply.text && {
+            replyMessage: reply.text.substring(0, 20),
+            replyRecipient: reply.recipient,
+            replyMessage_id: reply.id,
+        };
+        await firestore
+            .collection(collections.groups_register)
+            .doc(selectedChat)
+            .collection(collections.messages)
+            .add({ ...message, ...(replyMessage && replyMessage) });
+        await firestore
+            .collection(collections.groups_register)
+            .doc(selectedChat)
+            .update({
+                updatedAt: time_stamp,
+                latestText: text.length < 30 ? text : text.substring(0, 30) + "...",
+                latestText_sender_uid: userlocal.uid,
+                latestText_sender: userlocal.displayName.split(" ")[0],
+            });
+        setText("");
+        setReply({ text: null, recipient: null, id: null });
+        textarea.current.style.height = "30px";
+    } catch (err) {
+        console.log(err);
+    }
+}
+export async function leaveGroup(uid, selectedChat, displayName, groupName) {
+    await firestore
+        .collection(collections.users)
+        .doc(uid)
+        .update({
+            groups: firebase.firestore.FieldValue.arrayRemove(selectedChat),
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .update({
+            [feilds.group_members]: firebase.firestore.FieldValue.arrayRemove(uid),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .collection(collections.messages)
+        .add({
+            type: "bubble",
+            tag: "user_left",
+            createdAt: timeStamp(),
+            uid: uid,
+            user_that_left: displayName,
+        });
+    toast.success(`You have successfully left ${groupName}!`);
 }
