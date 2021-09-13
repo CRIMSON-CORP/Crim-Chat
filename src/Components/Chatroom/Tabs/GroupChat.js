@@ -3,11 +3,16 @@ import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
 import { MobileNav, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import Isotope from "isotope-layout";
-import { collections, feilds } from "../../../utils/FirebaseRefs";
+import { collections } from "../../../utils/FirebaseRefs";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const [groupsData, setGroupsdata] = useState([]);
     const groups_list = useRef();
+
+    function trim(data) {
+        let filt = data.filter((db) => userlocal.groups.includes(db.group_id));
+        return filt;
+    }
 
     useEffect(() => {
         if (userlocal.groups.length !== 0) {
@@ -15,13 +20,12 @@ function GroupChat() {
                 var unsub = firestore
                     .collection(collections.groups_register)
                     .orderBy("updatedAt", "desc")
-                    .where(feilds.group_id, "in", [...userlocal.groups])
                     .onSnapshot(async (collection) => {
                         var list = [];
                         collection.forEach((data) => {
                             list.push(data.data());
                         });
-                        setGroupsdata(list);
+                        setGroupsdata(trim(list));
                     });
             } catch (err) {
                 console.log(err);

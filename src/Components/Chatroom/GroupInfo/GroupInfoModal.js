@@ -66,6 +66,10 @@ function GroupMember({ member, admin }) {
             .then((data) => {
                 setMem(data.data());
             });
+        return () => {
+            setMem(null);
+            setAdmin(null);
+        };
     }, []);
 
     useEffect(() => {
@@ -85,10 +89,10 @@ function GroupMember({ member, admin }) {
                         <ProfilePic img={mem.profilePic} d_n={mem.displayName} />
                     </div>
                     <div className="user trim">
-                        <h5 className="trim-text">
-                            {mem.displayName}{" "}
+                        <div className="user_name">
+                            <h5 className="trim-text">{mem.displayName} </h5>
                             {admin == mem.uid && <span className="admin_state">(Admin)</span>}
-                        </h5>
+                        </div>
                         <span className="trim-text">{mem.email}</span>
                     </div>
                     {adminState && (

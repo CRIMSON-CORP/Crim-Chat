@@ -81,6 +81,10 @@
 
     .chat-pannel .messages .message .img_profile {
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+        border-radius: 50%;
+        img {
+            box-shadow: none;
+        }
     }
 
     p.or {

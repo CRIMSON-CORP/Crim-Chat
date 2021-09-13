@@ -25,11 +25,16 @@ function Form() {
                 replyRecipient: reply.recipient ? reply.recipient : null,
                 replyMessage_id: reply.id,
             };
+            const replyMessage = reply.text && {
+                replyMessage: reply.text.substring(0, 20),
+                replyRecipient: reply.recipient,
+                replyMessage_id: reply.id,
+            };
             await firestore
                 .collection(collections.groups_register)
                 .doc(selectedChat)
                 .collection(collections.messages)
-                .add(message);
+                .add({ ...message, ...(replyMessage && replyMessage) });
             await firestore
                 .collection(collections.groups_register)
                 .doc(selectedChat)

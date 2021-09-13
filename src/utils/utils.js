@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { UserContext } from "./Contexts";
 
 export const ImageTypes = ["image/png", "image/jpg", "image/jpeg"];
 

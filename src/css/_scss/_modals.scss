@@ -289,6 +289,18 @@
         }
         .user {
             flex: auto;
+            .user_name {
+                display: flex;
+                align-content: center;
+                overflow: hidden;
+                gap: 5px;
+                h5 {
+                    display: inline-block;
+                }
+                .admin_state {
+                    margin-top: 5px;
+                }
+            }
             h6 {
                 display: flex;
                 align-items: center;
@@ -473,8 +485,19 @@
         }
     }
 }
+.list-loader {
+    position: relative;
+    .loader-container {
+        position: relative;
+        margin-top: 20px;
+        background: none !important;
+    }
+}
 
 @media screen and (max-width: 500px) {
+    .modal-custom .underlay {
+        display: none;
+    }
     .modal-custom {
         top: 0;
         left: 0;

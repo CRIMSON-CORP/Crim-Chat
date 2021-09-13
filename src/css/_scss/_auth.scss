@@ -193,3 +193,13 @@
         }
     }
 }
+
+@media only screen and (max-width: 400px) {
+    .banner-container {
+        height: 80%;
+        .logo {
+            flex: 6;
+            transform: scale(1.4) !important;
+        }
+    }
+}

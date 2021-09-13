@@ -5,17 +5,34 @@ import { BorderedInput, ProfilePic } from "../../../utils/CustomComponents";
 import firebase, { firestore } from "../../../utils/firebase";
 import { collections, feilds } from "../../../utils/FirebaseRefs";
 import toast from "react-hot-toast";
+import { Loader } from "../../../utils/CustomComponents";
 function JoinGroupModalUI({ setmodal }) {
     const [groupsDb, setGroups] = useState([]);
     const [text, setText] = useState("");
+    const [loading, setLoading] = useState(false);
+    const {
+        userlocal: { groups },
+    } = useContext(UserContext);
+    function trim(data) {
+        let dbArr = data.docs.map((doc) => doc.data());
+        let filt = dbArr.filter((db) => !groups.includes(db.group_id));
+        return filt;
+    }
     const fetchGroups = async () => {
-        await firestore
-            .collection(collections.groups_register)
-            .where(feilds.group_security, "==", false)
-            .get()
-            .then((groupsList) => {
-                setGroups(groupsList.docs);
-            });
+        setLoading(true);
+        try {
+            await firestore
+                .collection(collections.groups_register)
+                .where(feilds.group_security, "==", false)
+                .get()
+                .then((groupsList) => {
+                    setGroups(trim(groupsList));
+                });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     };
     useEffect(() => {
         fetchGroups();
@@ -25,6 +42,7 @@ function JoinGroupModalUI({ setmodal }) {
         if (text == "") return fetchGroups();
         const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
         try {
+            setLoading(true);
             await firestore
                 .collection(collections.groups_register)
                 .where(feilds.group_security, "==", false)
@@ -32,16 +50,17 @@ function JoinGroupModalUI({ setmodal }) {
                 .where(feilds.group_name, "<", end)
                 .get()
                 .then((data) => {
-                    setGroups(data.docs);
+                    setGroups(trim(data));
                 });
         } catch (err) {
             console.log(err);
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         search(text);
-        return setText("");
     }, [text]);
     return (
         <div className="join-group-wrapper">
@@ -55,7 +74,13 @@ function JoinGroupModalUI({ setmodal }) {
                 value={text}
             />
             <h4 className="mt-3">Suggested Groups</h4>
-            {groupsDb && <GroupsList groupsDb={groupsDb} setmodal={setmodal} />}
+            <div className="list-loader">
+                {groupsDb && !loading ? (
+                    <GroupsList groupsDb={groupsDb} setmodal={setmodal} />
+                ) : (
+                    <Loader />
+                )}
+            </div>
         </div>
     );
 }
@@ -63,13 +88,10 @@ function JoinGroupModalUI({ setmodal }) {
 export default JoinGroupModalUI;
 function GroupsList({ groupsDb, setmodal }) {
     const {
-        userlocal: { groups, uid, displayName },
+        userlocal: { uid, displayName },
     } = useContext(UserContext);
     const { setSelectedChat } = useContext(SelectedChatContext);
-    const groupsRefined = groupsDb
-        .map((item) => item.data())
-        .filter((item) => !groups.includes(item.group_id));
-    const groupsJSX = groupsRefined.map((group, index) => {
+    const groupsJSX = groupsDb.map((group, index) => {
         return (
             <li
                 className="user hover mb-20"
