@@ -1,4 +1,4 @@
-import gsap from "gsap";
+import gsap, { Back } from "gsap";
 import { useContext, useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
@@ -6,6 +6,7 @@ import { ReplyContext, SelectedChatContext } from "../../../utils/Contexts";
 import Options from "../Options";
 import Form from "./Form";
 import Messages from "./Messages";
+import NoChat from "./NoChat";
 function ChatPannel() {
     const [caret, setCaret] = useState(false);
     const { selectedChat } = useContext(SelectedChatContext);
@@ -18,7 +19,7 @@ function ChatPannel() {
             <Options />
             <div className="chat-pannel">
                 <ReplyContext.Provider value={{ reply, setReply }}>
-                    <Messages setCaret={setCaret} />
+                    {selectedChat ? <Messages setCaret={setCaret} /> : <NoChat />}
                     <CSSTransition
                         in={caret}
                         unmountOnExit
@@ -38,7 +39,12 @@ export default ChatPannel;
 function Caret() {
     const caret = useRef();
     useEffect(() => {
-        gsap.to(caret.current, { y: -20, yoyo: true, repeat: -1, ease: "back.out()" });
+        gsap.to(caret.current, {
+            y: -20,
+            yoyo: true,
+            repeat: -1,
+            ease: Back.easeOut.config(2),
+        });
     }, []);
     return (
         <div

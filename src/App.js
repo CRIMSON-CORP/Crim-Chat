@@ -34,7 +34,7 @@ function App() {
                             if (!userdb.exists) {
                                 let local_user = await JSON.parse(localStorage.getItem("user"));
                                 if (local_user) {
-                                    local_user.onlineStatus = "Offline";
+                                    local_user.onlineStatus = status ? "Online" : "Offline";
                                     setUserLocal(local_user);
                                 }
                             } else {

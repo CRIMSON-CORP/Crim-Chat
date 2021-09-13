@@ -13,10 +13,9 @@ function EditProfile({ setmodal }) {
     const {
         userlocal: { uid },
     } = useContext(UserContext);
-    const [profileDetails, setProfileDetails] = useState({
-        profilePic: null,
-        displayName: "",
-    });
+    const [profileDetails, setProfileDetails] = useState(null);
+    const [former, setFormer] = useState()
+    const [text, setText] = useState("");
 
     useEffect(() => {
         firestore
@@ -25,6 +24,7 @@ function EditProfile({ setmodal }) {
             .get()
             .then((data) => {
                 setProfileDetails(data.data());
+                setFormer(data.data().displayName)
             });
     }, []);
 
@@ -55,7 +55,6 @@ function EditProfile({ setmodal }) {
         setLoading(true);
         try {
             await firestore.collection(collections.users).doc(uid).update(profileDetails);
-
             toast.success("Profile Details updated successfully");
             setmodal(false);
         } catch (error) {
@@ -66,98 +65,101 @@ function EditProfile({ setmodal }) {
     }
     return (
         <>
-            <div className="form">
-                <form onSubmit={submit}>
-                    <div className="form_grid" style={{ gridTemplateColumns: "100%" }}>
-                        <div className="profile_details">
-                            <div className="profile_icon">
-                                <h4 style={{ marginBottom: 20 }}>Profile Icon</h4>
-                                <input
-                                    type="file"
-                                    name="profile-icon"
-                                    accept="image/png, image/jpeg,image/jpg, image/JPEG, image/webpg"
-                                    id="profile-icon"
-                                    onChange={setImage}
-                                />
-                                <label htmlFor="profile-icon" className="profile_icon">
-                                    <div className="cover">
-                                        <CSSTransition
-                                            in={profileDetails.profilePic != null}
-                                            unmountOnExit
-                                            timeout={400}
-                                            classNames="profile_icon_switch_img"
-                                        >
-                                            <img
-                                                src={profileDetails.profilePic}
-                                                alt="profile icon"
-                                            />
-                                        </CSSTransition>
-                                        <CSSTransition
-                                            in={profileDetails.profilePic == null}
-                                            unmountOnExit
-                                            timeout={400}
-                                            classNames="profile_icon_switch_svg"
-                                        >
-                                            <span className="profile_icon_placeholder">
-                                                <FaUser size={40} />
-                                            </span>
-                                        </CSSTransition>
-                                        {setImageLoader && <Loader />}
-                                    </div>
-                                    <span className="edit">
-                                        <MdEdit />
-                                    </span>
-                                </label>
-                            </div>
-                            <div className="display_name">
-                                <BorderedInput
-                                    name="display_name"
-                                    header="Display name"
-                                    onChange={(e) => {
-                                        setProfileDetails((prev) => {
-                                            return { ...prev, displayName: e.target.value };
-                                        });
-                                    }}
-                                    value={" "}
-                                    label={profileDetails.displayName}
-                                    req={false}
-                                />
-                            </div>
-                        </div>
-                        <button
-                            className="btn-block btn-danger px-3 py-2 rounded"
-                            onClick={async (e) => {
-                                e.preventDefault();
-                                const ans = confirm(
-                                    "Are you sure you want to delete your account? you can sign out instead"
-                                );
-                                if (ans) {
-                                    try {
-                                        await firestore
-                                            .collection(collections.users)
-                                            .doc(uid)
-                                            .delete();
-                                        await firebase
-                                            .auth()
-                                            .currentUser.delete(uid)
-                                            .then(() => {
-                                                localStorage.removeItem("user");
-                                                toast.success("Account Deleted!");
+            {profileDetails && (
+                <div className="form">
+                    <form onSubmit={submit}>
+                        <div className="form_grid" style={{ gridTemplateColumns: "100%" }}>
+                            <div className="profile_details">
+                                <div className="profile_icon">
+                                    <h4 style={{ marginBottom: 20 }}>Profile Icon</h4>
+                                    <input
+                                        type="file"
+                                        name="profile-icon"
+                                        accept="image/png, image/jpeg,image/jpg, image/JPEG, image/webpg"
+                                        id="profile-icon"
+                                        onChange={setImage}
+                                    />
+                                    <label htmlFor="profile-icon" className="profile_icon">
+                                        <div className="cover">
+                                            <CSSTransition
+                                                in={profileDetails.profilePic != null}
+                                                unmountOnExit
+                                                timeout={400}
+                                                classNames="profile_icon_switch_img"
+                                            >
+                                                <img
+                                                    src={profileDetails.profilePic}
+                                                    alt="profile icon"
+                                                />
+                                            </CSSTransition>
+                                            <CSSTransition
+                                                in={profileDetails.profilePic == null}
+                                                unmountOnExit
+                                                timeout={400}
+                                                classNames="profile_icon_switch_svg"
+                                            >
+                                                <span className="profile_icon_placeholder">
+                                                    <FaUser size={40} />
+                                                </span>
+                                            </CSSTransition>
+                                            {setImageLoader && <Loader />}
+                                        </div>
+                                        <span className="edit">
+                                            <MdEdit />
+                                        </span>
+                                    </label>
+                                </div>
+                                <div className="display_name">
+                                    <BorderedInput
+                                        name="display_name"
+                                        header="Display name"
+                                        onChange={(e) => {
+                                            setProfileDetails((prev) => {
+                                                return { ...prev, displayName: e.target.value };
                                             });
-                                    } catch {
-                                        toast.error("Faailed to Delete Account!");
+                                            setText(e.target.value);
+                                        }}
+                                        value={text}
+                                        label={former}
+                                        req={false}
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                className="btn-block btn-danger px-3 py-2 rounded"
+                                onClick={async (e) => {
+                                    e.preventDefault();
+                                    const ans = confirm(
+                                        "Are you sure you want to delete your account? you can sign out instead"
+                                    );
+                                    if (ans) {
+                                        try {
+                                            await firestore
+                                                .collection(collections.users)
+                                                .doc(uid)
+                                                .delete();
+                                            await firebase
+                                                .auth()
+                                                .currentUser.delete(uid)
+                                                .then(() => {
+                                                    localStorage.removeItem("user");
+                                                    toast.success("Account Deleted!");
+                                                });
+                                        } catch {
+                                            toast.error("Faailed to Delete Account!");
+                                        }
                                     }
-                                }
-                            }}
-                        >
-                            Delete Account?
+                                }}
+                            >
+                                Delete Account?
+                            </button>
+                        </div>
+                        <button type="submit" className="btn btn-fill">
+                            Save Changes
                         </button>
-                    </div>
-                    <button type="submit" className="btn btn-fill">
-                        Save Changes
-                    </button>
-                </form>
-            </div>
+                    </form>
+                </div>
+            )}
         </>
     );
 }

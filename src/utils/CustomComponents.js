@@ -165,7 +165,7 @@ export function ProfilePic({ img, d_n, tag = "user" }) {
                         <FaUserFriends size="2em" />
                     </div>
                 ) : (
-                    <div className="alt">{d_n[0]}</div>
+                    <div className="alt">{d_n.trim()[0] && d_n.trim()[0].toUpperCase()}</div>
                 )
             ) : (
                 <img src={img} alt="profile" />

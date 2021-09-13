@@ -1,11 +1,9 @@
 import React, { useContext, useState } from "react";
-import toast from "react-hot-toast";
 import { IconContext } from "react-icons";
 import { BiEnvelope, BiKey, BsEye, BsEyeSlash } from "react-icons/all";
 import { LoaderContext } from "../../utils/Contexts";
 import { InputForm } from "../../utils/CustomComponents";
-import firebase, { auth } from "../../utils/firebase";
-import { UpdateUserOnlineStatus } from "../../utils/firebaseUtils";
+import { signin } from "../../utils/firebaseUtils";
 function SignIn({ setActivePage }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -14,35 +12,8 @@ function SignIn({ setActivePage }) {
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
-        async function signin() {
-            await firebase.auth().signInWithEmailAndPassword(email, password);
-            await UpdateUserOnlineStatus(auth.currentUser.uid, "Online");
-        }
-        try {
-            await toast.promise(signin(), {
-                loading: "Signing in...",
-                success: "Signed in Successfully!",
-                error: "Failed to Sign in!",
-            });
-        } catch (err) {
-            console.log(err);
-            if (err.code === "auth/wrong-password") {
-                toast.error("The Password is incorrect for this User!");
-                setPassword("");
-            } else if (err.code === "auth/too-many-requests") {
-                toast.error("Too many incorrect tries, Account Temporarily Blocked!");
-                setEmail("");
-                setPassword("");
-            } else if (err.code === "auth/invalid-email") {
-                toast.error(err.message);
-            } else if (err.code === "auth/user-not-found") {
-                toast.error("User with this Account does not Exist!");
-            } else if (err.code == "auth/network-request-failed") {
-                return toast.error("Network Error");
-            }
-        } finally {
-            setLoading(false);
-        }
+        await signin(email, password, setEmail, setPassword);
+        setLoading(false);
     }
     return (
         <div className="signup">

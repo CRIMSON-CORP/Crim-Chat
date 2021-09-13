@@ -5,16 +5,20 @@ import UsersList from "./UsersList";
 
 function InviteUsers({ selected, setSelected }) {
     const [users, setUsers] = useState([]);
-    useEffect(() => {
-        firestore
+    const fetchAll = async () => {
+        await firestore
             .collection("users")
             .get()
             .then((usersList) => {
                 setUsers(usersList.docs);
             });
+    };
+    useEffect(() => {
+        fetchAll();
     }, []);
     async function search(e) {
         const text = e.target.value.trim();
+        if (text == "") return fetchAll();
         const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
         try {
             const data = await firestore

@@ -1,11 +1,9 @@
 import React, { useContext, useState } from "react";
-import toast from "react-hot-toast";
 import { IconContext } from "react-icons";
 import { BiEnvelope, BiKey, BiUser, BsEye, BsEyeSlash } from "react-icons/all";
 import { LoaderContext } from "../../utils/Contexts";
 import { InputForm } from "../../utils/CustomComponents";
-import { auth } from "../../utils/firebase";
-import { AddUser } from "../../utils/firebaseUtils";
+import { signup } from "../../utils/firebaseUtils";
 function SignUp({ setActivePage }) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -15,26 +13,8 @@ function SignUp({ setActivePage }) {
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
-        try {
-            await auth.createUserWithEmailAndPassword(email, password);
-            await AddUser(auth.currentUser, username);
-        } catch (err) {
-            console.log(err);
-            if (err.code === "auth/invalid-email") {
-                toast.error(err.message);
-            }
-            if (err.code === "auth/email-already-in-use") {
-                toast.error("Email already in use!");
-            }
-            if (err.code == "auth/network-request-failed") {
-                toast.error("Network Error");
-            }
-            if (err.code == "auth/weak-password") {
-                toast.error(err.message);
-            }
-        } finally {
-            setLoading(false);
-        }
+        await signup();
+        setLoading(false);
     }
     return (
         <div className="signup">

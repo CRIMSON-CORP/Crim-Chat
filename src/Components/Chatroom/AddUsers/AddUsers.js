@@ -1,10 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { v4 } from "uuid";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput } from "../../../utils/CustomComponents";
-import firebase, { firestore } from "../../../utils/firebase";
-import { collections } from "../../../utils/FirebaseRefs";
+import { addUserToGroup, fetchAllUsers, searchUser } from "../../../utils/firebaseUtils";
 import UsersList from "../CreateGroup/UsersList";
 
 function AddUsers({ setmodal }) {
@@ -15,32 +12,17 @@ function AddUsers({ setmodal }) {
     const {
         userlocal: { displayName, uid },
     } = useContext(UserContext);
-    async function fetchUsers() {
-        await firestore
-            .collection("users")
-            .get()
-            .then((usersList) => {
-                setUsers(usersList.docs);
-            });
-    }
+
     useEffect(() => {
-        fetchUsers();
+        async function fetchCall() {
+            return setUsers(await fetchAllUsers());
+        }
+        fetchCall();
     }, []);
     async function search(e) {
         const text = e.target.value.trim();
         setText(text);
-        if (text == "") return fetchUsers();
-        const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
-        try {
-            const data = await firestore
-                .collection("users")
-                .where("displayName", ">=", text)
-                .where("displayName", "<", end)
-                .get();
-            setUsers(data.docs);
-        } catch (err) {
-            console.log(err);
-        }
+        setUsers(await searchUser(text));
     }
     return (
         <div className="mt-2">
@@ -54,45 +36,9 @@ function AddUsers({ setmodal }) {
             <h6 style={{ marginTop: 20 }}>{selected.length} Users Invited</h6>
             <UsersList users={users} selected={selected} setSelected={setSelected} />
             <button
-                className="btn btn-fill"
+                className="btn btn-fill mt-4"
                 onClick={() => {
-                    const notif_id = v4();
-                    if (!selected.length) return toast.error("No user Selected!");
-                    selected.forEach(async (user) => {
-                        await firestore
-                            .collection("users")
-                            .doc(user)
-                            .collection("notif")
-                            .doc(notif_id)
-                            .set({
-                                notif_id: notif_id,
-                                sender: displayName,
-                                type: "invite",
-                                group_id: selectedChat,
-                                sender_id: uid,
-                            });
-                        // Adds Bubble for each invited user
-                        await firestore
-                            .collection(collections.groups_register)
-                            .doc(selectedChat)
-                            .collection("messages")
-                            .add({
-                                type: "bubble",
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                uid: uid,
-                                tag: "invite_sent",
-                                invitee_id: user,
-                                invitee_name: await firestore
-                                    .collection(collections.users)
-                                    .doc(user)
-                                    .get()
-                                    .then((data) => data.data().displayName),
-                                inviter: displayName,
-                            });
-
-                        toast.success("Invite Sent");
-                        setmodal(false);
-                    });
+                    addUserToGroup(uid, displayName, selectedChat, selected, setmodal);
                 }}
             >
                 Add Users

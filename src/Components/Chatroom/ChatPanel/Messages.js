@@ -202,18 +202,14 @@ function Messages({ setCaret }) {
                         </div>
                     </div>
                 )}
-                {selectedChat ? (
-                    messages &&
+                {messages &&
                     messages.map(({ message, id }, index) =>
                         message.type === "message" ? (
                             <Message key={id} message={message} id={id} loaded={loaded} />
                         ) : (
                             <InfoBubble key={index} message={message} />
                         )
-                    )
-                ) : (
-                    <h1 className="no-chat-selected">Select a Chat to see messages</h1>
-                )}
+                    )}
 
                 <div className="dummy" ref={dummy}></div>
             </div>
@@ -323,7 +319,6 @@ function Bubble({
                                     duration: 0.5,
                                     repeat: 5,
                                     yoyo: true,
-                                    yoyoEase: true,
                                 }
                             );
                         }}

@@ -2,8 +2,13 @@ import React, { useContext, useEffect } from "react";
 import ChatPannel from "./ChatPanel/ChatPannel";
 import Tabs from "./Tabs/Tabs";
 import { useState } from "react";
-import { MobileNav, SelectedChatContext, UserContext } from "../../utils/Contexts";
-import { UnderLay } from "../../utils/CustomComponents";
+import {
+    CreateJoinContext,
+    MobileNav,
+    SelectedChatContext,
+    UserContext,
+} from "../../utils/Contexts";
+import { UnderLay, useModal } from "../../utils/CustomComponents";
 import { CSSTransition } from "react-transition-group";
 function ChatRoom() {
     const [mobileNav, setMobileNav] = useState(false);
@@ -11,6 +16,9 @@ function ChatRoom() {
     const {
         userlocal: { mode },
     } = useContext(UserContext);
+    const [joinGroupModal, setJoinGroupModal] = useModal();
+    const [createGroupModal, setCreateGroupModal] = useModal();
+    const [editProfileModal, setEditProfileModal] = useModal();
 
     useEffect(() => {
         const root = document.getElementById("root");
@@ -35,7 +43,18 @@ function ChatRoom() {
                             }}
                         />
                     </CSSTransition>
-                    <ChatPannel />
+                    <CreateJoinContext.Provider
+                        value={{
+                            joinGroupModal,
+                            setJoinGroupModal,
+                            createGroupModal,
+                            setCreateGroupModal,
+                            editProfileModal,
+                            setEditProfileModal,
+                        }}
+                    >
+                        <ChatPannel />
+                    </CreateJoinContext.Provider>
                 </SelectedChatContext.Provider>
             </MobileNav.Provider>
         </div>

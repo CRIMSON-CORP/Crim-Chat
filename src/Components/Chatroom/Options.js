@@ -11,15 +11,20 @@ import {
     MdKeyboardArrowLeft,
     MdClear,
     MdCheck,
+    FiEdit,
 } from "react-icons/all";
-import { MobileNav, SelectedChatContext, UserContext } from "../../utils/Contexts";
+import {
+    CreateJoinContext,
+    MobileNav,
+    SelectedChatContext,
+    UserContext,
+} from "../../utils/Contexts";
 import { signOut } from "../../utils/firebaseUtils";
 import {
     DropList,
     Modal,
     NotifDropDownItem,
     OptionsDropDownItem,
-    useModal,
 } from "../../utils/CustomComponents";
 import CreateGroupModalUI from "./CreateGroup/CreateGroupModalUI";
 import JoinGroupModalUI from "./JoinGroup/JoinGroupModalUI";
@@ -35,9 +40,14 @@ function Options() {
     const {
         userlocal: { mode, uid },
     } = useContext(UserContext);
-    const [createGroupModal, setCreateGroupModal] = useModal();
-    const [joinGroupModal, setJoinGroupModal] = useModal();
-    const [editProfileModal, setEditProfileModal] = useModal();
+    const {
+        createGroupModal,
+        setCreateGroupModal,
+        joinGroupModal,
+        setJoinGroupModal,
+        editProfileModal,
+        setEditProfileModal,
+    } = useContext(CreateJoinContext);
 
     return (
         <div className="optionsIcon">
@@ -78,11 +88,12 @@ function Options() {
                         onClickExe={() => {
                             setJoinGroupModal(true);
                         }}
+                        sufIcon={<MdAdd />}
                     >
                         Join Group
                     </OptionsDropDownItem>
                     <OptionsDropDownItem
-                        sufIcon={<MdAdd />}
+                        sufIcon={<FiEdit />}
                         onClickExe={() => {
                             setCreateGroupModal(true);
                         }}
