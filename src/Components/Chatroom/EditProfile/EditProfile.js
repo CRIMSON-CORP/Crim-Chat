@@ -1,20 +1,20 @@
 import { useState, useContext, useEffect } from "react";
 import { LoaderContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput, Loader } from "../../../utils/CustomComponents";
-import firebase, { firestore } from "../../../utils/firebase";
-import { ImageTypes } from "../../../utils/utils";
+import { firestore } from "../../../utils/firebase";
 import { CSSTransition } from "react-transition-group";
 import { FaUser } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import toast from "react-hot-toast";
 import { collections } from "../../../utils/FirebaseRefs";
+import { deleteAccount, UploadImage } from "../../../utils/firebaseUtils";
 function EditProfile({ setmodal }) {
     const { setLoading } = useContext(LoaderContext);
     const {
         userlocal: { uid },
     } = useContext(UserContext);
     const [profileDetails, setProfileDetails] = useState(null);
-    const [former, setFormer] = useState()
+    const [former, setFormer] = useState();
     const [text, setText] = useState("");
 
     useEffect(() => {
@@ -24,7 +24,7 @@ function EditProfile({ setmodal }) {
             .get()
             .then((data) => {
                 setProfileDetails(data.data());
-                setFormer(data.data().displayName)
+                setFormer(data.data().displayName);
             });
     }, []);
 
@@ -32,14 +32,9 @@ function EditProfile({ setmodal }) {
 
     async function setImage(e) {
         const image = e.target.files[0];
-        if (!image) return;
-        if (image.size > 1000_000) return toast.error("Please select a picture less than 1mb");
-        if (!ImageTypes.includes(image.type)) return toast.error("Please select a picture");
         setSetImageLoader(true);
         try {
-            const ref = firebase.storage().ref("users_profile_pic/" + image.name);
-            await ref.put(image);
-            const url = await ref.getDownloadURL();
+            const url = await UploadImage(image, "users_profile_pic/" + image.name);
             setProfileDetails((prev) => {
                 return { ...prev, profilePic: url };
             });
@@ -134,19 +129,9 @@ function EditProfile({ setmodal }) {
                                     );
                                     if (ans) {
                                         try {
-                                            await firestore
-                                                .collection(collections.users)
-                                                .doc(uid)
-                                                .delete();
-                                            await firebase
-                                                .auth()
-                                                .currentUser.delete(uid)
-                                                .then(() => {
-                                                    localStorage.removeItem("user");
-                                                    toast.success("Account Deleted!");
-                                                });
+                                            await deleteAccount(uid);
                                         } catch {
-                                            toast.error("Faailed to Delete Account!");
+                                            toast.error("Failed to Delete Account!");
                                         }
                                     }
                                 }}

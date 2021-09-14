@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useDocumentData, useDocumentDataOnce } from "react-firebase-hooks/firestore";
 import toast from "react-hot-toast";
 import { BiUserMinus } from "react-icons/bi";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
@@ -7,26 +8,13 @@ import firebase, { firestore } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
 
 function GroupInfoModal() {
-    const [groupInfo, setgroupInfo] = useState({
-        group_profilePic: null,
-        group_members: [],
-    });
     const { selectedChat } = useContext(SelectedChatContext);
-    useEffect(() => {
-        if (selectedChat != undefined) {
-            var unsub = firestore
-                .collection(collections.groups_register)
-                .doc(selectedChat)
-                .onSnapshot((data) => {
-                    setgroupInfo(data.data());
-                });
-        }
-        return unsub;
-    }, []);
+    const ref = firestore.collection(collections.groups_register).doc(selectedChat);
+    const [groupInfo, loading] = useDocumentData(ref, { idField: "id" });
 
     return (
         <div>
-            {groupInfo && (
+            {!loading && (
                 <>
                     <ProfilePic tag="group" img={groupInfo.group_profilePic} />
                     <h4 className="mb-2">{groupInfo.group_name}</h4>
@@ -52,35 +40,28 @@ function GroupInfoModal() {
 export default GroupInfoModal;
 
 function GroupMember({ member, admin }) {
-    const [mem, setMem] = useState(null);
+    const ref = firestore.collection(collections.users).doc(member);
+    const [mem, loading] = useDocumentDataOnce(ref, { idField: "uid" });
     const [adminState, setAdmin] = useState(null);
     const {
         userlocal: { uid, displayName },
     } = useContext(UserContext);
     const { selectedChat } = useContext(SelectedChatContext);
     useEffect(() => {
-        firestore
-            .collection(collections.users)
-            .doc(member)
-            .get()
-            .then((data) => {
-                setMem(data.data());
-            });
         return () => {
-            setMem(null);
             setAdmin(null);
         };
     }, []);
 
     useEffect(() => {
-        if (mem) {
+        if (!loading) {
             setAdmin(uid === admin && mem.uid !== admin);
         }
-    }, [mem]);
+    }, [!loading]);
 
     return (
         <>
-            {mem && (
+            {!loading && (
                 <li className="user hover  mb-20" key={member}>
                     <div className="profilepic">
                         <div className="user-online-status">

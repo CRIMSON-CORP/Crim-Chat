@@ -3,13 +3,14 @@ import firebase, { auth, firestore, storage, timeStamp } from "./firebase";
 import { collections, feilds } from "./FirebaseRefs";
 import { ImageTypes } from "./utils";
 import { v4 } from "uuid";
+
 export async function UploadImage(image, path, limit) {
     if (!image) return;
     if (image.size > limit)
         return toast.error(`Please select a picture less than ${limit / 1e6}mb`);
     if (!ImageTypes.includes(image.type)) return toast.error("Please select a picture");
     try {
-        const StorageRef = storage.ref(path);
+        const StorageRef = storage.ref(path + v4());
         await StorageRef.put(image);
         return await StorageRef.getDownloadURL();
     } catch (err) {
@@ -36,6 +37,15 @@ export async function signOut() {
             console.log(error);
         }
     }
+}
+
+export async function deleteAccount(uid) {
+    await firestore.collection(collections.users).doc(uid).delete();
+    await auth.currentUser.delete(uid).then(() => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("crimchat_current_group");
+        toast.success("Account Deleted!");
+    });
 }
 
 export async function UpdateUserOnlineStatus(uid, status) {
@@ -172,15 +182,7 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
     });
 }
 
-export async function sendMessage(
-    text,
-    userlocal,
-    reply,
-    selectedChat,
-    setText,
-    setReply,
-    textarea
-) {
+export async function sendMessage(text, userlocal, reply, selectedChat) {
     try {
         const time_stamp = timeStamp();
         const message = {
@@ -213,13 +215,11 @@ export async function sendMessage(
                 latestText_sender_uid: userlocal.uid,
                 latestText_sender: userlocal.displayName.split(" ")[0],
             });
-        setText("");
-        setReply({ text: null, recipient: null, id: null });
-        textarea.current.style.height = "30px";
     } catch (err) {
         console.log(err);
     }
 }
+
 export async function leaveGroup(uid, selectedChat, displayName, groupName) {
     await firestore
         .collection(collections.users)
@@ -246,4 +246,97 @@ export async function leaveGroup(uid, selectedChat, displayName, groupName) {
             user_that_left: displayName,
         });
     toast.success(`You have successfully left ${groupName}!`);
+}
+
+export async function createGroup(uid, displayName, groupDetails, selectedUsers) {
+    try {
+        const id = v4();
+        const notifid = v4();
+        const timestamp = timeStamp();
+        await firestore
+            .collection("groups-register")
+            .doc(id)
+            .set({
+                group_createdAt: timestamp,
+                group_description: groupDetails.descript,
+                group_id: id,
+                group_name: groupDetails.name,
+                group_profilePic: groupDetails.profile_icon,
+                group_members: [uid],
+                group_security: groupDetails.closed,
+                group_creator_id: uid,
+                updatedAt: timestamp,
+            });
+        // Adds new group to user's list of groups
+        await firestore
+            .collection("users")
+            .doc(uid)
+            .update({
+                groups: firebase.firestore.FieldValue.arrayUnion(id),
+            });
+        // Send Bubble that user has created the group
+        await firestore
+            .collection(collections.groups_register)
+            .doc(id)
+            .collection(collections.messages)
+            .add({
+                type: "bubble",
+                tag: "group_created",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                group_creator: displayName,
+                uid: uid,
+            });
+        if (selectedUsers.length !== 0) {
+            selectedUsers.forEach(async (user) => {
+                // Send notifications to added users
+                await firestore.collection("users").doc(user).collection("notif").doc(notifid).set({
+                    notif_id: notifid,
+                    sender: displayName,
+                    type: "invite",
+                    group_id: id,
+                    sender_id: uid,
+                });
+                // Adds Bubble for each invited user
+                await firestore
+                    .collection("groups-register")
+                    .doc(id)
+                    .collection("messages")
+                    .add({
+                        type: "bubble",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        uid: uid,
+                        tag: "invite_sent",
+                        invitee_id: user,
+                        invitee_name: await firestore
+                            .collection(collections.users)
+                            .doc(user)
+                            .get()
+                            .then((data) => data.data().displayName),
+                        inviter: displayName,
+                    });
+            });
+        }
+        return id;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function updateGroup(uid, displayName, selectedChat, groupDetails) {
+    //updates group details
+    await firestore.collection(collections.groups_register).doc(selectedChat).update(groupDetails);
+
+    // Send Bubble that user has updated the group
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .collection(collections.messages)
+        .add({
+            type: "bubble",
+            tag: "group_updated",
+            admin: displayName,
+            admin_uid: uid,
+            createdAt: timeStamp(),
+        });
+    toast.success("Group Details updated successfully");
 }

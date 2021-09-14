@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import firebase, { firestore } from "../../../utils/firebase";
+import { firestore } from "../../../utils/firebase";
 import { BiUser } from "react-icons/bi";
 import gsap from "gsap";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
@@ -26,10 +26,7 @@ function Messages({ setCaret }) {
     const [play] = useSound(aud);
     const [allowedToPlay, setAllowedToPlay] = useState(true);
     const dummy = useRef();
-    const groupDetailsRef = firebase
-        .firestore()
-        .collection(collections.groups_register)
-        .doc(selectedChat);
+    const groupDetailsRef = firestore.collection(collections.groups_register).doc(selectedChat);
     const groupMessagesRef = firestore
         .collection(collections.groups_register)
         .doc(selectedChat)
@@ -40,7 +37,7 @@ function Messages({ setCaret }) {
     const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
     useEffect(() => {
         if (groupMessages) {
-            if (!loading) {
+            if (loading) {
                 dummy.current.scrollIntoView({ behavior: "smooth" });
                 if (allowedToPlay) {
                     play();
@@ -65,6 +62,10 @@ function Messages({ setCaret }) {
                 setCaret(false);
             }
         });
+        return () => {
+            dummy.current = null;
+            setAllowedToPlay(false);
+        };
     }, []);
 
     return (
@@ -153,7 +154,7 @@ function Messages({ setCaret }) {
                                 key={message.id}
                                 message={message}
                                 id={message.id}
-                                loaded={loading}
+                                loaded={!loading}
                             />
                         ) : (
                             <InfoBubble key={index} message={message} />
@@ -219,7 +220,7 @@ function Bubble({
     loaded,
     id,
 }) {
-    const { reply, setReply } = useContext(ReplyContext);
+    const { setReply } = useContext(ReplyContext);
     const {
         userlocal: { displayName },
     } = useContext(UserContext);

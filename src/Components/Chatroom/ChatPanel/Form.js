@@ -11,7 +11,10 @@ function Form() {
     const textarea = useRef();
     async function submit(e) {
         e.preventDefault();
-        await sendMessage(text, userlocal, reply, selectedChat, setText, setReply, textarea);
+        await sendMessage(text, userlocal, reply, selectedChat);
+        setText("");
+        setReply({ text: null, recipient: null, id: null });
+        textarea.current.style.height = "30px";
     }
     function handleChange(txt) {
         textarea.current.style.height = "inherit";

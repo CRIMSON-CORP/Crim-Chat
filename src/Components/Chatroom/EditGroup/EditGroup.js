@@ -1,17 +1,23 @@
 import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { FaUserFriends } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import { LoaderContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput, Loader } from "../../../utils/CustomComponents";
-import { firestore, timeStamp } from "../../../utils/firebase";
+import { firestore } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
-import { UploadImage } from "../../../utils/firebaseUtils";
+import { updateGroup, UploadImage } from "../../../utils/firebaseUtils";
 function EditGroupUI({ setmodal }) {
     const { setLoading } = useContext(LoaderContext);
     const { selectedChat } = useContext(SelectedChatContext);
     const [groupDetails, setGroupDetails] = useState(null);
+    const [setImageLoader, setSetImageLoader] = useState(false);
+    const [groupName, setGroupName] = useState("");
+    const [groupDescription, setGroupDescription] = useState("");
+    const [former, setFormer] = useState();
+    const {
+        userlocal: { displayName, uid },
+    } = useContext(UserContext);
 
     useEffect(() => {
         firestore
@@ -19,53 +25,26 @@ function EditGroupUI({ setmodal }) {
             .doc(selectedChat)
             .get()
             .then((data) => {
+                setFormer(data.data());
                 setGroupDetails(data.data());
             });
     }, []);
 
-    const [setImageLoader, setSetImageLoader] = useState(false);
-
-    const {
-        userlocal: { displayName, uid },
-    } = useContext(UserContext);
     async function setImage(e) {
         const image = e.target.files[0];
         setSetImageLoader(true);
-        UploadImage(image, "groups_profile_pic/" + image.name)
-            .then((url) => {
-                setGroupDetails((prev) => {
-                    return { ...prev, group_profilePic: url };
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                setSetImageLoader(false);
-            });
+        const url = await UploadImage(image, "groups_profile_pic/" + image.name);
+        setGroupDetails((prev) => {
+            return { ...prev, group_profilePic: url };
+        });
+        setSetImageLoader(false);
     }
 
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            const timestamp = timeStamp();
-            //updates group details
-            await firestore.collection("groups-register").doc(selectedChat).update(groupDetails);
-
-            // Send Bubble that user has updated the group
-            await firestore
-                .collection("groups-register")
-                .doc(selectedChat)
-                .collection("messages")
-                .add({
-                    type: "bubble",
-                    tag: "group_updated",
-                    admin: displayName,
-                    admin_uid: uid,
-                    createdAt: timestamp,
-                });
-            toast.success("Group Details updated successfully");
+            await updateGroup(uid, displayName, selectedChat, groupDetails);
             setmodal(false);
         } catch (error) {
             console.log(error);
@@ -124,12 +103,13 @@ function EditGroupUI({ setmodal }) {
                                         name="group_name"
                                         header="Group name"
                                         onChange={(e) => {
+                                            setGroupName(e.target.value);
                                             setGroupDetails((prev) => {
                                                 return { ...prev, group_name: e.target.value };
                                             });
                                         }}
-                                        value={" "}
-                                        label={groupDetails.group_name}
+                                        value={groupName}
+                                        label={former.group_name}
                                         req={false}
                                     />
                                 </div>
@@ -138,6 +118,7 @@ function EditGroupUI({ setmodal }) {
                                         header="Group Description"
                                         name="group_description"
                                         onChange={(e) => {
+                                            setGroupDescription(e.target.value);
                                             setGroupDetails((prev) => {
                                                 return {
                                                     ...prev,
@@ -145,8 +126,8 @@ function EditGroupUI({ setmodal }) {
                                                 };
                                             });
                                         }}
-                                        label={groupDetails.group_description}
-                                        value={" "}
+                                        label={former.group_description}
+                                        value={groupDescription}
                                         req={false}
                                     />
                                 </div>

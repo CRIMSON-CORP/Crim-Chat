@@ -1,18 +1,15 @@
 import { useState, useContext } from "react";
 import { LoaderContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput, Loader } from "../../../utils/CustomComponents";
-import firebase, { firestore, timeStamp } from "../../../utils/firebase";
-import { ImageTypes } from "../../../utils/utils";
-import { v4 } from "uuid";
 import InviteUsers from "./InviteUsers";
 import { CSSTransition } from "react-transition-group";
 import { FaUserFriends } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { collections } from "../../../utils/FirebaseRefs";
+import { createGroup, UploadImage } from "../../../utils/firebaseUtils";
 function CreateGroupModalUI({ setmodal }) {
     const { setLoading } = useContext(LoaderContext);
     const [groupDetails, setGroupDetails] = useState({
-        profile_icon: "",
+        profile_icon: null,
         name: "",
         descript: "",
         closed: true,
@@ -27,106 +24,24 @@ function CreateGroupModalUI({ setmodal }) {
 
     const { setSelectedChat } = useContext(SelectedChatContext);
     async function setImage(e) {
-        const image = e.target.files[0];
         setSetImageLoader(true);
-        if (!ImageTypes.includes(image.type)) return;
-        try {
-            const ref = firebase.storage().ref("groups_profile_pic");
-            await ref.put(image);
-            const url = await ref.getDownloadURL();
-            setGroupDetails((prev) => {
-                return { ...prev, profile_icon: url };
-            });
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setSetImageLoader(false);
-        }
+        let url = await UploadImage(e.target.files[0], "groups_profile_pic", 1e6);
+        setGroupDetails((prev) => {
+            return {
+                ...prev,
+                profile_icon: url,
+            };
+        });
+        setSetImageLoader(false);
     }
 
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
-        try {
-            const id = v4();
-            const notifid = v4();
-            const timestamp = timeStamp();
-            // Adds new group to the register
-            await firestore
-                .collection("groups-register")
-                .doc(id)
-                .set({
-                    group_createdAt: timestamp,
-                    group_description: groupDetails.descript,
-                    group_id: id,
-                    group_name: groupDetails.name,
-                    group_profilePic: groupDetails.profile_icon,
-                    group_members: [uid],
-                    group_security: groupDetails.closed,
-                    group_creator_id: uid,
-                    updatedAt: timestamp,
-                });
-            // Adds new group to user's list of groups
-            await firestore
-                .collection("users")
-                .doc(uid)
-                .update({
-                    groups: firebase.firestore.FieldValue.arrayUnion(id),
-                });
-            // Send Bubble that user has created the group
-            await firestore
-                .collection(collections.groups_register)
-                .doc(id)
-                .collection(collections.messages)
-                .add({
-                    type: "bubble",
-                    tag: "group_created",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    group_creator: displayName,
-                    uid: uid,
-                });
-            if (selectedUsers.length !== 0) {
-                selectedUsers.forEach(async (user) => {
-                    // Send notifications to added users
-                    await firestore
-                        .collection("users")
-                        .doc(user)
-                        .collection("notif")
-                        .doc(notifid)
-                        .set({
-                            notif_id: notifid,
-                            sender: displayName,
-                            type: "invite",
-                            group_id: id,
-                            sender_id: uid,
-                        });
-                    // Adds Bubble for each invited user
-                    await firestore
-                        .collection("groups-register")
-                        .doc(id)
-                        .collection("messages")
-                        .add({
-                            type: "bubble",
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            uid: uid,
-                            tag: "invite_sent",
-                            invitee_id: user,
-                            invitee_name: await firestore
-                                .collection(collections.users)
-                                .doc(user)
-                                .get()
-                                .then((data) => data.data().displayName),
-                            inviter: displayName,
-                        });
-                });
-            }
-            setSelectedChat(id);
-            setmodal(false);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
+        const id = await createGroup(uid, displayName, groupDetails, selectedUsers);
+        setSelectedChat(id);
+        setmodal(false);
+        setLoading(false);
     }
     return (
         <>
@@ -146,7 +61,7 @@ function CreateGroupModalUI({ setmodal }) {
                                 <label htmlFor="profile-icon" className="profile_icon">
                                     <div className="cover">
                                         <CSSTransition
-                                            in={groupDetails.profile_icon != ""}
+                                            in={groupDetails.profile_icon !== null}
                                             unmountOnExit
                                             timeout={400}
                                             classNames="profile_icon_switch_img"
@@ -157,7 +72,7 @@ function CreateGroupModalUI({ setmodal }) {
                                             />
                                         </CSSTransition>
                                         <CSSTransition
-                                            in={groupDetails.profile_icon == ""}
+                                            in={!groupDetails.profile_icon}
                                             unmountOnExit
                                             timeout={400}
                                             classNames="profile_icon_switch_svg"
