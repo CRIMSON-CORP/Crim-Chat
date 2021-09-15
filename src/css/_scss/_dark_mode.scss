@@ -106,6 +106,10 @@
             background: $dark_background;
             box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
         }
+
+        .modal-head {
+            background: $dark_background;
+        }
     }
 
     .bordered_input_box.valid .label {

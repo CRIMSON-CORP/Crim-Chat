@@ -142,7 +142,7 @@
 }
 
 .signup-tab-enter {
-    transform: translateX(-110%);
+    transform: translateX(110%);
 }
 .signup-tab-enter-active {
     transform: translateX(0%);
@@ -153,10 +153,11 @@
     transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
 }
 .signup-tab-exit-active {
-    transform: translateX(-110%);
-}
-.signin-tab-enter {
     transform: translateX(110%);
+}
+
+.signin-tab-enter {
+    transform: translateX(-110%);
 }
 .signin-tab-enter-active {
     transform: translateX(0%);
@@ -167,7 +168,7 @@
     transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
 }
 .signin-tab-exit-active {
-    transform: translateX(110%);
+    transform: translateX(-110%);
 }
 
 .signup,

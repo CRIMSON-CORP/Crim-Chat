@@ -284,8 +284,8 @@ input {
 }
 
 .signup-tab-enter {
-  -webkit-transform: translateX(-110%);
-          transform: translateX(-110%);
+  -webkit-transform: translateX(110%);
+          transform: translateX(110%);
 }
 
 .signup-tab-enter-active {
@@ -303,13 +303,13 @@ input {
 }
 
 .signup-tab-exit-active {
-  -webkit-transform: translateX(-110%);
-          transform: translateX(-110%);
+  -webkit-transform: translateX(110%);
+          transform: translateX(110%);
 }
 
 .signin-tab-enter {
-  -webkit-transform: translateX(110%);
-          transform: translateX(110%);
+  -webkit-transform: translateX(-110%);
+          transform: translateX(-110%);
 }
 
 .signin-tab-enter-active {
@@ -327,8 +327,8 @@ input {
 }
 
 .signin-tab-exit-active {
-  -webkit-transform: translateX(110%);
-          transform: translateX(110%);
+  -webkit-transform: translateX(-110%);
+          transform: translateX(-110%);
 }
 
 .signup,
@@ -1558,6 +1558,15 @@ span.loader {
   z-index: 10;
 }
 
+.modal-custom .modal-content-custom .modal-head {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 9;
+  margin: 0;
+}
+
 .modal-custom input[type="file"] {
   display: none;
 }
@@ -1647,7 +1656,7 @@ span.loader {
           box-shadow: 0px 2px 5px rgba(220, 20, 60, 0.4);
   -webkit-transition: 1s ease;
   transition: 1s ease;
-  z-index: 10;
+  z-index: 8;
 }
 
 .modal-custom label.profile_icon span.edit:active {
@@ -2369,6 +2378,10 @@ span.loader {
   background: #050718;
   -webkit-box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
           box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
+}
+
+#root.dark .modal-custom .modal-head {
+  background: #050718;
 }
 
 #root.dark .bordered_input_box.valid .label {

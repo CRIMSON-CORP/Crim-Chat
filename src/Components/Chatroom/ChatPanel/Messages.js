@@ -47,7 +47,7 @@ function Messages({ setCaret }) {
                     setAllowedToPlay(true);
                 }, 1500);
             } else {
-                dummy.current.scrollIntoView({ behavior: "auto" });
+                dummy.current && dummy.current.scrollIntoView({ behavior: "auto" });
             }
         }
     }, [loading, groupMessages]);

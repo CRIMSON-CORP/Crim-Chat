@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import { ProfilePic } from "../../../utils/CustomComponents";
 function User() {
-    const { userlocal, setUserLocal } = useContext(UserContext);
+    const { userlocal } = useContext(UserContext);
 
     return (
         <div>

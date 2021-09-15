@@ -2,10 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { BorderedInput, ProfilePic } from "../../../utils/CustomComponents";
-import firebase, { firestore } from "../../../utils/firebase";
-import { collections, feilds } from "../../../utils/FirebaseRefs";
-import toast from "react-hot-toast";
 import { Loader } from "../../../utils/CustomComponents";
+import { fetchClosedGroups, joinGroup, searchClosedGroupName } from "../../../utils/firebaseUtils";
 function JoinGroupModalUI({ setmodal }) {
     const [groupsDb, setGroups] = useState([]);
     const [text, setText] = useState("");
@@ -20,43 +18,17 @@ function JoinGroupModalUI({ setmodal }) {
     }
     const fetchGroups = async () => {
         setLoading(true);
-        try {
-            await firestore
-                .collection(collections.groups_register)
-                .where(feilds.group_security, "==", false)
-                .get()
-                .then((groupsList) => {
-                    setGroups(trim(groupsList));
-                });
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setLoading(false);
-        }
+        setGroups(trim(await fetchClosedGroups()));
+        setLoading(false);
     };
     useEffect(() => {
         fetchGroups();
         return setGroups(null);
     }, []);
     async function search(text) {
-        if (text == "") return fetchGroups();
-        const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
-        try {
-            setLoading(true);
-            await firestore
-                .collection(collections.groups_register)
-                .where(feilds.group_security, "==", false)
-                .where(feilds.group_name, ">=", text)
-                .where(feilds.group_name, "<", end)
-                .get()
-                .then((data) => {
-                    setGroups(trim(data));
-                });
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        setGroups(trim(await searchClosedGroupName(text)));
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -98,34 +70,9 @@ function GroupsList({ groupsDb, setmodal }) {
                 key={index}
                 onClick={async () => {
                     const answer = confirm("Are you sure you want to join this Group Chat?");
-
                     if (answer) {
-                        await firestore
-                            .collection(collections.users)
-                            .doc(uid)
-                            .update({
-                                groups: firebase.firestore.FieldValue.arrayUnion(group.group_id),
-                            });
-                        await firestore
-                            .collection(collections.groups_register)
-                            .doc(group.group_id)
-                            .update({
-                                [feilds.group_members]:
-                                    firebase.firestore.FieldValue.arrayUnion(uid),
-                            });
-                        await firestore
-                            .collection(collections.groups_register)
-                            .doc(group.group_id)
-                            .collection(collections.messages)
-                            .add({
-                                type: "bubble",
-                                tag: "user_joined",
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                user_that_joined_id: uid,
-                                user_that_joined_name: displayName,
-                            });
+                        await joinGroup(uid, displayName, group);
                         setSelectedChat(group.group_id);
-                        toast.success("Group Chat Joined successfuly!");
                         setmodal(false);
                     }
                 }}

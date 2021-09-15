@@ -2,6 +2,7 @@ export const collections = {
     groups_register: "groups-register",
     messages: "messages",
     users: "users",
+    notif: "notif",
 };
 
 export const feilds = {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import {
     BiMoon,
     BiSun,
@@ -19,7 +19,7 @@ import {
     SelectedChatContext,
     UserContext,
 } from "../../utils/Contexts";
-import { signOut } from "../../utils/firebaseUtils";
+import { deleteUserNotification, signOut, updateUserMode } from "../../utils/firebaseUtils";
 import {
     DropList,
     Modal,
@@ -29,10 +29,11 @@ import {
 import CreateGroupModalUI from "./CreateGroup/CreateGroupModalUI";
 import JoinGroupModalUI from "./JoinGroup/JoinGroupModalUI";
 import EditProfile from "./EditProfile/EditProfile";
-import firebase, { firestore, timeStamp } from "../../utils/firebase";
-import { collections, feilds } from "../../utils/FirebaseRefs";
+import { firestore } from "../../utils/firebase";
+import { collections } from "../../utils/FirebaseRefs";
 import { CSSTransition } from "react-transition-group";
 import toast from "react-hot-toast";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
@@ -74,12 +75,7 @@ function Options() {
                     <OptionsDropDownItem
                         sufIcon={mode == "dark" ? <BiSun /> : <BiMoon />}
                         onClickExe={async () => {
-                            await firestore
-                                .collection(collections.users)
-                                .doc(uid)
-                                .update({
-                                    mode: mode == "dark" ? "light" : "dark",
-                                });
+                            await updateUserMode(uid, mode);
                         }}
                     >
                         {mode !== "dark" ? "Turn on Dark mode" : "Turn on Light mode"}
@@ -142,32 +138,18 @@ function Options() {
 export default Options;
 
 function Notification() {
-    const [notif, setNotif] = useState([]);
     const [activeMenu, setActiveMenu] = useState("main");
     const [menuHeight, setMenuHeight] = useState(null);
     const [selectedNotif, setSelectedNotif] = useState(null);
     const [notifToggle, setNotifToggle] = useState(false);
     const {
-        userlocal: { uid, displayName, groups },
+        userlocal: { uid, groups },
     } = useContext(UserContext);
     const { setSelectedChat } = useContext(SelectedChatContext);
-    const Drop = useRef();
-    useEffect(() => {
-        const unsub = firestore
-            .collection(collections.users)
-            .doc(uid)
-            .collection("notif")
-            .onSnapshot((notif) => {
-                let list = [];
-                notif.forEach((not) => {
-                    list.push(not.data());
-                });
-                setNotif(list);
-            });
-        return unsub;
-    }, [uid]);
+    const ref = firestore.collection(collections.users).doc(uid).collection("notif");
+    const [notifList = []] = useCollectionData(ref, { idField: "notif_id" });
 
-    const notifJSX = notif.map((not) => {
+    const notifJSX = notifList.map((not) => {
         return (
             <NotifDropDownItem
                 gotoMenu="side"
@@ -178,7 +160,7 @@ function Notification() {
             />
         );
     });
-
+    console.log(123);
     function calcHeight(el) {
         const height = el.offsetHeight + 30;
         setMenuHeight(height);
@@ -190,8 +172,7 @@ function Notification() {
             setter={setNotifToggle}
             height={menuHeight}
             tag="notif"
-            drop={Drop}
-            notifIndicator={notif.length}
+            notifIndicator={notifJSX.length}
         >
             <CSSTransition
                 in={activeMenu === "main"}
@@ -224,62 +205,22 @@ function Notification() {
                                     className="hover"
                                     onClick={async () => {
                                         try {
-                                            const timestamp = timeStamp();
                                             if (groups.includes(selectedNotif.group_id)) {
                                                 return (
                                                     toast.success("You're already in the group!"),
                                                     setSelectedChat(selectedNotif.group_id),
                                                     setActiveMenu("main"),
                                                     setNotifToggle(false),
-                                                    await firestore
-                                                        .collection(collections.users)
-                                                        .doc(uid)
-                                                        .collection("notif")
-                                                        .doc(selectedNotif.notif_id)
-                                                        .delete()
+                                                    await deleteUserNotification(uid, selectedNotif)
                                                 );
                                             }
-                                            await firestore
-                                                .collection(collections.users)
-                                                .doc(uid)
-                                                .update({
-                                                    groups: firebase.firestore.FieldValue.arrayUnion(
-                                                        selectedNotif.group_id
-                                                    ),
-                                                    updatedAt: timestamp,
-                                                });
-                                            await firestore
-                                                .collection(collections.groups_register)
-                                                .doc(selectedNotif.group_id)
-                                                .update({
-                                                    [feilds.group_members]:
-                                                        firebase.firestore.FieldValue.arrayUnion(
-                                                            uid
-                                                        ),
-                                                });
-                                            await firestore
-                                                .collection(collections.groups_register)
-                                                .doc(selectedNotif.group_id)
-                                                .collection(collections.messages)
-                                                .add({
-                                                    type: "bubble",
-                                                    tag: "user_joined",
-                                                    createdAt: timestamp,
-                                                    user_that_joined_id: uid,
-                                                    user_that_joined_name: displayName,
-                                                });
-                                            await firestore
-                                                .collection(collections.users)
-                                                .doc(uid)
-                                                .collection("notif")
-                                                .doc(selectedNotif.notif_id)
-                                                .delete();
                                             setSelectedChat(selectedNotif.group_id);
                                         } catch (err) {
                                             console.log(err);
+                                        } finally {
+                                            setActiveMenu("main");
+                                            setSelectedNotif(false);
                                         }
-                                        setActiveMenu("main");
-                                        setSelectedNotif(false);
                                     }}
                                 >
                                     <MdCheck />
@@ -289,12 +230,7 @@ function Notification() {
                                     className="hover"
                                     onClick={() => {
                                         try {
-                                            firestore
-                                                .collection(collections.users)
-                                                .doc(uid)
-                                                .collection("notif")
-                                                .doc(selectedNotif.notif_id)
-                                                .delete();
+                                            deleteUserNotification(uid, selectedNotif);
                                         } catch (err) {
                                             console.log(err);
                                         }

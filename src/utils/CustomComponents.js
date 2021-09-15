@@ -262,7 +262,7 @@ export function NotifDropDownItem({ notif, gotoMenu, setActiveMenu, setSelectedN
                     <MdKeyboardArrowRight />
                 </li>
             ) : (
-                <li className="dropDown_item_notif" onClick={() => {}}>
+                <li className="dropDown_item_notif">
                     <h5>{notif.header}</h5>
                     <p>New Notification</p>
                 </li>

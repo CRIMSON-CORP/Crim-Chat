@@ -13,7 +13,7 @@ function SignUp({ setActivePage }) {
     async function submit(e) {
         e.preventDefault();
         setLoading(true);
-        await signup();
+        await signup(username, email, password);
         setLoading(false);
     }
     return (

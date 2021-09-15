@@ -5,7 +5,7 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 function Auth() {
     const [banner, setBanner] = useState(window.innerWidth >= 766 ? "both" : "with-banner");
-    const [activePage, setActivePage] = useState("signup");
+    const [activePage, setActivePage] = useState("signin");
 
     useEffect(() => {
         window.innerWidth >= 766 ? setBanner("both") : setBanner("with-banner");
@@ -16,7 +16,7 @@ function Auth() {
                 in={banner === "with-banner" || banner === "both"}
                 unmountOnExit
                 timeout={500}
-                classNames="signup-tab"
+                classNames="signin-tab"
             >
                 <div className="banner-wrapper" style={{ overflow: "hidden" }}>
                     <Banner ban={banner} set={setBanner} />
@@ -26,21 +26,9 @@ function Auth() {
                 in={banner === "without-banner" || banner === "both"}
                 unmountOnExit
                 timeout={500}
-                classNames="signin-tab"
+                classNames="signup-tab"
             >
                 <div className="auth-wrapper">
-                    <CSSTransition
-                        in={activePage === "signup"}
-                        unmountOnExit
-                        timeout={500}
-                        classNames="signup-tab"
-                    >
-                        <SignUp
-                            setActivePage={() => {
-                                setActivePage("signin");
-                            }}
-                        />
-                    </CSSTransition>
                     <CSSTransition
                         in={activePage === "signin"}
                         unmountOnExit
@@ -50,6 +38,18 @@ function Auth() {
                         <SignIn
                             setActivePage={() => {
                                 setActivePage("signup");
+                            }}
+                        />
+                    </CSSTransition>
+                    <CSSTransition
+                        in={activePage === "signup"}
+                        unmountOnExit
+                        timeout={500}
+                        classNames="signup-tab"
+                    >
+                        <SignUp
+                            setActivePage={() => {
+                                setActivePage("signin");
                             }}
                         />
                     </CSSTransition>

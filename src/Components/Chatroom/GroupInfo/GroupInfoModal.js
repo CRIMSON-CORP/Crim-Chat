@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 import { BiUserMinus } from "react-icons/bi";
 import { SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { ProfilePic } from "../../../utils/CustomComponents";
-import firebase, { firestore } from "../../../utils/firebase";
+import { firestore } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
+import { removeUser } from "../../../utils/firebaseUtils";
 
 function GroupInfoModal() {
     const { selectedChat } = useContext(SelectedChatContext);
@@ -84,34 +85,7 @@ function GroupMember({ member, admin }) {
                                     "Are you sure you want to remove this user?"
                                 );
                                 if (answer) {
-                                    await firestore
-                                        .collection(collections.users)
-                                        .doc(mem.uid)
-                                        .update({
-                                            groups: firebase.firestore.FieldValue.arrayRemove(
-                                                selectedChat
-                                            ),
-                                        });
-                                    await firestore
-                                        .collection(collections.groups_register)
-                                        .doc(selectedChat)
-                                        .update({
-                                            group_members:
-                                                firebase.firestore.FieldValue.arrayRemove(mem.uid),
-                                        });
-                                    await firestore
-                                        .collection(collections.groups_register)
-                                        .doc(selectedChat)
-                                        .collection(collections.messages)
-                                        .add({
-                                            type: "bubble",
-                                            createdAt:
-                                                firebase.firestore.FieldValue.serverTimestamp(),
-                                            admin_uid: uid,
-                                            tag: "user_removed",
-                                            removed_user: mem.displayName,
-                                            admin: displayName,
-                                        });
+                                    await removeUser(mem, uid, displayName, selectedChat);
                                     toast.success("You removed " + mem.displayName);
                                 }
                             }}

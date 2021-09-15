@@ -340,3 +340,136 @@ export async function updateGroup(uid, displayName, selectedChat, groupDetails) 
         });
     toast.success("Group Details updated successfully");
 }
+
+export async function removeUser(mem, uid, displayName, selectedChat) {
+    await firestore
+        .collection(collections.users)
+        .doc(mem.uid)
+        .update({
+            groups: firebase.firestore.FieldValue.arrayRemove(selectedChat),
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .update({
+            group_members: firebase.firestore.FieldValue.arrayRemove(mem.uid),
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedChat)
+        .collection(collections.messages)
+        .add({
+            type: "bubble",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            admin_uid: uid,
+            tag: "user_removed",
+            removed_user: mem.displayName,
+            admin: displayName,
+        });
+}
+
+export async function fetchClosedGroups() {
+    try {
+        return await firestore
+            .collection(collections.groups_register)
+            .where(feilds.group_security, "==", false)
+            .get()
+            .then((groupsList) => groupsList);
+    } catch (err) {
+        return toast.error(err);
+    }
+}
+
+export async function searchClosedGroupName(text) {
+    if (text == "") return await fetchClosedGroups();
+    const end = text.replace(/.$/, (c) => String.fromCharCode(c.charCodeAt(0) + 1));
+    try {
+        return await firestore
+            .collection(collections.groups_register)
+            .where(feilds.group_security, "==", false)
+            .where(feilds.group_name, ">=", text)
+            .where(feilds.group_name, "<", end)
+            .get()
+            .then((data) => data);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export async function joinGroup(uid, displayName, group) {
+    try {
+        await firestore
+            .collection(collections.users)
+            .doc(uid)
+            .update({
+                groups: firebase.firestore.FieldValue.arrayUnion(group.group_id),
+            });
+        await firestore
+            .collection(collections.groups_register)
+            .doc(group.group_id)
+            .update({
+                [feilds.group_members]: firebase.firestore.FieldValue.arrayUnion(uid),
+            });
+        await firestore
+            .collection(collections.groups_register)
+            .doc(group.group_id)
+            .collection(collections.messages)
+            .add({
+                type: "bubble",
+                tag: "user_joined",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                user_that_joined_id: uid,
+                user_that_joined_name: displayName,
+            });
+        toast.success("Group Chat Joined successfuly!");
+    } catch (error) {
+        toast.error(error);
+    }
+}
+
+export async function updateUserMode(uid, mode) {
+    await firestore
+        .collection(collections.users)
+        .doc(uid)
+        .update({
+            mode: mode == "dark" ? "light" : "dark",
+        });
+}
+
+export async function acceptGroupInvite(uid, displayName, selectedNotif) {
+    const timestamp = timeStamp();
+    await firestore
+        .collection(collections.users)
+        .doc(uid)
+        .update({
+            groups: firebase.firestore.FieldValue.arrayUnion(selectedNotif.group_id),
+            updatedAt: timestamp,
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedNotif.group_id)
+        .update({
+            [feilds.group_members]: firebase.firestore.FieldValue.arrayUnion(uid),
+        });
+    await firestore
+        .collection(collections.groups_register)
+        .doc(selectedNotif.group_id)
+        .collection(collections.messages)
+        .add({
+            type: "bubble",
+            tag: "user_joined",
+            createdAt: timestamp,
+            user_that_joined_id: uid,
+            user_that_joined_name: displayName,
+        });
+    await deleteUserNotification(uid, selectedNotif);
+}
+
+export async function deleteUserNotification(uid, selectedNotif) {
+    return await firestore
+        .collection(collections.users)
+        .doc(uid)
+        .collection(collections.notif)
+        .doc(selectedNotif.notif_id)
+        .delete();
+}

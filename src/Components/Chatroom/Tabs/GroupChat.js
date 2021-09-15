@@ -1,41 +1,19 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { FaUserFriends } from "react-icons/all";
 import { firestore } from "../../../utils/firebase";
 import { MobileNav, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import Isotope from "isotope-layout";
 import { collections } from "../../../utils/FirebaseRefs";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
-    const [groupsData, setGroupsdata] = useState([]);
     const groups_list = useRef();
-
-    function trim(data) {
+    const ref = firestore.collection(collections.groups_register).orderBy("updatedAt", "desc");
+    const [groupsData = []] = useCollectionData(ref, { idField: "group_id" });
+    function trim(data = []) {
         let filt = data.filter((db) => userlocal.groups.includes(db.group_id));
         return filt;
     }
-
-    useEffect(() => {
-        if (userlocal.groups.length !== 0) {
-            try {
-                var unsub = firestore
-                    .collection(collections.groups_register)
-                    .orderBy("updatedAt", "desc")
-                    .onSnapshot(async (collection) => {
-                        var list = [];
-                        collection.forEach((data) => {
-                            list.push(data.data());
-                        });
-                        setGroupsdata(trim(list));
-                    });
-            } catch (err) {
-                console.log(err);
-            }
-        } else {
-            setGroupsdata([]);
-        }
-        return unsub;
-    }, [userlocal.groups]);
-
     return (
         <div className="groups">
             {userlocal && (
@@ -46,7 +24,7 @@ function GroupChat() {
                     <div className="group_list scroll" ref={groups_list}>
                         {groupsData.length !== 0 ? (
                             <div>
-                                {groupsData.map((group) => {
+                                {trim(groupsData).map((group) => {
                                     return <GroupComponent group={group} key={group.group_id} />;
                                 })}
                             </div>
