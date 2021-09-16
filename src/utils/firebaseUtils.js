@@ -249,12 +249,16 @@ export async function leaveGroup(uid, selectedChat, displayName, groupName) {
 }
 
 export async function createGroup(uid, displayName, groupDetails, selectedUsers) {
-    try {
+    let update = {
+        w: "Starting...",
+    };
+    async function CreateGropProm() {
         const id = v4();
         const notifid = v4();
         const timestamp = timeStamp();
+        update.w = "Creating Group...";
         await firestore
-            .collection("groups-register")
+            .collection(collections.groups_register)
             .doc(id)
             .set({
                 group_createdAt: timestamp,
@@ -268,8 +272,9 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                 updatedAt: timestamp,
             });
         // Adds new group to user's list of groups
+        update.w = "Adding you to the Group...";
         await firestore
-            .collection("users")
+            .collection(collections.users)
             .doc(uid)
             .update({
                 groups: firebase.firestore.FieldValue.arrayUnion(id),
@@ -287,20 +292,26 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                 uid: uid,
             });
         if (selectedUsers.length !== 0) {
+            update.w = "Inviting your frineds...";
             selectedUsers.forEach(async (user) => {
                 // Send notifications to added users
-                await firestore.collection("users").doc(user).collection("notif").doc(notifid).set({
-                    notif_id: notifid,
-                    sender: displayName,
-                    type: "invite",
-                    group_id: id,
-                    sender_id: uid,
-                });
+                await firestore
+                    .collection(collections.users)
+                    .doc(user)
+                    .collection("notif")
+                    .doc(notifid)
+                    .set({
+                        notif_id: notifid,
+                        sender: displayName,
+                        type: "invite",
+                        group_id: id,
+                        sender_id: uid,
+                    });
                 // Adds Bubble for each invited user
                 await firestore
-                    .collection("groups-register")
+                    .collection(collections.groups_register)
                     .doc(id)
-                    .collection("messages")
+                    .collection(collections.messages)
                     .add({
                         type: "bubble",
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -317,6 +328,22 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
             });
         }
         return id;
+    }
+    try {
+        return toast.promise(
+            CreateGropProm(),
+            {
+                success: "Group Created!",
+                loading: update.w,
+                error: "Failed to create your group for some reason",
+            },
+            {
+                style: {
+                    zIndex: 999999,
+                    position: "relative",
+                },
+            }
+        );
     } catch (error) {
         console.log(error);
     }
@@ -365,6 +392,23 @@ export async function removeUser(mem, uid, displayName, selectedChat) {
             tag: "user_removed",
             removed_user: mem.displayName,
             admin: displayName,
+        });
+    await firestore
+        .collection(collections.users)
+        .doc(mem.uid)
+        .collection(collections.notif)
+        .add({
+            notif_id: v4(),
+            sender: displayName,
+            type: "message",
+            message_header: "You were removed from a Group!",
+            message_body: `An Admin ${displayName} has removed you from thier group ${await firestore
+                .collection(collections.groups_register)
+                .doc(selectedChat)
+                .get()
+                .then(
+                    (data) => data.data().group_name
+                )},You can rejoin the Group if its open, or you can ask an Admin to Invite you to rejoin`,
         });
 }
 
@@ -438,38 +482,115 @@ export async function updateUserMode(uid, mode) {
 
 export async function acceptGroupInvite(uid, displayName, selectedNotif) {
     const timestamp = timeStamp();
-    await firestore
-        .collection(collections.users)
-        .doc(uid)
-        .update({
-            groups: firebase.firestore.FieldValue.arrayUnion(selectedNotif.group_id),
-            updatedAt: timestamp,
-        });
-    await firestore
-        .collection(collections.groups_register)
-        .doc(selectedNotif.group_id)
-        .update({
-            [feilds.group_members]: firebase.firestore.FieldValue.arrayUnion(uid),
-        });
-    await firestore
-        .collection(collections.groups_register)
-        .doc(selectedNotif.group_id)
-        .collection(collections.messages)
-        .add({
-            type: "bubble",
-            tag: "user_joined",
-            createdAt: timestamp,
-            user_that_joined_id: uid,
-            user_that_joined_name: displayName,
-        });
-    await deleteUserNotification(uid, selectedNotif);
+    // Check to see if group Exists
+    try {
+        const groupExist = await firestore
+            .collection(collections.groups_register)
+            .doc(selectedNotif.group_id)
+            .get()
+            .then((data) => data.exists);
+        if (!groupExist) throw "Group does not exist or might have been deleted!";
+        await firestore
+            .collection(collections.users)
+            .doc(uid)
+            .update({
+                groups: firebase.firestore.FieldValue.arrayUnion(selectedNotif.group_id),
+                updatedAt: timestamp,
+            });
+        await firestore
+            .collection(collections.groups_register)
+            .doc(selectedNotif.group_id)
+            .update({
+                [feilds.group_members]: firebase.firestore.FieldValue.arrayUnion(uid),
+            });
+        await firestore
+            .collection(collections.groups_register)
+            .doc(selectedNotif.group_id)
+            .collection(collections.messages)
+            .add({
+                type: "bubble",
+                tag: "user_joined",
+                createdAt: timestamp,
+                user_that_joined_id: uid,
+                user_that_joined_name: displayName,
+            });
+        return selectedNotif.notif_id;
+    } catch (error) {
+        toast.error(error);
+    } finally {
+        await firestore
+            .collection(collections.users)
+            .doc(uid)
+            .collection(collections.notif)
+            .doc(selectedNotif.notif_id)
+            .delete();
+    }
 }
 
 export async function deleteUserNotification(uid, selectedNotif) {
-    return await firestore
-        .collection(collections.users)
-        .doc(uid)
-        .collection(collections.notif)
-        .doc(selectedNotif.notif_id)
-        .delete();
+    async function deleteNotif() {
+        await firestore
+            .collection(collections.users)
+            .doc(uid)
+            .collection(collections.notif)
+            .doc(selectedNotif.notif_id)
+            .delete();
+    }
+    try {
+        return toast.promise(deleteNotif(), {
+            loading: "Dismissing Notification",
+            success: "Notification Dismissed!",
+            error: "Failed to Dismiss Notification!",
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function deleteGroup(uid, displayName, selectedChat) {
+    const groupRef = firestore.collection(collections.groups_register).doc(selectedChat);
+    const update = {
+        w: "Starting...",
+    };
+    async function deleteProcess() {
+        const { group_members, group_name } = await groupRef.get().then((doc) => doc.data());
+        update.w = "fetching group data...";
+        await group_members.forEach(async (member) => {
+            const notif_id = v4();
+            update.w = "removing users from group...";
+            await firestore
+                .collection(collections.users)
+                .doc(member)
+                .update({
+                    groups: firebase.firestore.FieldValue.arrayRemove(selectedChat),
+                });
+
+            member !== uid &&
+                ((update.w = "notifying users..."),
+                await firestore
+                    .collection(collections.users)
+                    .doc(member)
+                    .collection(collections.notif)
+                    .add({
+                        notif_id: notif_id,
+                        sender: displayName,
+                        type: "message",
+                        message_header: "Group Deleted",
+                        message_body: `An Admin ${displayName} has deleted group ${group_name}, all Messages have been deleted`,
+                    }));
+        });
+        update.w = "deleting group...";
+        await groupRef.delete();
+        localStorage.removeItem("crimchat_current_group");
+    }
+
+    try {
+        return toast.promise(deleteProcess(), {
+            loading: update.w,
+            success: "Group has been Deleted",
+            error: "Failed to delte group for some reason",
+        });
+    } catch (err) {
+        console.log(err);
+    }
 }

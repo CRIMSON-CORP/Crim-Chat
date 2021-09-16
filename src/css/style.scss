@@ -122,4 +122,9 @@ input {
         grid-template-columns: auto 45px;
         gap: 10px;
     }
+    .chat-pannel {
+        .underlay {
+            display: none;
+        }
+    }
 }

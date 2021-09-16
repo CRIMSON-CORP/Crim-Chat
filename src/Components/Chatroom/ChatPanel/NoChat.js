@@ -5,7 +5,7 @@ import { MdAdd } from "react-icons/md";
 import OnOutsiceClick from "react-outclick";
 import { CreateJoinContext } from "../../../utils/Contexts";
 import { ReactComponent as Texting } from "../../../img/undraw_Texting_re_l11n.svg";
-import { BiUser } from "react-icons/bi";
+import { BiUser, BiUserPlus } from "react-icons/bi";
 
 function NoChat() {
     return (
@@ -72,7 +72,7 @@ function FAB() {
                     ref={sub1}
                     data-tooltip="Join a Group!"
                 >
-                    <MdAdd />
+                    <BiUserPlus />
                 </div>
                 <div
                     className="fab ball create move"
@@ -86,13 +86,14 @@ function FAB() {
                     <FiEdit />
                 </div>
                 <div
-                    ref={sub0}
                     className="fab ball static"
                     onClick={() => {
                         tl.reversed() ? tl.play() : tl.reverse();
                     }}
                 >
-                    <MdAdd />
+                    <span ref={sub0} className="svg-wrapper">
+                        <MdAdd />
+                    </span>
                 </div>
             </div>
         </OnOutsiceClick>

@@ -247,26 +247,31 @@ export function NotifDropDownItem({ notif, gotoMenu, setActiveMenu, setSelectedN
     }, []);
     return (
         <>
-            {notif.type == "invite" ? (
-                <li
-                    className="dropDown_item_notif hover"
-                    onClick={() => {
-                        setSelectedNotif(notif);
-                        setActiveMenu(gotoMenu);
-                    }}
-                >
-                    <div>
-                        <h5>New Invitation</h5>
-                        <p>by {notif.sender}</p>
-                    </div>
-                    <MdKeyboardArrowRight />
-                </li>
-            ) : (
-                <li className="dropDown_item_notif">
-                    <h5>{notif.header}</h5>
-                    <p>New Notification</p>
-                </li>
-            )}
+            <li
+                className="dropDown_item_notif hover"
+                onClick={() => {
+                    setSelectedNotif(notif);
+                    setActiveMenu(gotoMenu);
+                }}
+            >
+                {notif.type == "invite" ? (
+                    <>
+                        <div>
+                            <h5>New Invitation</h5>
+                            <p>by {notif.sender}</p>
+                        </div>
+                        <MdKeyboardArrowRight />
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            <h5>New Notification</h5>
+                            <p>{notif.message_header}</p>
+                        </div>
+                        <MdKeyboardArrowRight />
+                    </>
+                )}
+            </li>
         </>
     );
 }

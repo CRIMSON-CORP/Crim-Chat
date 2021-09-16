@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { firestore } from "../../../utils/firebase";
-import { BiUser } from "react-icons/bi";
+import { BiUser, BiUserPlus } from "react-icons/bi";
 import gsap from "gsap";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections } from "../../../utils/FirebaseRefs";
-import { MdAdd, MdEdit, MdInfoOutline } from "react-icons/md";
+import { MdAdd, MdClear, MdDelete, MdDeleteForever, MdEdit, MdInfoOutline } from "react-icons/md";
 import $ from "jquery";
 import MessagesModal from "./MessagesModal";
 import aud from "../../../img/facebookchat.mp3";
 import useSound from "use-sound";
 import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
-import { leaveGroup } from "../../../utils/firebaseUtils";
+import { deleteGroup, leaveGroup } from "../../../utils/firebaseUtils";
+import { FiEdit } from "react-icons/fi";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -112,7 +113,7 @@ function Messages({ setCaret }) {
                                 {groupDetails.group_creator_id === uid && (
                                     <>
                                         <OptionsDropDownItem
-                                            sufIcon={<MdEdit />}
+                                            sufIcon={<FiEdit />}
                                             onClickExe={() => {
                                                 setEditGroupModal(true);
                                             }}
@@ -120,12 +121,30 @@ function Messages({ setCaret }) {
                                             Edit Group
                                         </OptionsDropDownItem>
                                         <OptionsDropDownItem
-                                            sufIcon={<MdAdd />}
+                                            sufIcon={<BiUserPlus />}
                                             onClickExe={() => {
                                                 setAddUsers(true);
                                             }}
                                         >
                                             Add a new User
+                                        </OptionsDropDownItem>
+                                        <OptionsDropDownItem
+                                            sufIcon={<MdDeleteForever />}
+                                            onClickExe={async () => {
+                                                const answer = confirm(
+                                                    "Are you sure you want to delete the group? messages cannot be recovered!"
+                                                );
+                                                if (answer) {
+                                                    await deleteGroup(
+                                                        uid,
+                                                        displayName,
+                                                        selectedChat
+                                                    );
+                                                    setSelectedChat(null);
+                                                } else return;
+                                            }}
+                                        >
+                                            Delete Group
                                         </OptionsDropDownItem>
                                     </>
                                 )}

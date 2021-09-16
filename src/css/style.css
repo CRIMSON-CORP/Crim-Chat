@@ -431,7 +431,7 @@ p {
       -ms-flex-align: center;
           align-items: center;
   position: absolute;
-  z-index: 999999;
+  z-index: 9998;
   padding: 0px 30px;
   -webkit-transition: 0.5s ease;
   transition: 0.5s ease;
@@ -801,8 +801,8 @@ span.loader {
 }
 
 .options_dropdown ul li.dropDown_item svg {
-  width: 0.8em;
-  height: 0.8em;
+  width: 1em;
+  height: 1em;
 }
 
 .chat-pannel {
@@ -2206,22 +2206,20 @@ span.loader {
   display: grid;
   place-items: center;
   cursor: pointer;
-  -webkit-transition: -webkit-filter 0.3s;
-  transition: -webkit-filter 0.3s;
-  transition: filter 0.3s;
-  transition: filter 0.3s, -webkit-filter 0.3s;
-  -webkit-box-shadow: 0px 6px 15px #200107d2, 0px 10px 25px #20010793;
-          box-shadow: 0px 6px 15px #200107d2, 0px 10px 25px #20010793;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  -webkit-box-shadow: 0px 5px 8px #20010750, 0px 7px 12px #2001071f;
+          box-shadow: 0px 5px 8px #20010750, 0px 7px 12px #2001071f;
 }
 
 .fab-wrapper .fab.ball:hover {
-  -webkit-filter: brightness(70%);
-          filter: brightness(70%);
+  background: #960e29;
 }
 
 .fab-wrapper .fab.ball svg {
   height: 25px;
   width: 25px;
+  color: white;
 }
 
 .fab-wrapper .fab.move {
@@ -2398,6 +2396,40 @@ span.loader {
   pointer-events: none;
 }
 
+#root.dark .fab-wrapper .fab.ball {
+  -webkit-box-shadow: 0px 6px 15px #200107d2, 0px 10px 25px #20010793;
+          box-shadow: 0px 6px 15px #200107d2, 0px 10px 25px #20010793;
+}
+
+#root.dark .fab-wrapper .fab.move {
+  opacity: 0;
+}
+
+#root.dark .fab-wrapper .fab.move::before {
+  opacity: 0;
+  position: absolute;
+  content: attr(data-tooltip);
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #050718;
+  color: white;
+  left: 0;
+  -webkit-transform: translateX(-110%) translateY(10px);
+          transform: translateX(-110%) translateY(10px);
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  white-space: nowrap;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+#root.dark .fab-wrapper .fab.move:hover::before {
+  opacity: 1;
+  -webkit-transform: translateX(-110%) translateY(0px);
+          transform: translateX(-110%) translateY(0px);
+}
+
 @media screen and (max-width: 700px) {
   .tabs {
     border-radius: 0px 10px 10px 0px;
@@ -2439,6 +2471,9 @@ span.loader {
     -ms-grid-columns: auto 45px;
         grid-template-columns: auto 45px;
     gap: 10px;
+  }
+  .chat-pannel .underlay {
+    display: none;
   }
 }
 /*# sourceMappingURL=style.css.map */

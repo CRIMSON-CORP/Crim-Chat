@@ -1,12 +1,11 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import {
     BiMoon,
     BiSun,
     FaEllipsisH,
     FaSignOutAlt,
-    MdAdd,
+    BiUserPlus,
     MdDehaze,
-    MdEdit,
     MdNotifications,
     MdKeyboardArrowLeft,
     MdClear,
@@ -19,7 +18,12 @@ import {
     SelectedChatContext,
     UserContext,
 } from "../../utils/Contexts";
-import { deleteUserNotification, signOut, updateUserMode } from "../../utils/firebaseUtils";
+import {
+    acceptGroupInvite,
+    deleteUserNotification,
+    signOut,
+    updateUserMode,
+} from "../../utils/firebaseUtils";
 import {
     DropList,
     Modal,
@@ -65,7 +69,7 @@ function Options() {
                     closeComp={<FaEllipsisH />}
                 >
                     <OptionsDropDownItem
-                        sufIcon={<MdEdit />}
+                        sufIcon={<FiEdit />}
                         onClickExe={() => {
                             setEditProfileModal(true);
                         }}
@@ -84,7 +88,7 @@ function Options() {
                         onClickExe={() => {
                             setJoinGroupModal(true);
                         }}
-                        sufIcon={<MdAdd />}
+                        sufIcon={<BiUserPlus />}
                     >
                         Join Group
                     </OptionsDropDownItem>
@@ -143,9 +147,8 @@ function Notification() {
     const [selectedNotif, setSelectedNotif] = useState(null);
     const [notifToggle, setNotifToggle] = useState(false);
     const {
-        userlocal: { uid, groups },
+        userlocal: { uid },
     } = useContext(UserContext);
-    const { setSelectedChat } = useContext(SelectedChatContext);
     const ref = firestore.collection(collections.users).doc(uid).collection("notif");
     const [notifList = []] = useCollectionData(ref, { idField: "notif_id" });
 
@@ -160,9 +163,8 @@ function Notification() {
             />
         );
     });
-    console.log(123);
     function calcHeight(el) {
-        const height = el.offsetHeight + 30;
+        const height = el.offsetHeight + 50;
         setMenuHeight(height);
     }
     return (
@@ -194,67 +196,125 @@ function Notification() {
                 onEnter={calcHeight}
             >
                 <div className="notif_wrapper">
-                    {selectedNotif && (
-                        <>
-                            <h4 className="border-bottom pb-2">
-                                {selectedNotif.sender} wants to invite you to Thier Group
-                            </h4>
-                            <p>Accept Invitation?</p>
-                            <div className="action">
-                                <div
-                                    className="hover"
-                                    onClick={async () => {
-                                        try {
-                                            if (groups.includes(selectedNotif.group_id)) {
-                                                return (
-                                                    toast.success("You're already in the group!"),
-                                                    setSelectedChat(selectedNotif.group_id),
-                                                    setActiveMenu("main"),
-                                                    setNotifToggle(false),
-                                                    await deleteUserNotification(uid, selectedNotif)
-                                                );
-                                            }
-                                            setSelectedChat(selectedNotif.group_id);
-                                        } catch (err) {
-                                            console.log(err);
-                                        } finally {
-                                            setActiveMenu("main");
-                                            setSelectedNotif(false);
-                                        }
-                                    }}
-                                >
-                                    <MdCheck />
-                                    <span>Yes</span>
-                                </div>
-                                <div
-                                    className="hover"
-                                    onClick={() => {
-                                        try {
-                                            deleteUserNotification(uid, selectedNotif);
-                                        } catch (err) {
-                                            console.log(err);
-                                        }
-                                        setActiveMenu("main");
-                                        setSelectedNotif(false);
-                                        toast.success("Invitation Declined!");
-                                    }}
-                                >
-                                    <MdClear />
-                                    <span>No</span>
-                                </div>
-                                <div
-                                    onClick={() => {
-                                        setActiveMenu("main");
-                                    }}
-                                >
-                                    <MdKeyboardArrowLeft />
-                                    <span>Back</span>
-                                </div>
-                            </div>
-                        </>
+                    {selectedNotif && selectedNotif.type == "invite" ? (
+                        <InviteComponent
+                            selectedNotif={selectedNotif}
+                            setActiveMenu={setActiveMenu}
+                            setNotifToggle={setNotifToggle}
+                            setSelectedNotif={setSelectedNotif}
+                        />
+                    ) : (
+                        <MessageComponent
+                            selectedNotif={selectedNotif}
+                            setActiveMenu={setActiveMenu}
+                        />
                     )}
                 </div>
             </CSSTransition>
         </DropList>
+    );
+}
+
+function InviteComponent({ selectedNotif, setActiveMenu, setNotifToggle, setSelectedNotif }) {
+    const {
+        userlocal: { uid, groups, displayName },
+    } = useContext(UserContext);
+    const { setSelectedChat } = useContext(SelectedChatContext);
+    return (
+        <>
+            <h4 className="border-bottom pb-2">
+                {selectedNotif.sender} wants to invite you to Thier Group
+            </h4>
+            <p>Accept Invitation?</p>
+            <div className="action mt-4">
+                <div
+                    className="hover"
+                    onClick={async () => {
+                        try {
+                            if (groups.includes(selectedNotif.group_id)) {
+                                return (
+                                    toast.success("You're already in the group!"),
+                                    setSelectedChat(selectedNotif.group_id),
+                                    setActiveMenu("main"),
+                                    setNotifToggle(false),
+                                    await deleteUserNotification(uid, selectedNotif.notif_id)
+                                );
+                            }
+                            const newGroupId = await acceptGroupInvite(
+                                uid,
+                                displayName,
+                                selectedNotif
+                            );
+                            setSelectedChat(newGroupId);
+                        } catch (err) {
+                            console.log(err);
+                        } finally {
+                            setActiveMenu("main");
+                            setSelectedNotif(false);
+                        }
+                    }}
+                >
+                    <MdCheck />
+                    <span>Yes</span>
+                </div>
+                <div
+                    className="hover"
+                    onClick={() => {
+                        try {
+                            deleteUserNotification(uid, selectedNotif);
+                        } catch (err) {
+                            console.log(err);
+                        }
+                        setActiveMenu("main");
+                        setSelectedNotif(false);
+                        toast.success("Invitation Declined!");
+                    }}
+                >
+                    <MdClear />
+                    <span>No</span>
+                </div>
+                <div
+                    onClick={() => {
+                        setActiveMenu("main");
+                    }}
+                >
+                    <MdKeyboardArrowLeft />
+                    <span>Back</span>
+                </div>
+            </div>
+        </>
+    );
+}
+
+function MessageComponent({ selectedNotif, setActiveMenu }) {
+    const {
+        userlocal: { uid },
+    } = useContext(UserContext);
+    return (
+        <>
+            <h4 className="border-bottom pb-2">{selectedNotif.message_header}</h4>
+            <p>{selectedNotif.message_body}</p>
+            <div className="action mt-3">
+                <div
+                    className="hover"
+                    onClick={async () => {
+                        await deleteUserNotification(uid, selectedNotif.notif_id);
+                        setActiveMenu("main");
+                    }}
+                >
+                    <MdClear />
+                    <span>Dismiss</span>
+                </div>
+                <div
+                    className="hover"
+                    onClick={() => {
+                        setActiveMenu("main");
+                    }}
+                >
+                    <MdKeyboardArrowLeft />
+                    <span>Back</span>
+                </div>
+            </div>
+        </>
     );
 }
