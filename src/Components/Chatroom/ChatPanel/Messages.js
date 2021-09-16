@@ -6,7 +6,7 @@ import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/C
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections } from "../../../utils/FirebaseRefs";
-import { MdAdd, MdClear, MdDelete, MdDeleteForever, MdEdit, MdInfoOutline } from "react-icons/md";
+import { MdDeleteForever, MdInfoOutline } from "react-icons/md";
 import $ from "jquery";
 import MessagesModal from "./MessagesModal";
 import aud from "../../../img/facebookchat.mp3";
@@ -31,15 +31,15 @@ function Messages({ setCaret }) {
     const groupMessagesRef = firestore
         .collection(collections.groups_register)
         .doc(selectedChat)
-        .collection("messages")
+        .collection(collections.messages)
         .orderBy("createdAt")
         .limit(100);
     const [groupMessages, loading] = useCollectionData(groupMessagesRef, { idField: "id" });
     const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
     useEffect(() => {
         if (groupMessages) {
-            if (loading) {
-                dummy.current.scrollIntoView({ behavior: "smooth" });
+            if (!loading) {
+                dummy.current && dummy.current.scrollIntoView({ behavior: "smooth" });
                 if (allowedToPlay) {
                     play();
                     setAllowedToPlay(false);

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
     BiMoon,
     BiSun,
@@ -37,7 +37,6 @@ import { firestore } from "../../utils/firebase";
 import { collections } from "../../utils/FirebaseRefs";
 import { CSSTransition } from "react-transition-group";
 import toast from "react-hot-toast";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 
 function Options() {
     const [optionsToggle, setOptionsToggle] = useState(false);
@@ -62,6 +61,25 @@ function Options() {
                     setMobileNav(true);
                 }}
             />
+            <label className="mode_label">
+                <input
+                    className="toggle-checkbox"
+                    onChange={async () => {
+                        await updateUserMode(uid, mode);
+                    }}
+                    checked={mode != "dark" || false}
+                    type="checkbox"
+                ></input>
+                <div className="toggle-slot">
+                    <div className="sun-icon-wrapper">
+                        <BiSun />
+                    </div>
+                    <div className="toggle-button"></div>
+                    <div className="moon-icon-wrapper">
+                        <BiMoon />
+                    </div>
+                </div>
+            </label>
             <div className="options_wrapper">
                 <DropList
                     open={optionsToggle}
@@ -142,15 +160,30 @@ function Options() {
 export default Options;
 
 function Notification() {
-    const [activeMenu, setActiveMenu] = useState("main");
-    const [menuHeight, setMenuHeight] = useState(null);
+    const [activeMenu, setActiveMenu] = useState(null);
+    const [menuHeight, setMenuHeight] = useState(57);
     const [selectedNotif, setSelectedNotif] = useState(null);
     const [notifToggle, setNotifToggle] = useState(false);
     const {
         userlocal: { uid },
     } = useContext(UserContext);
-    const ref = firestore.collection(collections.users).doc(uid).collection("notif");
-    const [notifList = []] = useCollectionData(ref, { idField: "notif_id" });
+    const [notifList, setNotifList] = useState([]);
+    const Drop = useRef();
+    useEffect(() => {
+        const unsub = firestore
+            .collection(collections.users)
+            .doc(uid)
+            .collection(collections.notif)
+            .onSnapshot((notifs) => {
+                let list = [];
+                notifs.forEach((notif) => {
+                    list.push(notif.data());
+                });
+                setNotifList(list);
+            });
+
+        return unsub;
+    }, [uid]);
 
     const notifJSX = notifList.map((not) => {
         return (
@@ -163,10 +196,19 @@ function Notification() {
             />
         );
     });
+
     function calcHeight(el) {
-        const height = el.offsetHeight + 50;
+        const height = el.offsetHeight + 40;
         setMenuHeight(height);
     }
+
+    useEffect(() => {
+        if (notifToggle) {
+            setActiveMenu("main");
+        } else {
+            setActiveMenu(null);
+        }
+    }, [notifToggle]);
     return (
         <DropList
             closeComp={<MdNotifications />}
@@ -174,7 +216,8 @@ function Notification() {
             setter={setNotifToggle}
             height={menuHeight}
             tag="notif"
-            notifIndicator={notifJSX.length}
+            drop={Drop}
+            notifIndicator={notifList.length}
         >
             <CSSTransition
                 in={activeMenu === "main"}
@@ -237,7 +280,7 @@ function InviteComponent({ selectedNotif, setActiveMenu, setNotifToggle, setSele
                                     setSelectedChat(selectedNotif.group_id),
                                     setActiveMenu("main"),
                                     setNotifToggle(false),
-                                    await deleteUserNotification(uid, selectedNotif.notif_id)
+                                    await deleteUserNotification(uid, selectedNotif.notif_id, false)
                                 );
                             }
                             const newGroupId = await acceptGroupInvite(
@@ -274,6 +317,7 @@ function InviteComponent({ selectedNotif, setActiveMenu, setNotifToggle, setSele
                     <span>No</span>
                 </div>
                 <div
+                    className="hover"
                     onClick={() => {
                         setActiveMenu("main");
                     }}
@@ -298,7 +342,7 @@ function MessageComponent({ selectedNotif, setActiveMenu }) {
                 <div
                     className="hover"
                     onClick={async () => {
-                        await deleteUserNotification(uid, selectedNotif.notif_id);
+                        await deleteUserNotification(uid, selectedNotif.notif_id, true);
                         setActiveMenu("main");
                     }}
                 >

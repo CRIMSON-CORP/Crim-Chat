@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { MdClear, MdKeyboardArrowRight } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { FaUserFriends } from "react-icons/fa";
+import gsap from "gsap";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (
@@ -67,46 +68,49 @@ export function useModal() {
     return [toggle, setModalState];
 }
 export function Modal({ children, state, setmodal, classTag, header }) {
+    const modalRef = useRef();
+    useEffect(() => {
+        if (state) {
+            gsap.fromTo(modalRef.current, { scale: 0.95 }, { scale: 1, duration: 0.5 });
+        } else {
+            gsap.fromTo(modalRef.current, { scale: 1 }, { scale: 0.95, duration: 0.5 });
+        }
+    }, [state]);
     return (
-        <>
-            <CSSTransition in={state} unmountOnExit classNames="modal-content-anim" timeout={400}>
-                <div className="modal-custom">
-                    <div className={`modal-content-custom ${classTag} scroll`}>
-                        <span
-                            className="close"
-                            style={{ position: "sticky" }}
-                            onClick={() => {
-                                setmodal(false);
-                            }}
-                        >
-                            <MdClear />
-                        </span>
-                        <div className="modal-content-custom-wrapper">
-                            <div className="modal-head">
-                                <h3>{header}</h3>
-                            </div>
-                            {children}
-                        </div>
-                    </div>
-                </div>
-            </CSSTransition>
-
-            {state && (
-                <CSSTransition
-                    in={state}
-                    unmountOnExit
-                    classNames="modal-content-anim"
-                    timeout={400}
+        <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
+            <div
+                className="modal-custom"
+                style={{ background: "#00000066" }}
+                onClick={() => {
+                    setmodal(false);
+                }}
+            >
+                <div
+                    className={`modal-content-custom ${classTag} scroll`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    ref={modalRef}
+                    style={{ transform: "scale(0.95)" }}
                 >
-                    <UnderLay
-                        exe={() => {
+                    <span
+                        className="close"
+                        style={{ position: "sticky" }}
+                        onClick={() => {
                             setmodal(false);
                         }}
-                        zIndex={100}
-                    />
-                </CSSTransition>
-            )}
-        </>
+                    >
+                        <MdClear />
+                    </span>
+                    <div className="modal-content-custom-wrapper">
+                        <div className="modal-head">
+                            <h3>{header}</h3>
+                        </div>
+                        {children}
+                    </div>
+                </div>
+            </div>
+        </CSSTransition>
     );
 }
 
@@ -174,8 +178,12 @@ export function ProfilePic({ img, d_n, tag = "user" }) {
     );
 }
 
-export function UnderLay({ zIndex, exe }) {
-    return <div className="underlay" style={{ zIndex }} onMouseDown={exe}></div>;
+export function UnderLay({ exe, children, style }) {
+    return (
+        <div className="underlay" style={style} onMouseDown={exe} onClick={exe} onTouchStart={exe}>
+            {children}
+        </div>
+    );
 }
 
 const Close = createContext(null);
@@ -215,7 +223,7 @@ export function OptionsDropDown({ children, height, drop }) {
     return (
         <div
             ref={drop}
-            className="options_dropdown"
+            className="options_dropdown scroll"
             style={{
                 overflowX: "hidden",
                 height: height + "px",

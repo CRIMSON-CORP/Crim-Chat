@@ -151,18 +151,24 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
     const notif_id = v4();
     if (!selected.length) return toast.error("No user Selected!");
     selected.forEach(async (user) => {
-        await firestore.collection("users").doc(user).collection("notif").doc(notif_id).set({
-            notif_id: notif_id,
-            sender: displayName,
-            type: "invite",
-            group_id: selectedChat,
-            sender_id: uid,
-        });
+        await firestore
+            .collection(collections.users)
+            .doc(user)
+            .collection(collections.notif)
+            .doc(notif_id)
+            .set({
+                notif_id: notif_id,
+                sender: displayName,
+                type: "invite",
+                group_id: selectedChat,
+                sender_id: uid,
+                createdAt: timeStamp(),
+            });
         // Adds Bubble for each invited user
         await firestore
             .collection(collections.groups_register)
             .doc(selectedChat)
-            .collection("messages")
+            .collection(collections.messages)
             .add({
                 type: "bubble",
                 createdAt: timeStamp(),
@@ -176,10 +182,9 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
                     .then((data) => data.data().displayName),
                 inviter: displayName,
             });
-
-        toast.success("Invite Sent");
-        setmodal(false);
     });
+    toast.success(`Invite${selected.length > 1 ? "s" : ""} Sent`);
+    setmodal(false);
 }
 
 export async function sendMessage(text, userlocal, reply, selectedChat) {
@@ -245,6 +250,7 @@ export async function leaveGroup(uid, selectedChat, displayName, groupName) {
             uid: uid,
             user_that_left: displayName,
         });
+    localStorage.removeItem("crimchat_current_group");
     toast.success(`You have successfully left ${groupName}!`);
 }
 
@@ -298,7 +304,7 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                 await firestore
                     .collection(collections.users)
                     .doc(user)
-                    .collection("notif")
+                    .collection(collections.notif)
                     .doc(notifid)
                     .set({
                         notif_id: notifid,
@@ -306,6 +312,7 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                         type: "invite",
                         group_id: id,
                         sender_id: uid,
+                        createdAt: timeStamp(),
                     });
                 // Adds Bubble for each invited user
                 await firestore
@@ -369,6 +376,7 @@ export async function updateGroup(uid, displayName, selectedChat, groupDetails) 
 }
 
 export async function removeUser(mem, uid, displayName, selectedChat) {
+    const notif_id = v4();
     await firestore
         .collection(collections.users)
         .doc(mem.uid)
@@ -397,8 +405,10 @@ export async function removeUser(mem, uid, displayName, selectedChat) {
         .collection(collections.users)
         .doc(mem.uid)
         .collection(collections.notif)
-        .add({
-            notif_id: v4(),
+        .doc(notif_id)
+        .set({
+            notif_id,
+            createdAt: timeStamp(),
             sender: displayName,
             type: "message",
             message_header: "You were removed from a Group!",
@@ -514,7 +524,9 @@ export async function acceptGroupInvite(uid, displayName, selectedNotif) {
                 user_that_joined_id: uid,
                 user_that_joined_name: displayName,
             });
-        return selectedNotif.notif_id;
+
+        localStorage.setItem("crimchat_current_group", selectedNotif.group_id);
+        return selectedNotif.group_id;
     } catch (error) {
         toast.error(error);
     } finally {
@@ -527,21 +539,25 @@ export async function acceptGroupInvite(uid, displayName, selectedNotif) {
     }
 }
 
-export async function deleteUserNotification(uid, selectedNotif) {
+export async function deleteUserNotification(uid, selectedNotif, notify = false) {
     async function deleteNotif() {
-        await firestore
+        return await firestore
             .collection(collections.users)
             .doc(uid)
             .collection(collections.notif)
-            .doc(selectedNotif.notif_id)
+            .doc(selectedNotif)
             .delete();
     }
     try {
-        return toast.promise(deleteNotif(), {
-            loading: "Dismissing Notification",
-            success: "Notification Dismissed!",
-            error: "Failed to Dismiss Notification!",
-        });
+        if (notify) {
+            return toast.promise(deleteNotif(), {
+                loading: "Dismissing Notification",
+                success: "Notification Dismissed!",
+                error: "Failed to Dismiss Notification!",
+            });
+        } else {
+            await deleteNotif();
+        }
     } catch (error) {
         console.log(error);
     }
@@ -575,6 +591,7 @@ export async function deleteGroup(uid, displayName, selectedChat) {
                         notif_id: notif_id,
                         sender: displayName,
                         type: "message",
+                        createdAt: timeStamp(),
                         message_header: "Group Deleted",
                         message_body: `An Admin ${displayName} has deleted group ${group_name}, all Messages have been deleted`,
                     }));

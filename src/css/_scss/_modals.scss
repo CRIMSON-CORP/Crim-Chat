@@ -523,18 +523,18 @@
         box-shadow: none;
     }
 
-    .modal-content-anim-enter {
+    .modal-anim-enter {
         transform: translateY(110%);
     }
 
-    .modal-content-anim-enter-active {
+    .modal-anim-enter-active {
         transform: translateY(0px);
     }
-    .modal-content-anim-exit {
+    .modal-anim-exit {
         transform: translateY(0px);
     }
 
-    .modal-content-anim-exit-active {
+    .modal-anim-exit-active {
         transform: translateY(110%);
     }
 
