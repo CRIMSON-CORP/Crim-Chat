@@ -293,3 +293,22 @@
     opacity: 0;
     transform: translateY(100%);
 }
+
+@media screen and (max-width: 500px) {
+    .chat-pannel {
+        .messages {
+            .message .bubble {
+                .text {
+                    font-size: 12px !important;
+                    padding: 8px 10px;
+                }
+                .timestamp {
+                    font-size: 8px;
+                }
+            }
+            .info-bubble {
+                font-size: 12px !important;
+            }
+        }
+    }
+}

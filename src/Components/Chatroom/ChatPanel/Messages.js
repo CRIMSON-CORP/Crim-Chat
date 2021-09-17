@@ -39,7 +39,9 @@ function Messages({ setCaret }) {
     useEffect(() => {
         if (groupMessages) {
             if (!loading) {
-                dummy.current && dummy.current.scrollIntoView({ behavior: "smooth" });
+                dummy.current != undefined
+                    ? dummy.current.scrollIntoView({ behavior: "smooth" })
+                    : console.log("Dummy undefined");
                 if (allowedToPlay) {
                     play();
                     setAllowedToPlay(false);
@@ -48,7 +50,7 @@ function Messages({ setCaret }) {
                     setAllowedToPlay(true);
                 }, 1500);
             } else {
-                dummy.current && dummy.current.scrollIntoView({ behavior: "auto" });
+                dummy.current != undefined && dummy.current.scrollIntoView({ behavior: "auto" });
             }
         }
     }, [loading, groupMessages]);
@@ -64,7 +66,6 @@ function Messages({ setCaret }) {
             }
         });
         return () => {
-            dummy.current = null;
             setAllowedToPlay(false);
         };
     }, []);
@@ -181,6 +182,7 @@ function Messages({ setCaret }) {
                     )}
 
                 <div className="dummy" ref={dummy}></div>
+                {console.log(dummy)}
             </div>
             <MessagesModal
                 props={{

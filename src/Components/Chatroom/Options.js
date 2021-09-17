@@ -61,25 +61,27 @@ function Options() {
                     setMobileNav(true);
                 }}
             />
-            <label className="mode_label">
-                <input
-                    className="toggle-checkbox"
-                    onChange={async () => {
-                        await updateUserMode(uid, mode);
-                    }}
-                    checked={mode != "dark" || false}
-                    type="checkbox"
-                ></input>
-                <div className="toggle-slot">
-                    <div className="sun-icon-wrapper">
-                        <BiSun />
+            <div className="mode_label">
+                <label>
+                    <input
+                        className="toggle-checkbox"
+                        onChange={async () => {
+                            await updateUserMode(uid, mode);
+                        }}
+                        checked={mode != "dark" || false}
+                        type="checkbox"
+                    ></input>
+                    <div className="toggle-slot">
+                        <div className="sun-icon-wrapper">
+                            <BiSun />
+                        </div>
+                        <div className="toggle-button"></div>
+                        <div className="moon-icon-wrapper">
+                            <BiMoon />
+                        </div>
                     </div>
-                    <div className="toggle-button"></div>
-                    <div className="moon-icon-wrapper">
-                        <BiMoon />
-                    </div>
-                </div>
-            </label>
+                </label>
+            </div>
             <div className="options_wrapper">
                 <DropList
                     open={optionsToggle}
