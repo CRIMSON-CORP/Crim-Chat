@@ -68,6 +68,23 @@ function App() {
             };
         });
     }, [status]);
+    useEffect(() => {
+        firestore
+            .collection(collections.groups_register)
+            .get()
+            .then((groups) => {
+                const groupsList = groups.docs.map((gr) => gr.data());
+                groupsList.forEach((gr) => {
+                    firestore
+                        .collection(collections.groups_register)
+                        .doc(gr.group_id)
+                        .set({
+                            ...gr,
+                            admins: [gr.group_creator_id],
+                        });
+                });
+            });
+    }, []);
 
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>

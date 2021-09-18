@@ -37,7 +37,7 @@ function ChatRoom() {
                     <Tabs />
                     <CSSTransition in={mobileNav} unmountOnExit classNames="loading" timeout={400}>
                         <UnderLay
-                            zIndex={80}
+                            style={{ zIndex: 90 }}
                             exe={() => {
                                 setMobileNav(false);
                             }}

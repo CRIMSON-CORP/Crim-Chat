@@ -87,9 +87,6 @@ export function Modal({ children, state, setmodal, classTag, header }) {
             >
                 <div
                     className={`modal-content-custom ${classTag} scroll`}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
                     ref={modalRef}
                     style={{ transform: "scale(0.95)" }}
                 >
@@ -102,7 +99,12 @@ export function Modal({ children, state, setmodal, classTag, header }) {
                     >
                         <MdClear />
                     </span>
-                    <div className="modal-content-custom-wrapper">
+                    <div
+                        className="modal-content-custom-wrapper"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
                         <div className="modal-head">
                             <h3>{header}</h3>
                         </div>

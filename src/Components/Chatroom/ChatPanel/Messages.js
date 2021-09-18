@@ -26,7 +26,6 @@ function Messages({ setCaret }) {
     const [groupInfoModal, setGroupInfoModal] = useModal(false);
     const [play] = useSound(aud);
     const [allowedToPlay, setAllowedToPlay] = useState(true);
-    const dummy = useRef();
     const groupDetailsRef = firestore.collection(collections.groups_register).doc(selectedChat);
     const groupMessagesRef = firestore
         .collection(collections.groups_register)
@@ -34,14 +33,14 @@ function Messages({ setCaret }) {
         .collection(collections.messages)
         .orderBy("createdAt")
         .limit(100);
-    const [groupMessages, loading] = useCollectionData(groupMessagesRef, { idField: "id" });
+    const [groupMessages] = useCollectionData(groupMessagesRef, { idField: "id" });
     const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
+    const [loaded, setLoaded] = useState(false);
+    const dummy = document.querySelector(".dummy");
     useEffect(() => {
         if (groupMessages) {
-            if (!loading) {
-                dummy.current != undefined
-                    ? dummy.current.scrollIntoView({ behavior: "smooth" })
-                    : console.log("Dummy undefined");
+            if (loaded) {
+                dummy != undefined && dummy.scrollIntoView({ behavior: "smooth" });
                 if (allowedToPlay) {
                     play();
                     setAllowedToPlay(false);
@@ -50,10 +49,11 @@ function Messages({ setCaret }) {
                     setAllowedToPlay(true);
                 }, 1500);
             } else {
-                dummy.current != undefined && dummy.current.scrollIntoView({ behavior: "auto" });
+                dummy != undefined && dummy.scrollIntoView({ behavior: "auto" });
+                setLoaded(true);
             }
         }
-    }, [loading, groupMessages]);
+    }, [loaded, groupMessages]);
 
     useEffect(() => {
         messageBoxRef.current.addEventListener("scroll", () => {
@@ -69,6 +69,10 @@ function Messages({ setCaret }) {
             setAllowedToPlay(false);
         };
     }, []);
+
+    useEffect(() => {
+        setLoaded(false);
+    }, [selectedChat]);
 
     return (
         <>
@@ -111,7 +115,7 @@ function Messages({ setCaret }) {
                                 >
                                     Group Information
                                 </OptionsDropDownItem>
-                                {groupDetails.group_creator_id === uid && (
+                                {groupDetails.admins.includes(uid) && (
                                     <>
                                         <OptionsDropDownItem
                                             sufIcon={<FiEdit />}
@@ -151,6 +155,11 @@ function Messages({ setCaret }) {
                                 )}
                                 <OptionsDropDownItem
                                     onClickExe={async () => {
+                                        if (groupDetails.group_creator_id === uid) {
+                                            return alert(
+                                                "You are the Super Admin, make someone else the Super Admin before you leave"
+                                            );
+                                        }
                                         leaveGroup(
                                             uid,
                                             selectedChat,
@@ -174,15 +183,14 @@ function Messages({ setCaret }) {
                                 key={message.id}
                                 message={message}
                                 id={message.id}
-                                loaded={!loading}
+                                loaded={!loaded}
                             />
                         ) : (
                             <InfoBubble key={index} message={message} />
                         )
                     )}
 
-                <div className="dummy" ref={dummy}></div>
-                {console.log(dummy)}
+                <div className="dummy"></div>
             </div>
             <MessagesModal
                 props={{
