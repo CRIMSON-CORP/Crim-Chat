@@ -242,7 +242,6 @@
     overflow: hidden;
     img {
         width: 100%;
-        height: 100%;
         object-fit: cover;
         object-position: center;
     }
@@ -378,6 +377,22 @@
     }
 }
 
+.group .group_profilePic {
+    img {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.messages {
+    .group_profilePic {
+        img {
+            width: 35px;
+            height: 35px;
+        }
+    }
+}
+
 @media only screen and (max-width: 400px) {
     .options_dropdown {
         position: absolute;
@@ -389,22 +404,31 @@
     }
 
     .fade-enter {
-        opacity: 0;
         transform: translateY(20px);
     }
 
     .fade-enter-active {
-        opacity: 1;
         transform: translateY(0px);
     }
 
     .fade-exit {
-        opacity: 1;
         transform: translateY(0px);
     }
     .fade-exit-active {
-        opacity: 0;
         transform: translateY(30px);
+    }
+
+    .messages {
+        .group_profilePic {
+            img {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    }
+
+    .modal-custom .modal-content-custom {
+        transition: 1.2s cubic-bezier(0.24, 0.78, 0.06, 0.99) !important;
     }
 }
 
@@ -514,7 +538,7 @@
     transform: translate(28px, 3px) rotate(15deg);
 }
 
-.message_blink {
+#root.dark .message_blink {
     animation: blink 1s ease-in-out infinite;
 }
 
@@ -525,5 +549,18 @@
     }
     50% {
         background: rgba(255, 255, 255, 0.562);
+    }
+}
+.message_blink {
+    animation: blink_dark 1s ease-in-out infinite;
+}
+
+@keyframes blink_dark {
+    0%,
+    100% {
+        background: transparent;
+    }
+    50% {
+        background: rgba(220, 20, 60, 0.253);
     }
 }

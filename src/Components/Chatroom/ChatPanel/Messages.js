@@ -294,7 +294,10 @@ function Bubble({
                         onClick={() => {
                             const target = document.querySelector(`[data-id="${replyMessage_id}"]`);
                             target &&
-                                (target.scrollIntoView({ behavior: "smooth", block: "center" }),
+                                (target.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "end",
+                                }),
                                 target.classList.add("message_blink")),
                                 setTimeout(() => {
                                     target.classList.remove("message_blink");

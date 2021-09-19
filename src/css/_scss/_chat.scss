@@ -95,7 +95,7 @@
                     box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
                     font-weight: bold;
                     transition: 0.3s ease-out;
-                    user-select: all;
+                    user-select: text;
                     p {
                         white-space: break-spaces;
                         line-height: 1.6;
@@ -304,16 +304,18 @@
 @media screen and (max-width: 500px) {
     .chat-pannel {
         .messages {
-            .message .bubble {
-                .text {
-                    font-size: 12px !important;
-                    padding: 8px 10px;
-                }
-                .timestamp {
-                    font-size: 8px;
+            .message {
+                .bubble {
+                    .text {
+                        font-size: 12px !important;
+                        padding: 8px 10px;
+                    }
+                    .timestamp {
+                        font-size: 8px;
+                    }
                 }
             }
-            .info-bubble {
+            .info_bubble {
                 font-size: 12px !important;
             }
         }

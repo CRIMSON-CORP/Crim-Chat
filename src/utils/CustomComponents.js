@@ -68,28 +68,21 @@ export function useModal() {
     return [toggle, setModalState];
 }
 export function Modal({ children, state, setmodal, classTag, header }) {
-    const modalRef = useRef();
-    useEffect(() => {
-        if (state) {
-            gsap.fromTo(modalRef.current, { scale: 0.95 }, { scale: 1, duration: 0.5 });
-        } else {
-            gsap.fromTo(modalRef.current, { scale: 1 }, { scale: 0.95, duration: 0.5 });
-        }
-    }, [state]);
     return (
-        <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
-            <div
-                className="modal-custom"
-                style={{ background: "#00000066" }}
-                onClick={() => {
-                    setmodal(false);
-                }}
-            >
-                <div
-                    className={`modal-content-custom ${classTag} scroll`}
-                    ref={modalRef}
-                    style={{ transform: "scale(0.95)" }}
-                >
+        <div
+            className="modal-custom"
+            style={{
+                background: "#00000066",
+                opacity: state ? 1 : 0,
+                pointerEvents: state ? "all" : "none",
+            }}
+            onClick={() => {
+                setmodal(false);
+            }}
+        >
+            <UnderLay />
+            <CSSTransition in={state} unmountOnExit classNames="modal-anim" timeout={400}>
+                <div className={`modal-content-custom ${classTag} scroll`}>
                     <span
                         className="close"
                         style={{ position: "sticky" }}
@@ -111,8 +104,8 @@ export function Modal({ children, state, setmodal, classTag, header }) {
                         {children}
                     </div>
                 </div>
-            </div>
-        </CSSTransition>
+            </CSSTransition>
+        </div>
     );
 }
 

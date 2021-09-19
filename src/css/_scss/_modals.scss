@@ -175,18 +175,18 @@
 }
 
 .modal-anim-enter {
-    opacity: 0;
+    transform: scale(0.9) translateY(20px);
 }
 
 .modal-anim-enter-active {
-    opacity: 1;
+    transform: scale(1) translateY(0px);
 }
 .modal-anim-exit {
-    opacity: 1;
+    transform: scale(1) translateY(0px);
 }
 
 .modal-anim-exit-active {
-    opacity: 0;
+    transform: scale(0.9) translateY(0px);
 }
 
 .modal-content-anim-enter {
