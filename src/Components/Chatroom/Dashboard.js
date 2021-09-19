@@ -30,6 +30,13 @@ function ChatRoom() {
     useEffect(() => {
         setSelectedChat(localStorage.getItem("crimchat_current_group"));
     }, []);
+    useEffect(() => {
+        if (window.innerWidth < 700) {
+            setMobileNav(true);
+        } else {
+            setMobileNav(false);
+        }
+    }, [window.innerWidth]);
     return (
         <div className={`dashboard ${mode}`}>
             <MobileNav.Provider value={{ mobileNav, setMobileNav }}>
