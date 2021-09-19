@@ -1,4 +1,5 @@
-import gsap, { Back } from "gsap";
+import gsap, { Back, Expo } from "gsap";
+import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
@@ -38,11 +39,18 @@ function FAB() {
             reversed: true,
             defaults: { duration: 0.3 },
         });
+        gsap.registerPlugin(CSSRulePlugin);
+        const before = CSSRulePlugin.getRule(".fab-wrapper .fab.move::before");
         timeline
             .to(sub1.current, { y: -160, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
             .to(sub2.current, { y: -80, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
             .to(sub3.current, { y: -240, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
-            .to(sub0.current, { rotate: "315deg", ease: Back.easeOut.config(2) }, "up");
+            .to(sub0.current, { rotate: "315deg", ease: Back.easeOut.config(2) }, "up")
+            .to(before, {
+                transform: "translateX(-110%) translateY(0px) scale(1)",
+                opacity: 1,
+                ease: Expo.easeOut(),
+            });
         setTl(timeline);
     }, []);
     return (

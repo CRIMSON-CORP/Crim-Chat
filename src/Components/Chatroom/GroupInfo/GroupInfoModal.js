@@ -68,7 +68,7 @@ function GroupMember({ member, admins, creator }) {
 
     return (
         <>
-            {!loading && (
+            {!loading && mem && (
                 <li
                     className="user hover  mb-20"
                     key={member}
@@ -89,7 +89,12 @@ function GroupMember({ member, admins, creator }) {
                                 {mem.uid === uid ? "You" : mem.displayName}{" "}
                             </h5>
                             {admins.includes(mem.uid) && (
-                                <span className="admin_state">(Admin)</span>
+                                <span
+                                    className={`admin_state ${mem.uid == creator ? "Super" : ""}`}
+                                >
+                                    {console.log(mem.uid == creator)}
+                                    (Admin)
+                                </span>
                             )}
                         </div>
                         <span className="trim-text">{mem.email}</span>

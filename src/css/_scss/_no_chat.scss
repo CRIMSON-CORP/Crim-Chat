@@ -52,17 +52,18 @@
                 background: $dark_background;
                 color: white;
                 left: 0;
-                transform: translateX(-110%) translateY(10px);
+                transform: translateX(-110%) translateY(10px) scale(0);
                 opacity: 0;
-                transition: 0.3s;
+                transform-origin: 90% 90%;
+                // transition: 0.3s;
                 white-space: nowrap;
                 border-radius: 5px;
                 pointer-events: none;
             }
-            &:hover::before {
-                opacity: 1;
-                transform: translateX(-110%) translateY(0px);
-            }
+            // &:hover::before {
+            //     opacity: 1;
+            //     transform: translateX(-110%) translateY(0px);
+            // }
         }
     }
 }

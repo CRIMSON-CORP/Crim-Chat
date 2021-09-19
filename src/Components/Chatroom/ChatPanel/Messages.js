@@ -296,12 +296,12 @@ function Bubble({
                             target &&
                                 (target.scrollIntoView({
                                     behavior: "smooth",
-                                    block: "end",
+                                    block: "center",
                                 }),
-                                target.classList.add("message_blink")),
+                                target.classList.add("message_blink"),
                                 setTimeout(() => {
                                     target.classList.remove("message_blink");
-                                }, 3000);
+                                }, 3000));
                         }}
                     >
                         <span className="recipeint font-weight-bold trim">

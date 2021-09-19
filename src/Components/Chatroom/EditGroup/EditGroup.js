@@ -71,7 +71,7 @@ function EditGroupUI({ setmodal }) {
                                     <label htmlFor="profile-icon" className="profile_icon">
                                         <div className="cover">
                                             <CSSTransition
-                                                in={groupDetails.group_profilePic != ""}
+                                                in={groupDetails.group_profilePic != null}
                                                 unmountOnExit
                                                 timeout={400}
                                                 classNames="profile_icon_switch_img"
@@ -82,7 +82,7 @@ function EditGroupUI({ setmodal }) {
                                                 />
                                             </CSSTransition>
                                             <CSSTransition
-                                                in={groupDetails.group_profilePic == ""}
+                                                in={groupDetails.group_profilePic == null}
                                                 unmountOnExit
                                                 timeout={400}
                                                 classNames="profile_icon_switch_svg"
