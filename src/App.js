@@ -13,14 +13,7 @@ import { useNavigatorOnLine } from "./utils/utils";
 function App() {
     const [user] = useAuthState(auth);
     const [loading, setLoading] = useState(true);
-    const [userlocal, setUserLocal] = useState({
-        profilePic: null,
-        displayName: "",
-        email: null,
-        onlineStatus: null,
-        groups: [],
-        mode: "light",
-    });
+    const [userlocal, setUserLocal] = useState(null);
 
     const status = useNavigatorOnLine();
     useEffect(() => {
@@ -47,6 +40,8 @@ function App() {
             } catch (error) {
                 console.log(error);
             }
+        } else {
+            setUserLocal(null);
         }
         return unsub;
     }, [user]);
@@ -61,39 +56,23 @@ function App() {
     }, []);
 
     useEffect(() => {
-        setUserLocal((prev) => {
-            return {
-                ...prev,
-                onlineStatus: status ? "Online" : "Offline",
-            };
-        });
-    }, [status]);
-    useEffect(() => {
-        firestore
-            .collection(collections.groups_register)
-            .get()
-            .then((groups) => {
-                const groupsList = groups.docs.map((gr) => gr.data());
-                groupsList.forEach((gr) => {
-                    firestore
-                        .collection(collections.groups_register)
-                        .doc(gr.group_id)
-                        .set({
-                            ...gr,
-                            admins: [gr.group_creator_id],
-                        });
-                });
+        userlocal &&
+            setUserLocal((prev) => {
+                return {
+                    ...prev,
+                    onlineStatus: status ? "Online" : "Offline",
+                };
             });
-    }, []);
+    }, [status]);
 
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>
             {
                 <CSSTransition in={loading} classNames="loading" unmountOnExit timeout={400}>
-                    <Loader mode={userlocal.mode} />
+                    <Loader mode={userlocal && userlocal.mode} />
                 </CSSTransition>
             }
-            {user ? (
+            {userlocal ? (
                 <UserContext.Provider value={{ userlocal, setUserLocal }}>
                     <Dashboard />
                 </UserContext.Provider>

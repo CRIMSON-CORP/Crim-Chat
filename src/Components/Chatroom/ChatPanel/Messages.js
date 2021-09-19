@@ -183,7 +183,7 @@ function Messages({ setCaret }) {
                                 key={message.id}
                                 message={message}
                                 id={message.id}
-                                loaded={!loaded}
+                                loaded={loaded}
                             />
                         ) : (
                             <InfoBubble key={index} message={message} />
@@ -230,7 +230,11 @@ function Message({ message, loaded, id }) {
         }
     }, []);
     return (
-        <div ref={messageRef} className={`message ${messageOwner ? "sent" : "received"} ${id}`}>
+        <div
+            ref={messageRef}
+            className={`message ${messageOwner ? "sent" : "received"}`}
+            data-id={id}
+        >
             <div className="img_profile">
                 {message.profilePhoto === null ? (
                     <BiUser size={22} />
@@ -265,16 +269,17 @@ function Bubble({
             gsap.fromTo(
                 bubble.current,
                 {
-                    scale: 0.7,
+                    scale: 0.3,
                     opacity: 0,
                     y: 10,
+                    transformOrigin: messageOwner ? "70% 70%" : "20% 70%",
                 },
                 { scale: 1, opacity: 1, y: 0, duration: 1, ease: "expo.out" }
             );
         }
         bubble.current.addEventListener("dblclick", () => {
             setReply({
-                text,
+                text: text.length > 100 ? text.substring(0, 100) + "..." : text.substring(0, 100),
                 recipient: sender.split(" ")[0],
                 id,
             });
@@ -287,21 +292,24 @@ function Bubble({
                     <div
                         className="reply"
                         onClick={() => {
-                            const target = document.querySelector(`.${replyMessage_id}`);
+                            const target = document.querySelector(`[data-id="${replyMessage_id}"]`);
                             target &&
-                                target.scrollIntoView({ behavior: "smooth", block: "center" });
-                            gsap.to(`.${replyMessage_id}`, {
-                                backgroundColor: "rgba(225, 225 225, .8)",
-                                duration: 0.5,
-                                repeat: 5,
-                                yoyo: true,
-                            });
+                                (target.scrollIntoView({ behavior: "smooth", block: "center" }),
+                                target.classList.add("message_blink")),
+                                setTimeout(() => {
+                                    target.classList.remove("message_blink");
+                                }, 3000);
                         }}
                     >
-                        <span className="recipeint font-weight-bold">
+                        <span className="recipeint font-weight-bold trim">
                             {replyRecipient === displayName ? "You" : replyRecipient}
                         </span>
-                        <p className="reply_text font-italic">{replyMessage}</p>
+                        <p
+                            className="reply_text font-italic trim-text"
+                            style={{ whiteSpace: "pre" }}
+                        >
+                            {replyMessage}
+                        </p>
                     </div>
                 )}
                 {!messageOwner && <div className="message_sender">{sender}</div>}

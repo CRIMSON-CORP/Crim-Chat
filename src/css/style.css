@@ -745,7 +745,6 @@ span.loader {
 
 .optionsIcon .options_wrapper {
   position: relative;
-  padding-right: 10px;
 }
 
 .optionsIcon svg {
@@ -941,6 +940,17 @@ span.loader {
   font-weight: bold;
   -webkit-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
+  -webkit-user-select: all;
+     -moz-user-select: all;
+      -ms-user-select: all;
+          user-select: all;
+}
+
+.chat-pannel .messages .message .bubble .text p {
+  white-space: break-spaces;
+  line-height: 1.6;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .chat-pannel .messages .message .bubble .timestamp {
@@ -1525,7 +1535,6 @@ span.loader {
 
 .mode_label {
   height: 100%;
-  width: 100%;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -1535,6 +1544,9 @@ span.loader {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
 }
 
 .mode_label label {
@@ -1650,6 +1662,31 @@ span.loader {
           transform: translate(28px, 3px) rotate(15deg);
 }
 
+.message_blink {
+  -webkit-animation: blink 1s ease-in-out infinite;
+          animation: blink 1s ease-in-out infinite;
+}
+
+@-webkit-keyframes blink {
+  0%,
+  100% {
+    background: transparent;
+  }
+  50% {
+    background: rgba(255, 255, 255, 0.562);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    background: transparent;
+  }
+  50% {
+    background: rgba(255, 255, 255, 0.562);
+  }
+}
+
 .modal-custom {
   position: fixed;
   inset: 0;
@@ -1684,6 +1721,7 @@ span.loader {
   -webkit-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
   overflow: auto;
+  min-width: 400px;
 }
 
 .modal-custom .modal-content-custom .modal-content-custom-wrapper {
@@ -2283,6 +2321,7 @@ span.loader {
     border-radius: 0px;
     -webkit-box-shadow: none;
             box-shadow: none;
+    min-width: auto;
   }
   .modal-anim-enter {
     -webkit-transform: translateY(110%);

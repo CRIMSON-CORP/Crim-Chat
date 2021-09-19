@@ -60,6 +60,7 @@ function Options() {
                 onClick={() => {
                     setMobileNav(true);
                 }}
+                style={{ width: 30, height: 25 }}
             />
             <div className="mode_label">
                 <label>

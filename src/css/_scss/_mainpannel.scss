@@ -111,7 +111,6 @@
     align-items: center;
     .options_wrapper {
         position: relative;
-        padding-right: 10px;
     }
     svg {
         width: 20px;
@@ -417,10 +416,10 @@
 
 .mode_label {
     height: 100%;
-    width: 100%;
     justify-content: center;
     align-items: center;
     display: flex;
+    flex: auto;
     label {
         cursor: pointer;
         height: 100%;
@@ -513,4 +512,18 @@
 .toggle-checkbox:checked ~ .toggle-slot .moon-icon-wrapper {
     opacity: 1;
     transform: translate(28px, 3px) rotate(15deg);
+}
+
+.message_blink {
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        background: transparent;
+    }
+    50% {
+        background: rgba(255, 255, 255, 0.562);
+    }
 }

@@ -8,13 +8,16 @@ function Form() {
     const { userlocal } = useContext(UserContext);
     const { selectedChat } = useContext(SelectedChatContext);
     const { reply, setReply } = useContext(ReplyContext);
+    const [loading, setLoading] = useState(false);
     const textarea = useRef();
     async function submit(e) {
-        e.preventDefault();
-        await sendMessage(text, userlocal, reply, selectedChat);
+        setLoading(true);
         setText("");
         setReply({ text: null, recipient: null, id: null });
+        e.preventDefault();
+        await sendMessage(text, userlocal, reply, selectedChat);
         textarea.current.style.height = "30px";
+        setLoading(false);
     }
     function handleChange(txt) {
         textarea.current.style.height = "inherit";
@@ -51,7 +54,12 @@ function Form() {
                                         ? "You"
                                         : reply.recipient}
                                 </span>
-                                <p className="reply_text font-italic">{reply.text}</p>
+                                <p
+                                    className="reply_text font-italic"
+                                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                                >
+                                    {reply.text}
+                                </p>
                             </div>
                         </div>
                     </CSSTransition>
@@ -75,7 +83,10 @@ function Form() {
                                 padding: "2px",
                             }}
                         >
-                            <button className="submit btn btn-fill" disabled={text.trim() === ""}>
+                            <button
+                                className="submit btn btn-fill"
+                                disabled={text.trim() === "" && !loading}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="24"

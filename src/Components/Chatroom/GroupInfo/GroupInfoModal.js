@@ -85,7 +85,9 @@ function GroupMember({ member, admins, creator }) {
                     </div>
                     <div className="user trim">
                         <div className="user_name">
-                            <h5 className="trim-text">{mem.displayName} </h5>
+                            <h5 className="trim-text">
+                                {mem.uid === uid ? "You" : mem.displayName}{" "}
+                            </h5>
                             {admins.includes(mem.uid) && (
                                 <span className="admin_state">(Admin)</span>
                             )}

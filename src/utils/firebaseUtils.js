@@ -197,12 +197,9 @@ export async function sendMessage(text, userlocal, reply, selectedChat) {
             profilePhoto: auth.currentUser.photoURL || userlocal.profilePic,
             sender: userlocal.displayName,
             type: "message",
-            replyMessage: reply.text ? reply.text.substring(0, 20) : null,
-            replyRecipient: reply.recipient ? reply.recipient : null,
-            replyMessage_id: reply.id,
         };
         const replyMessage = reply.text && {
-            replyMessage: reply.text.substring(0, 20),
+            replyMessage: reply.text,
             replyRecipient: reply.recipient,
             replyMessage_id: reply.id,
         };
@@ -276,6 +273,7 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                 group_security: groupDetails.closed,
                 group_creator_id: uid,
                 updatedAt: timestamp,
+                admin: [uid],
             });
         // Adds new group to user's list of groups
         update.w = "Adding you to the Group...";
@@ -587,7 +585,8 @@ export async function deleteGroup(uid, displayName, selectedChat) {
                     .collection(collections.users)
                     .doc(member)
                     .collection(collections.notif)
-                    .add({
+                    .doc(notif_id)
+                    .set({
                         notif_id: notif_id,
                         sender: displayName,
                         type: "message",
