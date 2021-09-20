@@ -2633,31 +2633,6 @@ span.loader {
   opacity: 0;
 }
 
-#root.dark .fab-wrapper .fab.move::before {
-  opacity: 0;
-  position: absolute;
-  content: attr(data-tooltip);
-  padding: 6px 10px;
-  font-size: 12px;
-  background: #050718;
-  color: white;
-  left: 0;
-  -webkit-transform: translateX(-110%) translateY(10px);
-          transform: translateX(-110%) translateY(10px);
-  opacity: 0;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-  white-space: nowrap;
-  border-radius: 5px;
-  pointer-events: none;
-}
-
-#root.dark .fab-wrapper .fab.move:hover::before {
-  opacity: 1;
-  -webkit-transform: translateX(-110%) translateY(0px);
-          transform: translateX(-110%) translateY(0px);
-}
-
 #root.dark .toggle-slot {
   background: #050718;
 }
