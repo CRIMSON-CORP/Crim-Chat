@@ -14,7 +14,7 @@ function Tabs() {
                 gsap.to(".chat-pannel", { scale: 0.5, delay: 0.2, duration: 0.3 });
                 gsap.to(tab.current, {
                     x: "0%",
-                    duration: 0.25,
+                    duration: 0.75,
                     ease: Expo.easeOut(),
                 });
             } else {
@@ -22,7 +22,7 @@ function Tabs() {
                 gsap.to(".chat-pannel", { scale: 1 });
                 gsap.to(tab.current, {
                     x: "-100%",
-                    duration: 0.25,
+                    duration: 0.75,
                 });
             }
         }

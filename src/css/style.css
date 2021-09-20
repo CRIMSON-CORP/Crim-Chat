@@ -557,8 +557,8 @@ span.loader {
   display: -ms-grid;
   display: grid;
   gap: 20px;
-  -webkit-transition: 0.3s ease-out;
-  transition: 0.3s ease-out;
+  -webkit-transition: background 0.3s ease-out;
+  transition: background 0.3s ease-out;
 }
 
 .nav {
@@ -914,8 +914,6 @@ span.loader {
       -ms-flex-align: start;
           align-items: flex-start;
   gap: 10px;
-  -webkit-transition: 0.3s ease-out;
-  transition: 0.3s ease-out;
   border-radius: 10px;
   width: 100%;
   background-color: transparent;
@@ -938,8 +936,8 @@ span.loader {
   -webkit-box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
           box-shadow: 0px 3px 15px rgba(220, 20, 60, 0.2);
   font-weight: bold;
-  -webkit-transition: 0.3s ease-out;
-  transition: 0.3s ease-out;
+  -webkit-transition: background 0.3s ease-out;
+  transition: background 0.3s ease-out;
   -webkit-user-select: text;
      -moz-user-select: text;
       -ms-user-select: text;
