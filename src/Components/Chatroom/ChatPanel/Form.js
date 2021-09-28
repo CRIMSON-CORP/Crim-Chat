@@ -1,21 +1,37 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdClear } from "react-icons/md";
+import { BiImage } from "react-icons/bi";
 import { CSSTransition } from "react-transition-group";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { sendMessage } from "../../../utils/firebaseUtils";
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
     const { selectedChat } = useContext(SelectedChatContext);
     const { reply, setReply } = useContext(ReplyContext);
     const [loading, setLoading] = useState(false);
+    const [readyImage, setReadyImage] = useState(false);
+    const [Image, setImage] = useState([]);
     const textarea = useRef();
+    registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginFileValidateType,
+        FilePondPluginFileValidateSize
+    );
     async function submit(e) {
+        e.preventDefault();
         setLoading(true);
         setText("");
         setReply({ text: null, recipient: null, id: null });
-        e.preventDefault();
-        await sendMessage(text, userlocal, reply, selectedChat);
+        setImage([]);
+        setReadyImage(false);
+        await sendMessage(text, userlocal, reply, Image[0], selectedChat);
         textarea.current.style.height = "30px";
         setLoading(false);
     }
@@ -63,6 +79,25 @@ function Form() {
                             </div>
                         </div>
                     </CSSTransition>
+                    <CSSTransition
+                        in={readyImage}
+                        classNames="fade-trans"
+                        timeout={100}
+                        unmountOnExit
+                    >
+                        <FilePond
+                            allowMultiple={false}
+                            allowFileTypeValidation={true}
+                            allowFileSizeValidation={true}
+                            maxFileSize={"2MB"}
+                            labelMaxFileSizeExceeded={"Image is too large!"}
+                            files={Image}
+                            maxFiles={1}
+                            acceptedFileTypes={["image/*"]}
+                            onaddfile={(err, file) => !err && setImage([file])}
+                            onremovefile={() => setImage([])}
+                        />
+                    </CSSTransition>
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
                             <textarea
@@ -74,6 +109,14 @@ function Form() {
                                     handleChange(e.target.value);
                                 }}
                             ></textarea>
+                            <div
+                                className={`image_icon ${readyImage ? "open" : ""}`}
+                                onClick={() => {
+                                    setReadyImage(!readyImage);
+                                }}
+                            >
+                                <BiImage />
+                            </div>
                         </div>
                         <div
                             style={{
@@ -85,7 +128,7 @@ function Form() {
                         >
                             <button
                                 className="submit btn btn-fill"
-                                disabled={text.trim() === "" && !loading}
+                                disabled={text.trim() === "" && !loading && Image.length === 0}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

@@ -3,3 +3,13 @@
     gap: 20px;
     transition: background 0.3s ease-out;
 }
+
+.group_update {
+    display: flex;
+    gap: 5px;
+
+    &>div {
+        text-overflow: ellipsis;
+    overflow: hidden;
+    }
+}

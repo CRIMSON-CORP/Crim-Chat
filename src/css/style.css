@@ -561,6 +561,18 @@ span.loader {
   transition: background 0.3s ease-out;
 }
 
+.group_update {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 5px;
+}
+
+.group_update > div {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .nav {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -855,6 +867,8 @@ span.loader {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -ms-grid-columns: auto 30px;
+      grid-template-columns: auto 30px;
 }
 
 .chat-pannel .form_input form .text-wrapper textarea {
@@ -869,6 +883,23 @@ span.loader {
   max-height: 150px;
   -webkit-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
+}
+
+.chat-pannel .form_input form .text-wrapper .image_icon {
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border-radius: 5px;
+  padding: 0.5px 2px;
+}
+
+.chat-pannel .form_input form .text-wrapper .image_icon.open {
+  background: #eee;
+}
+
+.chat-pannel .form_input form .text-wrapper .image_icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .chat-pannel .form_input form button {
@@ -887,6 +918,14 @@ span.loader {
 
 .chat-pannel .form_input form button svg {
   fill: white;
+}
+
+.chat-pannel .form_input .filepond--credits {
+  display: none;
+}
+
+.chat-pannel .form_input .filepond--root {
+  margin-bottom: 5px;
 }
 
 .chat-pannel .messages {
@@ -1176,6 +1215,21 @@ span.loader {
   opacity: 0.7;
   margin-bottom: 5px;
   display: block;
+}
+
+.sent_image {
+  margin-bottom: 5px;
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+  width: auto;
+  min-width: 50px;
+  max-width: 500px;
+}
+
+.sent_image img {
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
 }
 
 .fade-trans-enter {
@@ -2633,6 +2687,15 @@ span.loader {
 
 #root.dark .toggle-slot {
   background: #050718;
+}
+
+#root.dark .filepond--panel-root {
+  background: none;
+}
+
+#root.dark .filepond--drop-label {
+  background: rgba(220, 20, 60, 0.1);
+  color: white;
 }
 
 @media screen and (max-width: 700px) {

@@ -5,6 +5,7 @@ import { MobileNav, SelectedChatContext, UserContext } from "../../../utils/Cont
 import Isotope from "isotope-layout";
 import { collections } from "../../../utils/FirebaseRefs";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { BiImage } from "react-icons/bi";
 function GroupChat() {
     const { userlocal } = useContext(UserContext);
     const groups_list = useRef();
@@ -75,11 +76,33 @@ function GroupComponent({ group }) {
             </div>
             <div className="group_text trim">
                 <h3 className="group_name trim-text">{group.group_name}</h3>
-                {group.latestText && (
-                    <span className="trim-text">
-                        {group.latestText_sender_uid == userlocal.uid
-                            ? group.latestText
-                            : group.latestText_sender + ": " + group.latestText}
+                {(group.latestText || group.hasImage) && (
+                    <span className="trim-text group_update">
+                        {group.latestText_sender_uid == userlocal.uid ? (
+                            <>
+                                <div>{group.latestText} </div>
+                                {group.hasImage && (
+                                    <span>
+                                        <BiImage size={10} />
+                                        <span>: Photo</span>
+                                    </span>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                <div>
+                                    {group.latestText_sender} : {group.latestText}{" "}
+                                </div>
+                                <span>
+                                    {group.hasImage && (
+                                        <span>
+                                            <BiImage size={10} />
+                                            <span>: Photo</span>
+                                        </span>
+                                    )}
+                                </span>
+                            </>
+                        )}
                     </span>
                 )}
             </div>

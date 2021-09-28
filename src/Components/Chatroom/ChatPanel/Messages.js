@@ -248,7 +248,7 @@ function Message({ message, loaded, id }) {
 }
 
 function Bubble({
-    message: { text, createdAt, sender, replyRecipient, replyMessage, replyMessage_id },
+    message: { text, createdAt, sender, replyRecipient, replyMessage, replyMessage_id, imageUrl },
     messageOwner,
     loaded,
     id,
@@ -288,6 +288,7 @@ function Bubble({
     return (
         <div className="bubble" ref={bubble}>
             <div className="text">
+                {!messageOwner && <div className="message_sender">{sender}</div>}
                 {replyMessage && (
                     <div
                         className="reply"
@@ -315,7 +316,11 @@ function Bubble({
                         </p>
                     </div>
                 )}
-                {!messageOwner && <div className="message_sender">{sender}</div>}
+                {imageUrl && (
+                    <div className="sent_image">
+                        <img src={imageUrl} alt="" />
+                    </div>
+                )}
                 <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{text}</p>
             </div>
             <div className="timestamp" ref={textRef}>

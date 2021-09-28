@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { UserContext } from "./Contexts";
 
-export const ImageTypes = ["image/png", "image/jpg", "image/jpeg"];
+export const ImageTypes = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 const getOnLineStatus = () =>
     typeof navigator !== "undefined" && typeof navigator.onLine === "boolean"

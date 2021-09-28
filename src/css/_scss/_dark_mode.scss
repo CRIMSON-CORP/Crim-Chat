@@ -140,4 +140,11 @@
     .toggle-slot {
         background: $dark_background;
     }
+    .filepond--panel-root {
+        background: none;
+    }
+    .filepond--drop-label {
+        background: $main_faint;
+        color: white;
+    }
 }

@@ -4,11 +4,16 @@ import { collections, feilds } from "./FirebaseRefs";
 import { ImageTypes } from "./utils";
 import { v4 } from "uuid";
 
-export async function UploadImage(image, path, limit) {
-    if (!image) return;
-    if (image.size > limit)
-        return toast.error(`Please select a picture less than ${limit / 1e6}mb`);
-    if (!ImageTypes.includes(image.type)) return toast.error("Please select a picture");
+export async function UploadImage(image, path, limit = Infinity) {
+    if (!image) return null;
+    if (image.size > limit) {
+        toast.error(`Please select a picture less than ${limit / 1e6}mb`);
+        throw new Error("past_max");
+    }
+    if (!ImageTypes.includes(image.type)) {
+        toast.error("Please select a picture");
+        throw new Error("not_picture");
+    }
     try {
         const StorageRef = storage.ref(path + v4());
         await StorageRef.put(image);
@@ -187,7 +192,7 @@ export async function addUserToGroup(uid, displayName, selectedChat, selected, s
     setmodal(false);
 }
 
-export async function sendMessage(text, userlocal, reply, selectedChat) {
+export async function sendMessage(text, userlocal, reply, Image, selectedChat) {
     try {
         const time_stamp = timeStamp();
         const message = {
@@ -203,11 +208,21 @@ export async function sendMessage(text, userlocal, reply, selectedChat) {
             replyRecipient: reply.recipient,
             replyMessage_id: reply.id,
         };
+
+        const imageUrl =
+            Image &&
+            ((Image.type = Image.fileType),
+            await UploadImage(Image.file, "/chat_pic/" + Image.filename));
+
+        const imageData = {
+            imageUrl,
+        };
+
         await firestore
             .collection(collections.groups_register)
             .doc(selectedChat)
             .collection(collections.messages)
-            .add({ ...message, ...(replyMessage && replyMessage) });
+            .add({ ...message, ...(replyMessage && replyMessage), ...(imageUrl && imageData) });
         await firestore
             .collection(collections.groups_register)
             .doc(selectedChat)
@@ -216,6 +231,7 @@ export async function sendMessage(text, userlocal, reply, selectedChat) {
                 latestText: text.length < 30 ? text : text.substring(0, 30) + "...",
                 latestText_sender_uid: userlocal.uid,
                 latestText_sender: userlocal.displayName.split(" ")[0],
+                ...(imageUrl ? { hasImage: true } : { hasImage: false }),
             });
     } catch (err) {
         console.log(err);
@@ -273,7 +289,7 @@ export async function createGroup(uid, displayName, groupDetails, selectedUsers)
                 group_security: groupDetails.closed,
                 group_creator_id: uid,
                 updatedAt: timestamp,
-                admin: [uid],
+                admins: [uid],
             });
         // Adds new group to user's list of groups
         update.w = "Adding you to the Group...";
