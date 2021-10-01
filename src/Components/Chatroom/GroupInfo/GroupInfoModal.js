@@ -92,7 +92,6 @@ function GroupMember({ member, admins, creator }) {
                                 <span
                                     className={`admin_state ${mem.uid == creator ? "Super" : ""}`}
                                 >
-                                    {console.log(mem.uid == creator)}
                                     (Admin)
                                 </span>
                             )}

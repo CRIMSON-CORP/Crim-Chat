@@ -14,6 +14,17 @@ import useSound from "use-sound";
 import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
 import { deleteGroup, leaveGroup } from "../../../utils/firebaseUtils";
 import { FiEdit } from "react-icons/fi";
+import LightGallery from "lightgallery/react";
+import "lightgallery/css/lightgallery.css";
+import "lightgallery/css/lg-zoom.css";
+import "lightgallery/css/lg-thumbnail.css";
+import "lightgallery/css/lg-share.css";
+import "lightgallery/css/lg-fullscreen.css";
+import lgThumbnail from "lightgallery/plugins/thumbnail";
+import lgZoom from "lightgallery/plugins/zoom";
+import fullscreen from "lightgallery/plugins/fullscreen";
+import share from "lightgallery/plugins/share";
+import hash from "lightgallery/plugins/hash";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -214,6 +225,8 @@ function Message({ message, loaded, id }) {
         messageOwner = message.uid === userlocal.uid;
     }
     const messageRef = useRef();
+    const image = useRef();
+    const [res, setRes] = useState({ w: null, h: null });
     useEffect(() => {
         if (loaded) {
             gsap.fromTo(
@@ -229,6 +242,16 @@ function Message({ message, loaded, id }) {
             );
         }
     }, []);
+
+    useEffect(() => {
+        if (message.profilePhoto) {
+            const image = new Image();
+            image.src = message.profilePhoto;
+            image.onload = function () {
+                setRes({ w: image.width, h: image.height });
+            };
+        }
+    }, []);
     return (
         <div
             ref={messageRef}
@@ -239,7 +262,27 @@ function Message({ message, loaded, id }) {
                 {message.profilePhoto === null ? (
                     <BiUser size={22} />
                 ) : (
-                    <img src={message.profilePhoto} alt="profile" />
+                    <LightGallery
+                        plugins={[lgThumbnail, lgZoom, fullscreen, hash]}
+                        fullScreen={true}
+                        speed={500}
+                        share={true}
+                        pinterest={false}
+                        counter={false}
+                        easing="ease-out"
+                        zoomFromOrigin={true}
+                    >
+                        <a href={message.profilePhoto} data-lg-size={`${res.w}-${res.h}`}>
+                            <img
+                                src={message.profilePhoto}
+                                alt="profile"
+                                ref={image}
+                                onLoad={({ target: { offsetWidth, offsetHeight } }) => {
+                                    setRes({ w: offsetWidth, h: offsetHeight });
+                                }}
+                            />
+                        </a>
+                    </LightGallery>
                 )}
             </div>
             <Bubble message={message} id={id} messageOwner={messageOwner} loaded={loaded} />
@@ -264,6 +307,7 @@ function Bubble({
 
     const bubble = useRef();
     const textRef = useRef();
+    const [imageTag, setImageTag] = useState({ w: null, h: null });
     useEffect(() => {
         if (loaded) {
             gsap.fromTo(
@@ -284,6 +328,15 @@ function Bubble({
                 id,
             });
         });
+    }, []);
+
+    useEffect(() => {
+        const image = new Image();
+
+        image.src = imageUrl;
+        image.onload = function () {
+            setImageTag({ w: image.width, h: image.height });
+        };
     }, []);
     return (
         <div className="bubble" ref={bubble}>
@@ -318,7 +371,18 @@ function Bubble({
                 )}
                 {imageUrl && (
                     <div className="sent_image">
-                        <img src={imageUrl} alt="" />
+                        <LightGallery
+                            plugins={[lgThumbnail, lgZoom, fullscreen, share]}
+                            pinterest={false}
+                            fullScreen={true}
+                            speed={500}
+                            counter={false}
+                            easing="ease-out"
+                        >
+                            <a href={imageUrl} data-lg-size={`${imageTag.w}-${imageTag.h}`}>
+                                <img src={imageUrl} alt="image" />
+                            </a>
+                        </LightGallery>
                     </div>
                 )}
                 <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{text}</p>

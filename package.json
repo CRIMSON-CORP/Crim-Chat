@@ -21,6 +21,7 @@
     "isotope-layout": "^3.0.6",
     "jquery": "^3.5.1",
     "jquery.easing": "^1.4.1",
+    "lightgallery": "^2.2.1",
     "rc-dropdown": "^3.2.0",
     "rc-menu": "^8.10.5",
     "react": "^17.0.1",
