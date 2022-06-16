@@ -9,7 +9,8 @@ import {
     UserContext,
 } from "../../utils/Contexts";
 import { UnderLay, useModal } from "../../utils/CustomComponents";
-import { CSSTransition } from "react-transition-group";
+import { AnimatePresence, motion } from "framer-motion";
+import { DESKTOP } from "../../utils/utils";
 function ChatRoom() {
     const [mobileNav, setMobileNav] = useState(false);
     const [selectedChat, setSelectedChat] = useState();
@@ -32,18 +33,22 @@ function ChatRoom() {
     }, []);
 
     return (
-        <div className={`dashboard ${mode}`}>
+        <div className={`dashboard ${mode}`} style={{ gap: DESKTOP ? 20 : 0 }}>
             <MobileNav.Provider value={{ mobileNav, setMobileNav }}>
                 <SelectedChatContext.Provider value={{ selectedChat, setSelectedChat }}>
                     <Tabs />
-                    <CSSTransition in={mobileNav} unmountOnExit classNames="loading" timeout={400}>
-                        <UnderLay
-                            style={{ zIndex: 90 }}
-                            exe={() => {
-                                setMobileNav(false);
-                            }}
-                        />
-                    </CSSTransition>
+                    <AnimatePresence>
+                        {
+                            mobileNav && <motion.div style={{ zIndex: 90 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .75 }}>
+                                <UnderLay
+                                    style={{ zIndex: 90 }}
+                                    exe={() => {
+                                        setMobileNav(false);
+                                    }}
+                                />
+                            </motion.div>
+                        }
+                    </AnimatePresence>
                     <CreateJoinContext.Provider
                         value={{
                             joinGroupModal,

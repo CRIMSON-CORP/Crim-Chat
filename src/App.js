@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Toaster } from "react-hot-toast";
-import { CSSTransition } from "react-transition-group";
 import Auth from "./Components/Auth/Auth";
 import Dashboard from "./Components/Chatroom/Dashboard";
 import { LoaderContext, UserContext } from "./utils/Contexts";
@@ -10,9 +9,10 @@ import { auth, firestore } from "./utils/firebase";
 import { collections } from "./utils/FirebaseRefs";
 import { UpdateUserOnlineStatus } from "./utils/firebaseUtils";
 import { useNavigatorOnLine } from "./utils/utils";
+import { AnimatePresence, motion } from "framer-motion";
 function App() {
     const [user] = useAuthState(auth);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [userlocal, setUserLocal] = useState(null);
 
     const status = useNavigatorOnLine();
@@ -47,11 +47,10 @@ function App() {
     }, [user]);
 
     useEffect(() => {
-        setLoading(false);
         return async () => {
             auth.currentUser &&
                 (await UpdateUserOnlineStatus(auth.currentUser.uid, "Offline"),
-                await auth.signOut());
+                    await auth.signOut());
         };
     }, []);
 
@@ -67,11 +66,13 @@ function App() {
 
     return (
         <LoaderContext.Provider value={{ loading, setLoading }}>
-            {
-                <CSSTransition in={loading} classNames="loading" unmountOnExit timeout={400}>
-                    <Loader mode={userlocal && userlocal.mode} />
-                </CSSTransition>
-            }
+            <AnimatePresence>
+                {loading &&
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 1 }}>
+                        <Loader mode={userlocal && userlocal.mode} />
+                    </motion.div>
+                }
+            </AnimatePresence>
             {userlocal ? (
                 <UserContext.Provider value={{ userlocal, setUserLocal }}>
                     <Dashboard />

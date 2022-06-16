@@ -43,10 +43,10 @@
         }
         &.move {
             opacity: 0;
-            &::before {
-                opacity: 0;
+            & span.tooltip {
+                display: inline-block;
+                // opacity: 0;
                 position: absolute;
-                content: attr(data-tooltip);
                 padding: 6px 10px;
                 font-size: 12px;
                 background: $dark_background;

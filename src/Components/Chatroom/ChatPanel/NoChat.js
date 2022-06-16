@@ -1,12 +1,11 @@
-import gsap, { Back, Expo } from "gsap";
-import { CSSRulePlugin } from "gsap/CSSRulePlugin";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
 import OnOutsiceClick from "react-outclick";
 import { CreateJoinContext } from "../../../utils/Contexts";
 import { ReactComponent as Texting } from "../../../img/undraw_Texting_re_l11n.svg";
 import { BiUser, BiUserPlus } from "react-icons/bi";
+import { useAnimation, motion } from "framer-motion";
 
 function NoChat() {
     return (
@@ -25,83 +24,120 @@ function NoChat() {
 export default NoChat;
 
 function FAB() {
-    const [tl, setTl] = useState();
-    const sub0 = useRef();
-    const sub1 = useRef();
-    const sub2 = useRef();
-    const sub3 = useRef();
+    const sub0 = useAnimation();
+    const sub1 = useAnimation();
+    const sub2 = useAnimation();
+    const sub3 = useAnimation();
+    const tooltips_controls = useAnimation()
     const { setJoinGroupModal, setCreateGroupModal, setEditProfileModal } =
         useContext(CreateJoinContext);
+    const [PopupOpened, setPopupOpened] = useState(false)
 
-    useEffect(() => {
-        const timeline = gsap.timeline({
-            paused: true,
-            reversed: true,
-            defaults: { duration: 0.3 },
-        });
-        gsap.registerPlugin(CSSRulePlugin);
-        const before = CSSRulePlugin.getRule(".fab-wrapper .fab.move::before");
-        timeline
-            .to(sub1.current, { y: -160, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
-            .to(sub2.current, { y: -80, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
-            .to(sub3.current, { y: -240, autoAlpha: 1, ease: Back.easeOut.config(2) }, "up")
-            .to(sub0.current, { rotate: "315deg", ease: Back.easeOut.config(2) }, "up")
-            .to(before, {
-                transform: "translateX(-110%) translateY(0px) scale(1)",
-                opacity: 1,
-                ease: Expo.easeOut(),
-            });
-        setTl(timeline);
-    }, []);
+    function Popup() {
+        sub0.start({
+            rotate: "315deg"
+        })
+        sub1.start({
+            y: -80,
+            opacity: 1,
+        })
+        sub2.start({
+            y: -160,
+            opacity: 1,
+        })
+        sub3.start({
+            y: -240,
+            opacity: 1,
+        })
+
+        tooltips_controls.start({
+            x: "-110%",
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            transition: {
+                delay: 0.5
+            }
+        })
+        setPopupOpened(true)
+    }
+
+    function closePopup() {
+        const reset = {
+            y: 0,
+            opacity: 0,
+            transition: {
+                delay: 0.5
+            }
+        }
+        sub0.start({
+            rotate: "0deg"
+        })
+        sub1.start(reset)
+        sub2.start(reset)
+        sub3.start(reset)
+
+        tooltips_controls.start({
+            x: "-110%",
+            y: 10,
+            scale: 0,
+            opacity: 0
+        })
+        setPopupOpened(false)
+    }
     return (
         <OnOutsiceClick
             onOutsideClick={() => {
-                tl.reverse();
+                closePopup()
             }}
         >
             <div className="fab-wrapper">
-                <div
+                <motion.div
                     className="fab ball join move"
                     onClick={() => {
+                        closePopup()
                         setEditProfileModal(true);
-                        tl.reverse();
                     }}
-                    ref={sub3}
+                    animate={sub3}
                     data-tooltip="Edit your Profile!"
                 >
                     <BiUser />
-                </div>
-                <div
-                    className="fab ball join move"
-                    onClick={() => {
-                        setJoinGroupModal(true);
-                        tl.reverse();
-                    }}
-                    ref={sub1}
-                    data-tooltip="Join a Group!"
-                >
-                    <BiUserPlus />
-                </div>
-                <div
+                    <motion.span animate={tooltips_controls} className="tooltip">Edit your Profile!</motion.span>
+                </motion.div>
+
+                <motion.div
                     className="fab ball create move"
                     onClick={() => {
+                        closePopup()
                         setCreateGroupModal(true);
-                        tl.reverse();
                     }}
-                    ref={sub2}
+                    animate={sub2}
                     data-tooltip="Creat your Group!"
                 >
                     <FiEdit />
-                </div>
+                    <motion.span animate={tooltips_controls} className="tooltip">Creat your Group!</motion.span>
+                </motion.div>
+                <motion.div
+                    className="fab ball join move"
+                    onClick={() => {
+                        closePopup()
+                        setJoinGroupModal(true);
+                    }}
+                    animate={sub1}
+                    data-tooltip="Join a Group!"
+                >
+                    <BiUserPlus />
+                    <motion.span animate={tooltips_controls} className="tooltip">Join a Group!</motion.span>
+                </motion.div>
                 <div
                     className="fab ball static"
                     onClick={() => {
-                        tl.reversed() ? tl.play() : tl.reverse();
+                        PopupOpened ? closePopup() : Popup()
                     }}
                 >
-                    <span ref={sub0} className="svg-wrapper">
+                    <motion.span animate={sub0} className="svg-wrapper">
                         <MdAdd />
-                    </span>
+                    </motion.span>
                 </div>
             </div>
         </OnOutsiceClick>

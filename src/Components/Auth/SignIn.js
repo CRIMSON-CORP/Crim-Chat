@@ -16,37 +16,35 @@ function SignIn({ setActivePage }) {
         setLoading(false);
     }
     return (
-        <div className="signup">
-            <IconContext.Provider value={{ size: "1.4em" }}>
-                <form onSubmit={submit}>
-                    <h1 className="mb-10">Log In</h1>
-                    <InputForm
-                        preicon={<BiEnvelope />}
-                        type="email"
-                        name="email"
-                        onChange={setEmail}
-                        value={email}
-                        plh={"Email"}
-                    />
-                    <InputForm
-                        preicon={<BiKey />}
-                        suficon={<BsEye />}
-                        suficonAlt={<BsEyeSlash />}
-                        type="password"
-                        name="password"
-                        onChange={setPassword}
-                        value={password}
-                        plh={"Password"}
-                    />
-                    <button className="signup-btn btn btn-fill" type="submit">
-                        Log In
-                    </button>
-                    <button className="login btn btn-outline" type="button" onClick={setActivePage}>
-                        Sign Up
-                    </button>
-                </form>
-            </IconContext.Provider>
-        </div>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+            <form onSubmit={submit}>
+                <h1 className="mb-10">Log In</h1>
+                <InputForm
+                    preicon={<BiEnvelope />}
+                    type="email"
+                    name="email"
+                    onChange={setEmail}
+                    value={email}
+                    plh={"Email"}
+                />
+                <InputForm
+                    preicon={<BiKey />}
+                    suficon={<BsEye />}
+                    suficonAlt={<BsEyeSlash />}
+                    type="password"
+                    name="password"
+                    onChange={setPassword}
+                    value={password}
+                    plh={"Password"}
+                />
+                <button className="signup-btn btn btn-fill" type="submit">
+                    Log In
+                </button>
+                <button className="login btn btn-outline" type="button" onClick={setActivePage}>
+                    Sign Up
+                </button>
+            </form>
+        </IconContext.Provider>
     );
 }
 

@@ -1,9 +1,8 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { MdClear, MdKeyboardArrowRight } from "react-icons/md";
 import { CSSTransition } from "react-transition-group";
 import OnOutsiceClick from "react-outclick";
 import { FaUserFriends } from "react-icons/fa";
-import gsap from "gsap";
 export function InputForm({ preicon, type, suficon, name, onChange, value, plh, suficonAlt }) {
     const [pasVis, setPasVis] = useState(false);
     return (

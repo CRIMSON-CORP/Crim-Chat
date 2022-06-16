@@ -17,45 +17,43 @@ function SignUp({ setActivePage }) {
         setLoading(false);
     }
     return (
-        <div className="signup">
-            <IconContext.Provider value={{ size: "1.4em" }}>
-                <form onSubmit={submit}>
-                    <h1 className="mb-10">Create Profile</h1>
-                    <InputForm
-                        preicon={<BiUser />}
-                        type="text"
-                        name="username"
-                        onChange={setUsername}
-                        value={username}
-                        plh={"Username"}
-                    />
-                    <InputForm
-                        preicon={<BiEnvelope />}
-                        type="email"
-                        name="email"
-                        onChange={setEmail}
-                        value={email}
-                        plh={"Email"}
-                    />
-                    <InputForm
-                        preicon={<BiKey />}
-                        suficon={<BsEye />}
-                        suficonAlt={<BsEyeSlash />}
-                        type="password"
-                        name="password"
-                        onChange={setPassword}
-                        value={password}
-                        plh={"Password"}
-                    />
-                    <button className="signup-btn btn btn-fill" type="submit">
-                        Sign Up
-                    </button>
-                    <button className="login btn btn-outline" type="button" onClick={setActivePage}>
-                        Log In
-                    </button>
-                </form>
-            </IconContext.Provider>
-        </div>
+        <IconContext.Provider value={{ size: "1.4em" }}>
+            <form onSubmit={submit}>
+                <h1 className="mb-10">Create Profile</h1>
+                <InputForm
+                    preicon={<BiUser />}
+                    type="text"
+                    name="username"
+                    onChange={setUsername}
+                    value={username}
+                    plh={"Username"}
+                />
+                <InputForm
+                    preicon={<BiEnvelope />}
+                    type="email"
+                    name="email"
+                    onChange={setEmail}
+                    value={email}
+                    plh={"Email"}
+                />
+                <InputForm
+                    preicon={<BiKey />}
+                    suficon={<BsEye />}
+                    suficonAlt={<BsEyeSlash />}
+                    type="password"
+                    name="password"
+                    onChange={setPassword}
+                    value={password}
+                    plh={"Password"}
+                />
+                <button className="signup-btn btn btn-fill" type="submit">
+                    Sign Up
+                </button>
+                <button className="login btn btn-outline" type="button" onClick={setActivePage}>
+                    Log In
+                </button>
+            </form>
+        </IconContext.Provider>
     );
 }
 

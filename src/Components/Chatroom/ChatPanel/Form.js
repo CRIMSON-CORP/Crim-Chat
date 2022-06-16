@@ -10,6 +10,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import { AnimatePresence, motion } from "framer-motion";
 function Form() {
     const [text, setText] = useState("");
     const { userlocal } = useContext(UserContext);
@@ -51,53 +52,52 @@ function Form() {
         <>
             {selectedChat && (
                 <div className="form_input">
-                    <CSSTransition
-                        in={reply.text != null}
-                        classNames="fade-trans"
-                        timeout={100}
-                        unmountOnExit
-                    >
-                        <div className="reply">
-                            <MdClear
-                                size={28}
-                                onClick={() => {
-                                    setReply({ text: null, recipient: null, id: null });
-                                }}
+                    <AnimatePresence>
+                        {
+                            reply.text != null && (
+                                <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: "0%" }} exit={{ opacity: 0, y: "100%" }} className="reply">
+                                    <MdClear
+                                        size={28}
+                                        onClick={() => {
+                                            setReply({ text: null, recipient: null, id: null });
+                                        }}
+                                    />
+                                    <div>
+                                        <span className="recipeint font-weight-bold">
+                                            {reply.recipient === userlocal.displayName.split(" ")[0]
+                                                ? "You"
+                                                : reply.recipient}
+                                        </span>
+                                        <p
+                                            className="reply_text font-italic"
+                                            style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                                        >
+                                            {reply.text}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )
+                        }
+                        <CSSTransition
+                            in={readyImage}
+                            classNames="fade-trans"
+                            timeout={100}
+                            unmountOnExit
+                        >
+                            <FilePond
+                                allowMultiple={false}
+                                allowFileTypeValidation={true}
+                                allowFileSizeValidation={true}
+                                maxFileSize={"2MB"}
+                                labelMaxFileSizeExceeded={"Image is too large!"}
+                                files={Image}
+                                maxFiles={1}
+                                acceptedFileTypes={["image/*"]}
+                                onaddfile={(err, file) => !err && setImage([file])}
+                                onremovefile={() => setImage([])}
                             />
-                            <div>
-                                <span className="recipeint font-weight-bold">
-                                    {reply.recipient === userlocal.displayName.split(" ")[0]
-                                        ? "You"
-                                        : reply.recipient}
-                                </span>
-                                <p
-                                    className="reply_text font-italic"
-                                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                                >
-                                    {reply.text}
-                                </p>
-                            </div>
-                        </div>
-                    </CSSTransition>
-                    <CSSTransition
-                        in={readyImage}
-                        classNames="fade-trans"
-                        timeout={100}
-                        unmountOnExit
-                    >
-                        <FilePond
-                            allowMultiple={false}
-                            allowFileTypeValidation={true}
-                            allowFileSizeValidation={true}
-                            maxFileSize={"2MB"}
-                            labelMaxFileSizeExceeded={"Image is too large!"}
-                            files={Image}
-                            maxFiles={1}
-                            acceptedFileTypes={["image/*"]}
-                            onaddfile={(err, file) => !err && setImage([file])}
-                            onremovefile={() => setImage([])}
-                        />
-                    </CSSTransition>
+                        </CSSTransition>
+                    </AnimatePresence>
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
                             <textarea
@@ -107,6 +107,9 @@ function Form() {
                                 ref={textarea}
                                 onChange={(e) => {
                                     handleChange(e.target.value);
+                                }}
+                                onFocus={() => {
+                                    document.querySelector(".dummy").scrollIntoView({ behavior: "smooth" });
                                 }}
                             ></textarea>
                             <div

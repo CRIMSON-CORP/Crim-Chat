@@ -177,21 +177,6 @@
     transform: translateY(30px) translateX(-110%);
 }
 
-.fade_no_trans-enter {
-    opacity: 0;
-}
-
-.fade_no_trans-enter-active {
-    opacity: 1;
-}
-
-.fade_no_trans-exit {
-    opacity: 1;
-}
-.fade_no_trans-exit-active {
-    opacity: 0;
-}
-
 .tab_logo {
     display: flex;
     justify-content: space-between;
@@ -546,12 +531,16 @@
     0%,
     100% {
         background: transparent;
+        outline-color: transparent;
     }
     50% {
+        outline-color: rgba(255, 255, 255, 0.562);
         background: rgba(255, 255, 255, 0.562);
     }
 }
 .message_blink {
+    outline-width: 5px;
+    outline-style: solid;
     animation: blink_dark 1s ease-in-out infinite;
 }
 
@@ -559,8 +548,10 @@
     0%,
     100% {
         background: transparent;
+        outline-color: transparent;
     }
     50% {
+        outline-color: rgba(220, 20, 60, 0.253);
         background: rgba(220, 20, 60, 0.253);
     }
 }

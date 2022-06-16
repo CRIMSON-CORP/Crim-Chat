@@ -80,7 +80,7 @@ function GroupComponent({ group }) {
                     <span className="trim-text group_update">
                         {group.latestText_sender_uid == userlocal.uid ? (
                             <>
-                                <div>{group.latestText} </div>
+                                <div>You: {group.latestText} </div>
                                 {group.hasImage && (
                                     <span>
                                         <BiImage size={10} />

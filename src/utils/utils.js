@@ -47,3 +47,5 @@ export const useNavigatorOnLine = () => {
 
     return status;
 };
+
+export const DESKTOP = window.innerWidth > 700

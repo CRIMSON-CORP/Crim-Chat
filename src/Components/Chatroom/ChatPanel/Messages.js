@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { firestore } from "../../../utils/firebase";
 import { BiUser, BiUserPlus } from "react-icons/bi";
-import gsap from "gsap";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
@@ -25,6 +24,7 @@ import lgZoom from "lightgallery/plugins/zoom";
 import fullscreen from "lightgallery/plugins/fullscreen";
 import share from "lightgallery/plugins/share";
 import hash from "lightgallery/plugins/hash";
+import { motion, useAnimation } from 'framer-motion'
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -42,16 +42,17 @@ function Messages({ setCaret }) {
         .collection(collections.groups_register)
         .doc(selectedChat)
         .collection(collections.messages)
-        .orderBy("createdAt")
-        .limit(100);
+        .orderBy("createdAt", "desc")
+        .limit(200);
     const [groupMessages] = useCollectionData(groupMessagesRef, { idField: "id" });
     const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
     const [loaded, setLoaded] = useState(false);
     const dummy = document.querySelector(".dummy");
+    const dummyRef = useRef()
     useEffect(() => {
         if (groupMessages) {
             if (loaded) {
-                dummy != undefined && dummy.scrollIntoView({ behavior: "smooth" });
+                dummyRef?.current && dummyRef.current?.scrollIntoView({ behavior: "smooth" });
                 if (allowedToPlay) {
                     play();
                     setAllowedToPlay(false);
@@ -69,8 +70,8 @@ function Messages({ setCaret }) {
     useEffect(() => {
         messageBoxRef.current.addEventListener("scroll", () => {
             let scrolltop =
-                $(messageBoxRef.current).scrollTop() + $(messageBoxRef.current).height();
-            if (scrolltop < messageBoxRef.current.scrollHeight - 50) {
+                $(messageBoxRef.current).scrollTop()
+            if (scrolltop < -150) {
                 setCaret(true);
             } else {
                 setCaret(false);
@@ -87,7 +88,7 @@ function Messages({ setCaret }) {
 
     return (
         <>
-            <div className="messages scroll" ref={messageBoxRef}>
+            <div className="messages scroll" >
                 {groupDetails && selectedChat !== "" && (
                     <div className="messages_header">
                         <div
@@ -187,21 +188,23 @@ function Messages({ setCaret }) {
                         </div>
                     </div>
                 )}
-                {groupMessages !== undefined &&
-                    groupMessages.map((message, index) =>
-                        message.type === "message" ? (
-                            <Message
-                                key={message.id}
-                                message={message}
-                                id={message.id}
-                                loaded={loaded}
-                            />
-                        ) : (
-                            <InfoBubble key={index} message={message} />
-                        )
-                    )}
+                <div className="messages_list scroll" ref={messageBoxRef}>
+                    <div className="dummy" ref={dummyRef}></div>
+                    {groupMessages !== undefined &&
+                        groupMessages.map((message, index) =>
+                            message.type === "message" ? (
+                                <Message
+                                    key={message.id}
+                                    message={message}
+                                    id={message.id}
+                                    loaded={loaded}
+                                />
+                            ) : (
+                                <InfoBubble key={index} message={message} />
+                            )
+                        )}
+                </div>
 
-                <div className="dummy"></div>
             </div>
             <MessagesModal
                 props={{
@@ -224,22 +227,16 @@ function Message({ message, loaded, id }) {
     if (message.uid) {
         messageOwner = message.uid === userlocal.uid;
     }
-    const messageRef = useRef();
     const image = useRef();
     const [res, setRes] = useState({ w: null, h: null });
+    const controls = useAnimation()
+
     useEffect(() => {
         if (loaded) {
-            gsap.fromTo(
-                messageRef.current,
-                {
-                    opacity: 0,
-                    y: 20,
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                }
-            );
+            controls.start({
+                opacity: [0, 1],
+                y: [20, 0]
+            })
         }
     }, []);
 
@@ -253,8 +250,8 @@ function Message({ message, loaded, id }) {
         }
     }, []);
     return (
-        <div
-            ref={messageRef}
+        <motion.div
+            animate={controls}
             className={`message ${messageOwner ? "sent" : "received"}`}
             data-id={id}
         >
@@ -275,7 +272,7 @@ function Message({ message, loaded, id }) {
                         <a href={message.profilePhoto} data-lg-size={`${res.w}-${res.h}`}>
                             <img
                                 src={message.profilePhoto}
-                                alt="profile"
+                                alt={message.sender}
                                 ref={image}
                                 onLoad={({ target: { offsetWidth, offsetHeight } }) => {
                                     setRes({ w: offsetWidth, h: offsetHeight });
@@ -286,7 +283,7 @@ function Message({ message, loaded, id }) {
                 )}
             </div>
             <Bubble message={message} id={id} messageOwner={messageOwner} loaded={loaded} />
-        </div>
+        </motion.div>
     );
 }
 
@@ -308,18 +305,14 @@ function Bubble({
     const bubble = useRef();
     const textRef = useRef();
     const [imageTag, setImageTag] = useState({ w: null, h: null });
+    const controls = useAnimation()
     useEffect(() => {
         if (loaded) {
-            gsap.fromTo(
-                bubble.current,
-                {
-                    scale: 0.3,
-                    opacity: 0,
-                    y: 10,
-                    transformOrigin: messageOwner ? "70% 70%" : "20% 70%",
-                },
-                { scale: 1, opacity: 1, y: 0, duration: 1, ease: "expo.out" }
-            );
+            controls.start({
+                scale: [0.3, 1],
+                opacity: [0, 1],
+                y: [10, 0]
+            })
         }
         bubble.current.addEventListener("dblclick", () => {
             setReply({
@@ -339,7 +332,7 @@ function Bubble({
         };
     }, []);
     return (
-        <div className="bubble" ref={bubble}>
+        <motion.div className="bubble" animate={controls} ref={bubble} style={{ transformOrigin: messageOwner ? "95% 95%" : "5% 95%" }}>
             <div className="text">
                 {!messageOwner && <div className="message_sender">{sender}</div>}
                 {replyMessage && (
@@ -352,10 +345,10 @@ function Bubble({
                                     behavior: "smooth",
                                     block: "center",
                                 }),
-                                target.classList.add("message_blink"),
-                                setTimeout(() => {
-                                    target.classList.remove("message_blink");
-                                }, 3000));
+                                    target.classList.add("message_blink"),
+                                    setTimeout(() => {
+                                        target.classList.remove("message_blink");
+                                    }, 3000));
                         }}
                     >
                         <span className="recipeint font-weight-bold trim">
@@ -390,7 +383,7 @@ function Bubble({
             <div className="timestamp" ref={textRef}>
                 {time}
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -411,19 +404,16 @@ function InfoBubble({ message }) {
             bubble = `${messageOwner ? "You" : message.user_that_left} left the Group!`;
             break;
         case "user_joined":
-            bubble = `${
-                message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
-            } joined the Group!`;
+            bubble = `${message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
+                } joined the Group!`;
             break;
         case "group_updated":
-            bubble = `${
-                message.admin_uid == uid ? "You" : message.admin
-            } Updated the Group's Details!`;
+            bubble = `${message.admin_uid == uid ? "You" : message.admin
+                } Updated the Group's Details!`;
             break;
         case "user_removed":
-            bubble = `${message.admin_uid == uid ? "You" : message.admin} removed ${
-                message.removed_user
-            }`;
+            bubble = `${message.admin_uid == uid ? "You" : message.admin} removed ${message.removed_user
+                }`;
             break;
     }
     return <div className="info_bubble">{bubble}</div>;
