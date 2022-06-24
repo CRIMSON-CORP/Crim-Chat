@@ -5,14 +5,30 @@ import SignUp from "./SignUp";
 import { AnimatePresence, motion } from "framer-motion";
 
 const transition = {
-    duration: 0.5,
+    duration: 0.75,
     type: "tween",
-    ease: "easeOut"
-}
-const X0 = { x: 0 }
-const X100 = { x: "100%" }
-const X_100 = { x: "-100%" }
-const DESKTOP = window.innerWidth >= 766
+    ease: "easeOut",
+};
+const DESKTOP = window.innerWidth >= 766;
+const SLIDE_IN_LEFT = {
+    hidden: {
+        x: "-100%",
+        transition,
+    },
+    show: {
+        x: 0,
+        transition,
+    },
+};
+const SLIDE_IN_RIGHT = {
+    hidden: {
+        x: "100%",
+    },
+    show: {
+        x: 0,
+    },
+};
+
 function Auth() {
     const [banner, setBanner] = useState(DESKTOP ? "both" : "with-banner");
     const [activePage, setActivePage] = useState("signin");
@@ -24,10 +40,10 @@ function Auth() {
             <AnimatePresence>
                 {(banner === "with-banner" || banner === "both") && (
                     <motion.div
-                        initial={X0}
-                        exit={X_100}
+                        initial="show"
+                        exit="hidden"
+                        variants={SLIDE_IN_LEFT}
                         key="banner"
-                        transition={transition}
                         className="banner-wrapper"
                         style={{ overflow: "hidden" }}
                     >
@@ -36,20 +52,25 @@ function Auth() {
                 )}
                 {(banner === "without-banner" || banner === "both") && (
                     <motion.div
-                        initial={X100}
-                        animate={X0}
-                        exit={X100}
-                        transition={transition}
+                        initial="hidden"
+                        animate="show"
+                        exit="hidden"
+                        variants={SLIDE_IN_RIGHT}
+                        transition={{
+                            when: "beforeChildren",
+                            delay: 0.25,
+                            ...transition,
+                        }}
                         className="auth-wrapper"
                         key="auth-wrapper"
                     >
                         <AnimatePresence>
                             {activePage === "signin" && (
                                 <motion.div
-                                    initial={X_100}
-                                    animate={X0}
-                                    exit={X_100}
-                                    transition={transition}
+                                    initial="hidden"
+                                    animate="show"
+                                    exit="hidden"
+                                    variants={SLIDE_IN_LEFT}
                                     className="signin"
                                     key="signin"
                                 >
@@ -62,9 +83,10 @@ function Auth() {
                             )}
                             {activePage === "signup" && (
                                 <motion.div
-                                    initial={X100}
-                                    animate={X0}
-                                    exit={X100}
+                                    initial="hidden"
+                                    animate="show"
+                                    exit="hidden"
+                                    variants={SLIDE_IN_RIGHT}
                                     transition={transition}
                                     className="signup"
                                     key="signup"
