@@ -6,7 +6,6 @@ import { FaEllipsisH, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 import { DropList, OptionsDropDownItem, useModal } from "../../../utils/CustomComponents";
 import { collections } from "../../../utils/FirebaseRefs";
 import { MdDeleteForever, MdInfoOutline } from "react-icons/md";
-import $ from "jquery";
 import MessagesModal from "./MessagesModal";
 import aud from "../../../img/facebookchat.mp3";
 import useSound from "use-sound";
@@ -24,7 +23,7 @@ import lgZoom from "lightgallery/plugins/zoom";
 import fullscreen from "lightgallery/plugins/fullscreen";
 import share from "lightgallery/plugins/share";
 import hash from "lightgallery/plugins/hash";
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimation } from "framer-motion";
 function Messages({ setCaret }) {
     const { selectedChat, setSelectedChat } = useContext(SelectedChatContext);
     const {
@@ -48,7 +47,7 @@ function Messages({ setCaret }) {
     const [groupDetails] = useDocumentData(groupDetailsRef, { idField: "group_id" });
     const [loaded, setLoaded] = useState(false);
     const dummy = document.querySelector(".dummy");
-    const dummyRef = useRef()
+    const dummyRef = useRef();
     useEffect(() => {
         if (groupMessages) {
             if (loaded) {
@@ -69,8 +68,7 @@ function Messages({ setCaret }) {
 
     useEffect(() => {
         messageBoxRef.current.addEventListener("scroll", () => {
-            let scrolltop =
-                $(messageBoxRef.current).scrollTop()
+            let scrolltop = messageBoxRef.current.scrollTop;
             if (scrolltop < -150) {
                 setCaret(true);
             } else {
@@ -88,7 +86,7 @@ function Messages({ setCaret }) {
 
     return (
         <>
-            <div className="messages scroll" >
+            <div className="messages scroll">
                 {groupDetails && selectedChat !== "" && (
                     <div className="messages_header">
                         <div
@@ -204,7 +202,6 @@ function Messages({ setCaret }) {
                             )
                         )}
                 </div>
-
             </div>
             <MessagesModal
                 props={{
@@ -229,14 +226,14 @@ function Message({ message, loaded, id }) {
     }
     const image = useRef();
     const [res, setRes] = useState({ w: null, h: null });
-    const controls = useAnimation()
+    const controls = useAnimation();
 
     useEffect(() => {
         if (loaded) {
             controls.start({
                 opacity: [0, 1],
-                y: [20, 0]
-            })
+                y: [20, 0],
+            });
         }
     }, []);
 
@@ -299,20 +296,20 @@ function Bubble({
     } = useContext(UserContext);
     const time =
         createdAt !== null && createdAt !== undefined
-            ? new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1e6).toLocaleTimeString()
+            ? new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1e6).toLocaleString()
             : "";
 
     const bubble = useRef();
     const textRef = useRef();
     const [imageTag, setImageTag] = useState({ w: null, h: null });
-    const controls = useAnimation()
+    const controls = useAnimation();
     useEffect(() => {
         if (loaded) {
             controls.start({
                 scale: [0.3, 1],
                 opacity: [0, 1],
-                y: [10, 0]
-            })
+                y: [10, 0],
+            });
         }
         bubble.current.addEventListener("dblclick", () => {
             setReply({
@@ -325,14 +322,18 @@ function Bubble({
 
     useEffect(() => {
         const image = new Image();
-
         image.src = imageUrl;
         image.onload = function () {
             setImageTag({ w: image.width, h: image.height });
         };
     }, []);
     return (
-        <motion.div className="bubble" animate={controls} ref={bubble} style={{ transformOrigin: messageOwner ? "95% 95%" : "5% 95%" }}>
+        <motion.div
+            className="bubble"
+            animate={controls}
+            ref={bubble}
+            style={{ transformOrigin: messageOwner ? "95% 95%" : "5% 95%" }}
+        >
             <div className="text">
                 {!messageOwner && <div className="message_sender">{sender}</div>}
                 {replyMessage && (
@@ -345,10 +346,10 @@ function Bubble({
                                     behavior: "smooth",
                                     block: "center",
                                 }),
-                                    target.classList.add("message_blink"),
-                                    setTimeout(() => {
-                                        target.classList.remove("message_blink");
-                                    }, 3000));
+                                target.classList.add("message_blink"),
+                                setTimeout(() => {
+                                    target.classList.remove("message_blink");
+                                }, 3000));
                         }}
                     >
                         <span className="recipeint font-weight-bold trim">
@@ -373,7 +374,7 @@ function Bubble({
                             easing="ease-out"
                         >
                             <a href={imageUrl} data-lg-size={`${imageTag.w}-${imageTag.h}`}>
-                                <img src={imageUrl} alt="image" />
+                                <img src={imageUrl} alt={text} />
                             </a>
                         </LightGallery>
                     </div>
@@ -404,16 +405,19 @@ function InfoBubble({ message }) {
             bubble = `${messageOwner ? "You" : message.user_that_left} left the Group!`;
             break;
         case "user_joined":
-            bubble = `${message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
-                } joined the Group!`;
+            bubble = `${
+                message.user_that_joined_id == uid ? "You" : message.user_that_joined_name
+            } joined the Group!`;
             break;
         case "group_updated":
-            bubble = `${message.admin_uid == uid ? "You" : message.admin
-                } Updated the Group's Details!`;
+            bubble = `${
+                message.admin_uid == uid ? "You" : message.admin
+            } Updated the Group's Details!`;
             break;
         case "user_removed":
-            bubble = `${message.admin_uid == uid ? "You" : message.admin} removed ${message.removed_user
-                }`;
+            bubble = `${message.admin_uid == uid ? "You" : message.admin} removed ${
+                message.removed_user
+            }`;
             break;
     }
     return <div className="info_bubble">{bubble}</div>;

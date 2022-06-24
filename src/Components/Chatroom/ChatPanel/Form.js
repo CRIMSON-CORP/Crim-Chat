@@ -31,7 +31,7 @@ function Form() {
         setReply({ text: null, recipient: null, id: null });
         setImage([]);
         setReadyImage(false);
-        await sendMessage(text, userlocal, reply, Image[0], selectedChat);
+        await sendMessage(text.trim(), userlocal, reply, Image[0], selectedChat);
         textarea.current.style.height = "30px";
         setLoading(false);
     }

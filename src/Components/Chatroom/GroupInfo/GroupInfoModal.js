@@ -7,6 +7,7 @@ import { DropList, OptionsDropDownItem, ProfilePic } from "../../../utils/Custom
 import firebase, { firestore } from "../../../utils/firebase";
 import { collections } from "../../../utils/FirebaseRefs";
 import { removeUser } from "../../../utils/firebaseUtils";
+import InfiniteScrolll from "../InfiniteScrolll";
 
 function GroupInfoModal() {
     const { selectedChat } = useContext(SelectedChatContext);
@@ -19,8 +20,13 @@ function GroupInfoModal() {
                     <ProfilePic tag="group" img={groupInfo.group_profilePic} />
                     <h4 className="mb-2">{groupInfo.group_name}</h4>
                     <p className="font-italic">{groupInfo.group_description}</p>
-                    <h4 className="mt-3">Group Members</h4>
-                    <ul className="users_list scroll">
+                    <h4 className="mt-3">
+                        Group Members{" "}
+                        <span className="group-memebers-count">
+                            {groupInfo.group_members.length}
+                        </span>
+                    </h4>
+                    <ul className="users_list">
                         {groupInfo.group_members.map((grp, index) => {
                             return (
                                 <GroupMember

@@ -899,6 +899,13 @@ span.loader {
 
 .chat-pannel .messages .message .bubble {
   max-width: 80%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .chat-pannel .messages .message .bubble .message_sender {
@@ -954,6 +961,12 @@ span.loader {
       align-self: flex-end;
 }
 
+.chat-pannel .messages .message.sent .bubble {
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
 .chat-pannel .messages .message.sent .bubble .text {
   background: #424242;
   color: white;
@@ -974,6 +987,12 @@ span.loader {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+}
+
+.chat-pannel .messages .message.received .bubble {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 
 .chat-pannel .messages .message.received .bubble .text {
@@ -2319,6 +2338,14 @@ span.loader {
   margin: 0;
   width: 50px;
   height: 50px;
+}
+
+.group-info .group-memebers-count {
+  background: #dc143c;
+  padding: 2px 5px;
+  border-radius: 3px;
+  color: white;
+  aspect-ratio: 1/1;
 }
 
 .list-loader {

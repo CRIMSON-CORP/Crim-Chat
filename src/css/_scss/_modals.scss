@@ -494,6 +494,14 @@
             height: 50px;
         }
     }
+
+    .group-memebers-count {
+        background: #dc143c;
+        padding: 2px 5px;
+        border-radius: 3px;
+        color: white;
+        aspect-ratio: 1/1;
+    }
 }
 .list-loader {
     position: relative;
