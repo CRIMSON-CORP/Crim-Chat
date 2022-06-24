@@ -5,7 +5,7 @@ import SignUp from "./SignUp";
 import { AnimatePresence, motion } from "framer-motion";
 
 const transition = {
-    duration: 0.75,
+    duration: 0.4,
     type: "tween",
     ease: "easeOut",
 };

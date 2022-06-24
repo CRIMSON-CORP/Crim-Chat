@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdClear } from "react-icons/md";
 import { BiImage } from "react-icons/bi";
-import { CSSTransition } from "react-transition-group";
 import { ReplyContext, SelectedChatContext, UserContext } from "../../../utils/Contexts";
 import { sendMessage } from "../../../utils/firebaseUtils";
 import { FilePond, registerPlugin } from "react-filepond";
@@ -51,52 +50,67 @@ function Form() {
     return (
         <>
             {selectedChat && (
-                <div className="form_input">
+                <div className="form_input" style={{ overflow: "hidden" }}>
                     <AnimatePresence>
-                        {
-                            reply.text != null && (
-                                <motion.div initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: "0%" }} exit={{ opacity: 0, y: "100%" }} className="reply">
-                                    <MdClear
-                                        size={28}
-                                        onClick={() => {
-                                            setReply({ text: null, recipient: null, id: null });
-                                        }}
-                                    />
-                                    <div>
-                                        <span className="recipeint font-weight-bold">
-                                            {reply.recipient === userlocal.displayName.split(" ")[0]
-                                                ? "You"
-                                                : reply.recipient}
-                                        </span>
-                                        <p
-                                            className="reply_text font-italic"
-                                            style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                                        >
-                                            {reply.text}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            )
-                        }
-                        <CSSTransition
-                            in={readyImage}
-                            classNames="fade-trans"
-                            timeout={100}
-                            unmountOnExit
-                        >
-                            <FilePond
-                                allowMultiple={false}
-                                allowFileTypeValidation={true}
-                                allowFileSizeValidation={true}
-                                maxFileSize={"2MB"}
-                                labelMaxFileSizeExceeded={"Image is too large!"}
-                                files={Image}
-                                maxFiles={1}
-                                acceptedFileTypes={["image/*"]}
-                                onaddfile={(err, file) => !err && setImage([file])}
-                                onremovefile={() => setImage([])}
-                            />
-                        </CSSTransition>
+                        {reply.text != null && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 100 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 100 }}
+                                transition={{
+                                    type: "tween",
+                                }}
+                                className="reply"
+                                key="reply"
+                            >
+                                <MdClear
+                                    size={28}
+                                    onClick={() => {
+                                        setReply({ text: null, recipient: null, id: null });
+                                    }}
+                                />
+                                <div>
+                                    <span className="recipeint font-weight-bold">
+                                        {reply.recipient === userlocal.displayName.split(" ")[0]
+                                            ? "You"
+                                            : reply.recipient}
+                                    </span>
+                                    <p
+                                        className="reply_text font-italic"
+                                        style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                                    >
+                                        {reply.text}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                        {readyImage && (
+                            <motion.div
+                                initial={{ y: 100 }}
+                                animate={{ y: 0 }}
+                                exit={{ y: 100 }}
+                                transition={{
+                                    type: "tween",
+                                }}
+                                key="file"
+                                style={{ overflow: "hidden" }}
+                            >
+                                <FilePond
+                                    allowMultiple={false}
+                                    allowFileTypeValidation={true}
+                                    allowFileSizeValidation={true}
+                                    maxFileSize={"2MB"}
+                                    labelMaxFileSizeExceeded={"Image is too large!"}
+                                    files={Image}
+                                    maxFiles={1}
+                                    acceptedFileTypes={["image/*"]}
+                                    onaddfile={(err, file) => !err && setImage([file])}
+                                    onremovefile={() => setImage([])}
+                                />
+                            </motion.div>
+                        )}
                     </AnimatePresence>
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
@@ -109,7 +123,9 @@ function Form() {
                                     handleChange(e.target.value);
                                 }}
                                 onFocus={() => {
-                                    document.querySelector(".dummy").scrollIntoView({ behavior: "smooth" });
+                                    document
+                                        .querySelector(".dummy")
+                                        .scrollIntoView({ behavior: "smooth" });
                                 }}
                             ></textarea>
                             <div
