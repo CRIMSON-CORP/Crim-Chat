@@ -1,0 +1,26 @@
+@import "./variables";
+.profilePic {
+    display: grid;
+    place-items: center;
+    img,
+    .alt {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        object-position: center;
+    }
+    .alt {
+        font-size: 60px;
+        display: grid;
+        place-items: center;
+        background: $main;
+        color: white;
+    }
+}
+
+.underlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.349);
+}

@@ -1,7 +1,6 @@
 @import "./signup";
 .auth {
-    position: relative;
-    height: 100vh;
+    width: 100%;
     .banner {
         display: grid;
         place-items: center;
@@ -56,7 +55,6 @@
     }
     h1 {
         font-family: $Gisha;
-        color: #000;
         font-size: 28px;
         font-weight: bold;
     }
@@ -64,19 +62,21 @@
     form {
         width: 100%;
         max-width: 400px;
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: 25px;
         padding: 20px;
         .input_feild {
             font-size: 22px;
             border-bottom: 3px solid $ashh;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
+            display: flex;
             align-items: center;
+            width: auto;
             svg {
                 stroke: $ashh;
                 color: $ashh;
                 overflow: visible;
+                flex: 30px;
             }
             input {
                 border: none;
@@ -84,6 +84,7 @@
                 padding: 0.5em 1em;
                 font-size: 20px;
                 font-weight: 500;
+                width: 100%;
                 &::placeholder {
                     color: $ashh;
                 }
@@ -139,35 +140,6 @@
     }
 }
 
-.signup-tab-enter {
-    transform: translateX(-110%);
-}
-.signup-tab-enter-active {
-    transform: translateX(0%);
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.signup-tab-exit {
-    transform: translateX(0%);
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.signup-tab-exit-active {
-    transform: translateX(-110%);
-}
-.signin-tab-enter {
-    transform: translateX(110%);
-}
-.signin-tab-enter-active {
-    transform: translateX(0%);
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.signin-tab-exit {
-    transform: translateX(0%);
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.signin-tab-exit-active {
-    transform: translateX(110%);
-}
-
 .signup,
 .signin {
     position: absolute;
@@ -188,6 +160,16 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .banner-container {
+        height: 80%;
+        .logo {
+            flex: 6;
+            transform: scale(1.4) !important;
         }
     }
 }

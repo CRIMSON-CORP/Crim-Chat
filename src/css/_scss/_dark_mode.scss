@@ -1,0 +1,150 @@
+@import "./variables";
+.loader-container.dark {
+    background: #10155388;
+}
+
+#root.dark {
+    background: $dark_background;
+    color: white;
+    .tabs {
+        background: $dark_background;
+    }
+
+    .options_dropdown {
+        background: $dark_background;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.582);
+        border: 2px solid white;
+    }
+
+    .chat-pannel .form_input {
+        background: $dark_background;
+        box-shadow: 0px 2px 8px #05071836, 0px 2px 5px #05071821;
+        textarea {
+            background: $dark_background;
+            color: white;
+        }
+    }
+    .messages_header .head,
+    .messages_header .messages_options {
+        background: $dark_background;
+        color: white;
+        box-shadow: 0px 3px 15px #0507187c;
+    }
+
+    input {
+        background: none;
+        color: white;
+        &:-webkit-autofill {
+            border-radius: 5px;
+            background-color: $main_faint !important;
+        }
+    }
+
+    .auth {
+        form .input_feild {
+            border-bottom: 3px solid rgb(190, 190, 190);
+            svg {
+                stroke: white;
+                color: white;
+            }
+        }
+    }
+
+    .info_bubble {
+        background: #0507185d;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.247);
+    }
+
+    .message {
+        .text {
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.199);
+            color: white;
+        }
+        &.sent {
+            .bubble {
+                .text {
+                    background: $dark_background;
+                }
+            }
+        }
+        &.received {
+            .bubble {
+                .text {
+                    background: $main_faint;
+                }
+            }
+        }
+        .timestamp {
+            color: rgba(255, 255, 255, 0.4);
+        }
+    }
+
+    .chat-pannel .messages .message .img_profile {
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+        border-radius: 50%;
+        img {
+            box-shadow: none;
+        }
+    }
+
+    p.or {
+        color: white;
+        &::before {
+            background: none;
+        }
+        span {
+            background: $main_faint;
+            border-radius: 5px;
+        }
+    }
+
+    .modal-custom {
+        .underlay {
+            background: #10155388;
+        }
+        .modal-content-custom {
+            background: $dark_background;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.274);
+        }
+
+        .modal-head {
+            background: $dark_background;
+        }
+    }
+
+    .bordered_input_box.valid .label {
+        background: $dark_background;
+    }
+
+    .banner-container {
+        img {
+            display: none;
+        }
+        .logo {
+            transform: scale(1.7);
+            pointer-events: none;
+        }
+    }
+
+    .fab-wrapper {
+        .fab {
+            &.ball {
+                box-shadow: 0px 6px 15px #200107d2, 0px 10px 25px #20010793;
+            }
+            &.move {
+                opacity: 0;
+            }
+        }
+    }
+
+    .toggle-slot {
+        background: $dark_background;
+    }
+    .filepond--panel-root {
+        background: none;
+    }
+    .filepond--drop-label {
+        background: $main_faint;
+        color: white;
+    }
+}

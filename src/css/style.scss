@@ -5,24 +5,25 @@ body {
     min-height: 100vh;
 }
 
-body::-webkit-scrollbar {
-    width: 10px;
-}
-body::-webkit-scrollbar-thumb {
-    width: 10px;
-    background: var(--main);
-    border-radius: 10px;
-}
-
 a {
     text-decoration: none;
 }
 
 #root {
-    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    user-select: none;
     padding: 20px;
-    position: absolute;
-    inset: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    color: black;
+    transition: 0.3s ease-out;
+}
+
+input {
+    transition: 0.3s ease-out;
 }
 
 .logo {
@@ -47,27 +48,68 @@ a {
         font-family: $Gisha;
         font-weight: bold;
         font-size: 0.8em;
-        color: black;
     }
-}
-
-.loading-enter {
-    opacity: 0;
-}
-.loading-enter-active {
-    opacity: 1;
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.loading-exit {
-    opacity: 1;
-    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 500ms;
-}
-.loading-exit-active {
-    opacity: 0;
 }
 
 @import "./_scss/auth";
 @import "./_scss/utils";
+@import "./_scss/custom_components";
 @import "./_scss/tabs";
 @import "./_scss/navbar";
 @import "./_scss//mainpannel";
+@import "./_scss/modals";
+@import "./_scss/no_chat";
+@import "./_scss/dark_mode";
+
+// Mobile Media Query
+@media screen and (max-width: 700px) {
+    .tabs {
+        border-radius: 0px 10px 10px 0px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .auth {
+        .auth-wrapper {
+            padding: 0;
+            form {
+                padding: 20px;
+            }
+        }
+    }
+    .loader-wrapper {
+        scale: 0.6;
+    }
+    .no-chat-selected {
+        font-size: 20px !important;
+    }
+
+    #root {
+        padding: 10px;
+    }
+
+    .messages_header .head {
+        height: 45px;
+        grid-template-columns: 25px auto;
+        svg {
+            width: 15px;
+            height: 15;
+        }
+        h5 {
+            font-size: 18px;
+        }
+    }
+    .messages_header .messages_options {
+        height: 45px;
+    }
+
+    .messages_header {
+        grid-template-columns: auto 45px;
+        gap: 10px;
+    }
+    .chat-pannel {
+        .underlay {
+            display: none;
+        }
+    }
+}
