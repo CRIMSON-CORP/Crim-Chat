@@ -115,6 +115,7 @@ function Form() {
                     <form onSubmit={submit}>
                         <div className="text-wrapper">
                             <textarea
+                                className="scroll"
                                 type="text"
                                 placeholder="Type your message..."
                                 value={text}

@@ -113,7 +113,7 @@ function Messages({ setCaret }) {
                         </div>
                         <div className="messages_options">
                             <DropList
-                                closeComp={<FaEllipsisH />}
+                                closeComp={<FaEllipsisH style={{ marginTop: -4 }} />}
                                 setter={setOptionsToggle}
                                 open={optionsToggle}
                             >
